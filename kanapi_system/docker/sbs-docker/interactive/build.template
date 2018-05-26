@@ -5,7 +5,7 @@ BUILD_VERSION=@KANAPI_VER@
 ln -sf /kanapi_build/kanapi/kanapi_system/scripts/pkg_kanapi /bin/pkg_kanapi
 mkdir -p /kanapi_${BUILD_VERSION}
 ln -sf /kanapi_${BUILD_VERSION}/packages/include /usr/local/include
-cd /kanapi_build/kanapi/kanapi_system/kanapi-sbs
+cd /kanapi_build/kanapi/kanapi_system/sbs/build
 if [ "${TRAVIS}" = "true" ]
 then
 	./install sbs ci
@@ -13,7 +13,7 @@ else
 	./install sbs verbose
 fi
 
-cd /kanapi_build/kanapi/kanapi_system/test_system
+cd /kanapi_build/kanapi/kanapi_system/sbs
 cat prepare_sbs_docker.template | sed "s/@SBS_BUILD@/%SBS_BUILD%/" > prepare_sbs_docker
 chmod +x prepare_sbs_docker
 ./prepare_sbs_docker
