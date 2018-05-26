@@ -1,12 +1,9 @@
 #targets to prepare SBS image
 
-ifeq (x$(KANAPI_TOP),x)
-BASE=
-else
-BASE=$(KANAPI_TOP)/
-endif
+REPO_BASE=$(shell git rev-parse --show-toplevel)
+SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
 
-include $(BASE)../scripts/Makefile.common
+include $(SCRIPTS_DIR)/Makefile.common
 
 sbs: gcc rootfs file busybox bash make openssl curl
 

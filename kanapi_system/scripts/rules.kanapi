@@ -7,7 +7,7 @@ target_p_ver=$(lastword $(shell echo  $(subst _,\ , $@)))
 target_version=$($(addsuffix _ver, $(target_package)$(target_p_ver)))
 DIR_NAME_VER=$(target_package)-$(target_version)
 
-target_run=make -f ../Makefile -C $(1) kanapi_$(ACTION) PKG=$2 KANAPI_TOP=$(PWD) VERBOSE=$(VERBOSE); \
+target_run=make -f ../Makefile -C $(1) kanapi_$(ACTION) PKG=$2 VERBOSE=$(VERBOSE); \
 if [ "$$?" = "0" ] ; then if [ "$$REMOVE_DURING_INSTALL" = "1" -a "$(ACTION)" = "install" ]; then echo "clearing in $(1)"; rm -rf $(1) ; fi ; else false; fi
 
 ifeq ($(ACTION),)

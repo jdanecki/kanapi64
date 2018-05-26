@@ -7,7 +7,8 @@ export LC_COLLATE="C"
 export LC_CTYPE="C"
 export LANG="C"
 
-KANAPI_VER=`cat ../../scripts/KANAPI_VER`
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
 if [ "`id -u`" != "0" ]
 then
 	KANAPI_ROOT="${HOME}/kanapi_${KANAPI_VER}"
@@ -27,7 +28,7 @@ fi
 USE_WGET=0
 
 ##############################################################
-. ../../scripts/config.kanapi
+. ${REPO_BASE}/kanapi_system/scripts/config.kanapi
 
 if [ -f ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config ]
 then
