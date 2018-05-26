@@ -30,7 +30,7 @@ pkg_prepare() {
 }
 
 pkg_configure() {
-	cp ../../configs/busybox.config .config
+	cp ../../packages/${PACKAGE_NAME}-${VER}/busybox.config .config
 	${MAKE} CONFIG_PREFIX=${PREFIX} KBUILD_SRC=${PACKAGE_SRCDIR} -f ${PACKAGE_SRCDIR}/Makefile oldconfig
 }
 
@@ -47,5 +47,6 @@ pkg_install() {
 pkg_check() {
 	echo "CC=${CC}"
 	echo "CXX=${CXX}"
+	echo $REPO_BASE
 }
 
