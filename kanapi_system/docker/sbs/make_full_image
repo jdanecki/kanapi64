@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 . version
 
 pushd ../sbs-docker/interactive/
@@ -7,3 +8,4 @@ popd
 
 cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${KANAPI_VER}.${SBS_BUILD}.tar.xz .
 ./make_image
+
