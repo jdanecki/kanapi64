@@ -2,9 +2,6 @@
 
 . version
 
-REPO_BASE=`git rev-parse --show-toplevel`
-KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
-
 if [ ! -f sbs-docker-${VER}.tar.xz ]
 then
 	wget http://downloads.sourceforge.net/project/kanapi/images/v${KANAPI_VER}/sbs-docker-${VER}.tar.xz

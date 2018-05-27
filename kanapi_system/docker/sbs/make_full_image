@@ -1,0 +1,9 @@
+#!/bin/bash
+. version
+
+pushd ../sbs-docker/interactive/
+./create_sbs_docker
+popd
+
+cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${KANAPI_VER}.${SBS_BUILD}.tar.xz .
+./make_image
