@@ -1,4 +1,0 @@
-FROM scratch
-MAINTAINER Jacek Danecki <jacek.m.danecki@gmail.com>
-ADD sbs-docker-VER.tar.xz /
-CMD ["/bin/bash"]
