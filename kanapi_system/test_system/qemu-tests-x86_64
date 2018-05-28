@@ -1,0 +1,3 @@
+ARCH=`uname -m`
+qemu-system-x86_64 -enable-kvm -hda kanapi_image.x86_64 -m 512
+

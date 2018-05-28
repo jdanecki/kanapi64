@@ -1,0 +1,38 @@
+#!/bin/bash
+
+. version
+
+run_minimum() {
+	docker run -it \
+   -e DISPLAY=$DISPLAY \
+   -v /tmp/.X11-unix:/tmp/.X11-unix \
+   --ipc host \
+   --cap-add SYS_PTRACE \
+   --device=/dev/dri/card0:/dev/dri/card0 \
+   --device=/dev/dri/renderD128:/dev/dri/renderD128 \
+   --device=/dev/snd/timer:/dev/snd/timer \
+   --device=/dev/snd/pcmC0D0p:/dev/snd/pcmC0D0p \
+   --device=/dev/snd/controlC0:/dev/snd/controlC0 \
+   --device=/dev/snd/seq:/dev/snd/seq \
+   -e XDG_CACHE_HOME=/kanapi_0.9/x86_64/home/.cache \
+   -e XDG_CONFIG_HOME=/kanapi_0.9/x86_64/home/.config \
+   -e XDG_DATA_HOME=/kanapi_0.9/x86_64/home/.local \
+   -e XDG_RUNTIME_DIR=/kanapi_0.9/x86_64/home/.cache \
+   -v $HOME/.Xauthority:$HOME/.Xauthority kanapi/kanapi-${NAME}:${VER}
+}
+
+run_full() {
+	docker run -it \
+   -e DISPLAY=$DISPLAY \
+   --privileged \
+   --cap-add=ALL \
+   --device /dev:/dev \
+   -v /tmp/.X11-unix:/tmp/.X11-unix \
+   --ipc host \
+   -v /kanapi_build:/kanapi_build \
+   -v $HOME/.Xauthority:$HOME/.Xauthority kanapi/kanapi-${NAME}:${VER}
+}
+
+#run_minimum
+run_full
+

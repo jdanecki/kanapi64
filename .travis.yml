@@ -1,0 +1,22 @@
+language: c
+compiler:
+  - gcc
+sudo: required
+services:
+  - docker
+
+matrix:
+    include:
+        - env: "job1"
+          script:
+            - ./configure
+            - make -C ci-tests job1
+        - env: "job2"
+          script:
+            - ./configure
+            - make -C ci-tests job2
+        - env: "job3"
+          script:
+            - ./configure
+            - travis_wait 50 make -C ci-tests job3
+

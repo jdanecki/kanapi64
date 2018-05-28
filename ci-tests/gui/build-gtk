@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -f Dockerfile-gtk -m 4g -t kanapi-gtk:ci .
+

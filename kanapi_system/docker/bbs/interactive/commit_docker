@@ -1,0 +1,12 @@
+#!/bin/bash
+. version
+
+if [ -n "$1" ]
+then
+	docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} ${VER}" $1 kanapi/kanapi-${NAME}:${VER}
+else
+	echo "run script with container ID"
+	docker ps -a
+fi
+
+

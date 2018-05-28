@@ -1,0 +1,27 @@
+1. Create directory
+mkdir /kanapi_0.7
+cd /kanapi_0.7
+
+2. Download rootfs
+https://sourceforge.net/projects/kanapi/files/packages/v0.7/rootfs/x86_64-rootfs.tar.xz/download
+
+3. Uncompress rootfs
+tar -xJf x86_64-rootfs.tar.xz
+
+4. Download pkg script and copy it to your $PATH
+https://sourceforge.net/projects/kanapi/files/packages/v0.7/pkg/download
+
+5. Download all packages
+cd /kanapi_0.7/x86_64/packages
+pkg pull_all
+
+6. Uncompress all packages
+for i in *.xz; do tar -xJf $i ; done
+
+7. Run selected programs from /kanapi_0.7/x86_64/bin or from package directory
+   /kanapi_0.7/x86_64/packages/"package name"/bin
+
+If anything doesn't work, let me know, so I can fix it ;)
+
+Enjoy!
+

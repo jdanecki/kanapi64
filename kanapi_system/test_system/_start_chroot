@@ -1,0 +1,35 @@
+#!/bin/bash
+
+ARCH=`/bin/uname -m`
+echo "starting on ARCH=${ARCH}"
+
+export PATH=/@KANAPI_VER@/${ARCH}/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devpts devpts /dev/pts
+mount -t debugfs debugs /sys/kernel/debug
+
+#mount /dev/shm
+chmod 777 /tmp
+
+export HOME=/@KANAPI_VER@/${ARCH}/home
+export XDG_CONFIG_HOME=${HOME}/.config
+export XDG_CACHE_HOME=${HOME}/.cache
+export XDG_DATA_HOME=${HOME}/.local
+export XDG_RUNTIME_DIR=${HOME}/.cache
+unset LD_LIBRARY_PATH
+
+#eval `dbus-launch --sh-syntax --exit-with-session`
+#echo "DBUS_SESSION_BUS_PID=$DBUS_SESSION_BUS_PID"
+
+/bin/bash 
+
+#kill -9  $DBUS_SESSION_BUS_PID
+
+#umount /dev/shm
+umount /dev/pts
+umount /sys/kernel/debug
+umount /sys
+umount /proc
+
+

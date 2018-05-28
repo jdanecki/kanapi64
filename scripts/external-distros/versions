@@ -1,0 +1,43 @@
+#!/bin/bash
+
+export LANG=
+export LC_ALL=
+
+echo "----- debian -----"
+debian apt-cache policy $1 | grep -E "Installed"
+#debian apt-cache policy $1 | grep -E "Installed|Candidate"
+
+echo "----- fedora ----"
+fedora dnf info $1 | grep -E "Version"
+#fedora dnf info $1 | grep -E "Packages|Version"
+
+echo "----- mint ----"
+mint apt-cache policy $1 | grep -E "Installed"
+#mint apt-cache policy $1 | grep -E "Installed|Candidate"
+
+#echo "----- opensuse ----"
+#opensuse zypper info $1 | grep -E "Installed:|Version"
+
+echo "----- arch64    ---"
+arch64 pacman -Ss $1 | grep -E "installed:"
+
+echo "----- crux      ---"
+crux prt-get info $1 | grep -E "Version"
+
+echo "----- exherbo      ---"
+exherbo-game cave search -n $1 | grep installed 2> /dev/null
+
+echo "----- gobolinux      ---"
+gobolinux FindPackage $1
+
+echo "----- lunar      ---"
+lunar lvu info $1 | grep "Installed Version"
+
+echo "----- nutyx      ---"
+nutyx cards info $1 | grep "Version"
+
+echo "----- void      ---"
+void xbps-query -S $1 | grep "pkgver:"
+
+echo "----- kanapi      ---"
+pkg version $1

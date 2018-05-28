@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=libsoup
+VER=2.57.1
+URL="http://ftp.acc.umu.se/pub/gnome/sources/libsoup/2.57"
+EXT=tar.xz
+#build depends on
+
+LIB_DEPENDS="gio-2.0 gmodule-2.0 zlib libffi"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lresolv"
+
+if [ "${KANAPI_TARGET}" = "arm" ]
+then
+	if [ -d "${KANAPI_HOST_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}" ]
+	then
+		export PERL5LIB="${KANAPI_HOST_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+		export PATH=${KANAPI_HOST_BASE}/perl-${perl_ver}/bin:${PATH}
+	fi
+else
+	export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+fi
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --disable-tls-check \
+	--without-gssapi
+}
+
+pkg_install() {
+	pkg_install_pc_all
+	pkg_install_libs
+}
+

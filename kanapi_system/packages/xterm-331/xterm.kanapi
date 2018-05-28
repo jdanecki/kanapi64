@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=xterm
+VER=331
+URL="http://invisible-island.net/datafiles/release/xterm.tar.gz"
+EXT=tar.gz
+#build depends on libXext libxcb libXau libXpm libX11 ncurses
+
+LIB_DEPENDS="xext xcb xau xpm x11 xrender ncurses xft fontconfig expat libpng zlib uuid"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt"
+
+pkg_download() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
+	then 
+		echo "$PACKAGE_NAME: already downloaded"
+	else
+		echo "downloading ${PACKAGE_NAME}"
+		wget ${URL} -O ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+	fi
+}
+
+pkg_configure() {	
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+		--enable-readline-mouse --enable-256-color \
+		--enable-luit --enable-exec-xterm --enable-freetype --enable-i18n --enable-wide-chars \
+		--enable-16bit-chars  --enable-toolbar 
+}
+
+pkg_build() {
+	MAKE_JOBS=1
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+
+pkg_install() {
+	pkg_install_make
+	pkg_install_bin_all
+	cat ${PREFIX}/lib/X11/app-defaults/XTerm | sed "s@saveLines: 1024@saveLines: 100000@" > tmp_file
+	mv tmp_file ${PREFIX}/lib/X11/app-defaults/XTerm 
+}	
+
+pkg_check() {
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+}

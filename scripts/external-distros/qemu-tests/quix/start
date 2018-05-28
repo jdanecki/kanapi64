@@ -1,0 +1,2 @@
+qemu-system-x86_64 -enable-kvm -m 2048 -net nic,model=e1000 -net user gnu-system-demo-0.6.qcow2
+

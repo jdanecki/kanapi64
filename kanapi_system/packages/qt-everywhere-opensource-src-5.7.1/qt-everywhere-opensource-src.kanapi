@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=qt-everywhere-opensource-src
+VER=5.7.1
+URL="http://download.qt.io/official_releases/qt/5.7/5.7.1/single"
+EXT=tar.xz
+#build depends on
+
+LIB_DEPENDS="gobject-2.0 libxml-2.0 gl icu-i18n alsa openssl xrender harfbuzz xi xext freetype2 fontconfig sm ice dbus-1 slang zlib"
+
+. ../settings
+
+if [ -n "${PKG_CONFIG}" ]
+then
+	export LDFLAGS="${LDFLAGS} `${PKG_CONFIG} --libs-only-l gthread-2.0 gmodule-2.0` \
+		`${PKG_CONFIG} --libs-only-L gthread-2.0 gmodule-2.0`"
+	export CFLAGS="${CFLAGS} `${PKG_CONFIG} --cflags-only-I gmodule-2.0`"
+fi
+
+pkg_configure() {	
+	NEW_CFLAGS=`echo "${CFLAGS}" | sed "s/-fPIC//"`
+	export CFLAGS="${NEW_CFLAGS}"
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX -v -opensource -confirm-license \
+	-qt-xcb -qt-pcre -qt-zlib -qt-libpng \
+	-qt-libjpeg  -pkg-config -icu -gui -qt-xkbcommon -qt-pcre \
+	-lrt  -ldl -lpthread -lresolv -lglapi -nomake examples -strip -no-pch -no-eglfs \
+	-no-directfb -no-linuxfb -no-mirclient -qpa xcb \
+	${LDFLAGS} ${CFLAGS}
+
+	#-L/kanapi_packages/gstreamer-0.10.36/lib  \
+#    -lgstreamer-0.10  \
+#    ${GST_TAG_L} ${GST_HDR}
+}
+
+pkg_install() {
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+}
+
+pkg_check() {
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+	${PKG_CONFIG} --cflags ${LIB_DEPENDS}
+	echo "CFLAGS=${CFLAGS}"
+	echo "LDFLAGS=${LDFLAGS}"
+
+	if [ "`uname -m`" = "x86_64" ]
+	then 
+		NEW_CFLAGS=`echo "${CFLAGS}" | sed "s/-fPIC//"`
+	export CFLAGS="${NEW_CFLAGS}"
+	fi
+	echo "CFLAGS=${CFLAGS}"
+}
+

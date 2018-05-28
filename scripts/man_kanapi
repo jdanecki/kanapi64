@@ -1,0 +1,5 @@
+#!/bin/bash
+
+nroff -c -mandoc -Tlatin1 $1 | less
+
+

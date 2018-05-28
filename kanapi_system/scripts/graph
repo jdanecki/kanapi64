@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+then
+	echo "package name missing"
+	echo "run: $0 package_name"
+else
+	unset LANG
+	unset LC_ALL
+	make -Bnd $1 ACTION=download V=1 | make2graph -r | dot -Tpdf -o $1.pdf
+	evince $1.pdf
+fi
+

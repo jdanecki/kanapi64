@@ -1,0 +1,4 @@
+#!/bin/bash
+
+readlink `which $1`
+

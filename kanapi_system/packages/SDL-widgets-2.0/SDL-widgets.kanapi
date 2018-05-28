@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=SDL-widgets
+VER=2.0
+URL="http://members.chello.nl/w.boeke/SDL-widgets"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS="sdl SDL_gfx SDL_ttf"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} "
+export CFLAGS="${CFLAGS} -std=c++0x -Wall -Wuninitialized -Wshadow -Wno-non-virtual-dtor -Wno-delete-non-virtual-dtor -Wno-multichar -fmax-errors=5"
+
+pkg_configure() {
+	local_copy
+	FONTPATH=${KANAPI_BASE}/freefont-ttf-${freefont_ttf_ver}/FreeSans.ttf
+	FONTPATH_MONO=${KANAPI_BASE}/freefont-ttf-${freefont_ttf_ver}/FreeMonoBold.ttf
+	echo "const char* FONTPATH=\"$FONTPATH\";" > config.h
+	echo "const char* FONTPATH_MONO=\"$FONTPATH_MONO\";" >> config.h
+}
+
+pkg_build() {
+	cd build; 	${KANAPI_CXX_COMPILER} ${CFLAGS} testsw.cpp sdl-widgets.cpp -o testsw ${LDFLAGS} 
+#	cd make-waves; ${KANAPI_CXX_COMPILER} ${CFLAGS} -I.. dump-wave.cpp filter-test.cpp make-waves.cpp ../sdl-widgets.cpp -o make-waves ${LDFLAGS} ; cd ..
+	cd hello; ${KANAPI_CXX_COMPILER} ${CFLAGS} -I.. hello.cpp ../sdl-widgets.cpp -o hello ${LDFLAGS} ; cd ..
+	cd bouncy-tune; ${KANAPI_CXX_COMPILER} ${CFLAGS} -I.. dump-wave.cpp bouncy-tune.cpp ../sdl-widgets.cpp -o bouncy-tune ${LDFLAGS} ; cd ..
+}
+
+pkg_install() {
+	echo "nothing to do"
+}
+

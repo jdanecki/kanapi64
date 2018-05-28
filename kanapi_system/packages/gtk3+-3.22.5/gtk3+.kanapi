@@ -1,0 +1,84 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gtk3+
+VER=3.22.5
+URL="http://ftp.acc.umu.se/pub/gnome/sources/gtk+/3.22"
+EXT=tar.xz
+PATCH_FILE=0003-disable-atk-bridge
+#build depends on
+
+LIB_DEPENDS="glib-2.0 xi pango cairo-xlib xcb xau gthread-2.0 libffi ice expat pixman-1 fontconfig freetype2 libpng xcb-shm xcb-render xrender zlib pangoft2 harfbuzz"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lpthread -lm -lrt"
+if [ -n "${PKG_CONFIG}" ]
+then
+	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir  cairo-xlib`"
+fi
+
+pkg_download() {
+	PACKAGE_PATH=gtk+-${VER}.${EXT}
+
+	pkg_curl
+}
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		pkg_tar_xz
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+	${LN_SNF} gtk+-${VER} ${PACKAGE_SRCDIR}
+}
+
+pkg_configure_target() {	
+	local_copy
+	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/${PATCH_FILE}.patch
+	cat configure | sed "s/ atk-bridge-2.0//" > configure.tmp
+	mv configure.tmp configure; chmod +x configure
+	./configure --prefix=$PREFIX  
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=truE
+}
+
+pkg_install() {
+	cd build
+	if [ "${KANAPI_TARGET}" = "arm" ]
+	then
+		cp gtk/gtk-update-icon-cache gtk/gtk-update-icon-cache.arm
+		cp -f ${KANAPI_HOST_BASE}/../bin/gtk-update-icon-cache gtk
+	fi
+	pkg_install_pc_all
+	if [ "${KANAPI_TARGET}" = "arm" ]
+	then
+		cp -f gtk/gtk-update-icon-cache.arm ${PREFIX}/bin/gtk-update-icon-cache
+	fi
+	pkg_install_bin_all
+	pkg_install_libs
+	pkg_install_schemas
+
+}
+

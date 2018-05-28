@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=icon-naming-utils
+VER=0.8.90
+URL="http://tango.freedesktop.org/releases"
+EXT=tar.bz2
+#build depends on
+. ../settings
+
+export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}:${KANAPI_BASE}/XML-NamespaceSupport-${XML_NamespaceSupport_ver}/lib/site_perl/${perl_ver}:${KANAPI_BASE}/XML-SAX-Base-${XML_SAX_Base_ver}/lib/site_perl/${perl_ver}:${KANAPI_BASE}/XML-SAX-${XML_SAX_ver}/lib/site_perl/${perl_ver}:${KANAPI_BASE}/XML-SAX-Expat-${XML_SAX_Expat_ver}/lib/site_perl/${perl_ver}:${KANAPI_BASE}/XML-Simple-${XML_Simple_ver}/lib/site_perl/${perl_ver}"
+
+pkg_install() {
+	pkg_install_pc_share
+}
+

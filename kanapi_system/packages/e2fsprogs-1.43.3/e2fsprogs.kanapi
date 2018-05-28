@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=e2fsprogs
+VER=1.43.3
+URL="https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v1.43.3"
+EXT=tar.xz
+#build depends on
+. ../settings
+
+export LDFLAGS="-lpthread -ldl"
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-elf-shlibs --disable-nls
+}
+
+pkg_build() {
+	MAKE_JOBS=1
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+pkg_install() {
+	${MAKE} -j ${MAKE_JOBS} install &&  ${MAKE} -j ${MAKE_JOBS} install-libs
+	if [ "$?" ! = "0" ] ; then exit 1 ; fi
+	for i in ${PREFIX}/lib/pkgconfig/*
+	do
+		if [ -f $i ]
+		then
+			${LN_SF} $i ${PKG_CONFIG_DIR}/`basename $i`
+		fi
+	done
+	pkg_update_include && pkg_install_bin_all && pkg_install_sbin_all && pkg_install_libs && \
+	rm -rf ${PREFIX}/share/{man,info}
+}
+
+pkg_check() {
+	echo "CFLAGS=${CFLAGS}"
+}

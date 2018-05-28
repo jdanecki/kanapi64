@@ -1,0 +1,121 @@
+#!/bin/bash
+#
+#  Copyright (c) 2012-2015 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+ARCH=`uname -m`
+KERNEL=`uname -r`
+export LANG=pl_PL.UTF-8
+export LC_ALL=pl_PL.UTF-8
+export EDITOR=vim
+
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devpts devpts /dev/pts
+mount -t debugfs debugs /sys/kernel/debug
+
+#mount -t ext4 /dev/sdb2 -o noatime /kanapi_packages
+#grep kanapi_packages /proc/mounts
+#if [ $? != 0 ]
+#then
+mount -t ext4 /dev/sda2 -o noatime,commit=60 /kanapi_packages
+#fi
+
+grep kanapi_packages /proc/mounts
+if [ $? != 0 ]
+then
+	echo "#######################################"
+	echo "####   Nie moge wystartowac KaNaPi ####"
+	echo "#######################################"
+	echo "#    Napisz o tym pod adres:          #"
+	echo "#   jacek.m.danecki@gmail.com         #"
+	echo "#######################################"
+	exec /bin/bash
+fi
+
+ln -sfn /kanapi_packages/bin /bin
+rm -rf /root
+
+export USER=kanapi
+export HOME=/kanapi_packages/config/current
+export XDG_CONFIG_HOME=${HOME}/.config
+export XDG_CACHE_HOME=${HOME}/.cache
+export XDG_DATA_HOME=${HOME}/.local
+export XDG_RUNTIME_DIR=${HOME}/.cache
+export LD_LIBRARY_PATH=/kanapi_packages/libs
+#export BINUTILS_PREFIX="/kanapi_packages/binutils-2.22.51.20120122"
+#export GCC_PREFIX="/kanapi_packages/gcc-4.7.1-a"
+#export PATH=$GCC_PREFIX/bin:$BINUTILS_PREFIX/bin:
+if [ "${ARCH}" = "x86_64" ]
+then
+	export PATH=.:/bin64:/bin
+	BINDIR=/bin64
+	KANAPI_BASE=/kanapi_packages_x86_64
+else
+	export PATH=.:/bin
+	BINDIR=/bin
+	KANAPI_BASE=/kanapi_packages
+fi
+echo "czekam na dysk"
+sleep 1
+/bin/disks
+
+dmesg -n 4
+#depmod -a
+
+ifconfig lo up
+#/bin/bash
+
+$KANAPI_BASE/udev-175/libexec/udevd --daemon
+udevadm trigger
+udevadm settle
+#lsmod
+rm -f /kanapi_packages/dbus-1.6.8/var/run/dbus/pid
+dbus-daemon --system
+alsactl init
+#alsactl restore -f  /t100_B.state
+
+/kanapi_packages/config/network
+openvt
+openvt
+/bin/sshd
+#dmesg | grep tsc
+
+echo "###########################################################"
+echo "#                                                         #"
+echo "#                                                         #"
+echo "#                       Witam w KaNaPi dla Lenovo         #"
+echo "                        Arch: ${ARCH}                      "
+echo "                        Kernel: ${KERNEL}                  "
+echo "###########################################################"
+
+${BINDIR}/bash
+#kanapi
+
+echo "##################################################"
+echo "###       A co chcesz teraz zrobic?            ###"
+echo "###                                            ###"
+echo "### kanapi - aby uruchomic KaNaPi              ###"
+echo "### spij   - aby uspic komputer                ###"
+echo "### koniec - aby wylaczyc komputer             ###"
+echo "##################################################"
+
+while true
+do
+	/bin/bash
+done
+
+

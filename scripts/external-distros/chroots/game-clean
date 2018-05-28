@@ -1,0 +1,38 @@
+#!/bin/bash
+
+if [ -z "$1" ] ; then exit 2 ; fi
+
+pushd /kanapi_external/binary-distros/$1-mount > /dev/null
+for dir in proc sys dev/pts dev tmp
+do
+	d=`pwd`/$dir 
+	grep $d /proc/mounts > /dev/null
+	if [ "$?" = "0" ]
+	then
+		umount $d
+		if [ "$?" != "0" ]
+		then
+			pr=`fuser -m $d`
+			echo "processes: $pr"
+			for i in $pr 
+			do
+				ps ax | grep $i
+			done
+		fi
+	fi
+done
+popd > /dev/null
+grep /kanapi_external/binary-distros/$1-mount  /proc/mounts > /dev/null
+if [ "$?" = "0" ]
+then
+	umount /kanapi_external/binary-distros/$1-mount
+		if [ "$?" != "0" ]
+		then
+			pr=`fuser -m /kanapi_external/binary-distros/$1-mount`
+			echo "processes: $pr"
+			for i in $pr 
+			do
+				ps ax | grep $i
+			done
+		fi
+fi

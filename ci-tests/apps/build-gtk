@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ "${SHIPPABLE}" = "true" -o  "${TRAVIS}" = "true" ]
+then
+	case $1 in
+	job1) docker build -f Dockerfile-gtk-travis1 -m 4g -t kanapi-apps-gtk:ci1 . ;;
+	job2) docker build -f Dockerfile-gtk-travis2 -m 4g -t kanapi-apps-gtk:ci2 . ;;
+	job3) docker build -f Dockerfile-gtk-travis3 -m 4g -t kanapi-apps-gtk:ci3 . ;;
+	esac
+else
+	docker build -f Dockerfile-gtk -m 4g -t kanapi-apps-gtk:ci .
+fi
+

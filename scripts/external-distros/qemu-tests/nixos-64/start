@@ -1,0 +1,3 @@
+modprobe kvm-intel
+qemu-system-x86_64 -enable-kvm -hda nixos.img -m 2048
+

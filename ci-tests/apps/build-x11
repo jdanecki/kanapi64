@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -f Dockerfile-x11 -m 4g -t kanapi-apps-x11:ci .
+

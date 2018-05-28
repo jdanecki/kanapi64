@@ -1,0 +1,11 @@
+#/bin/bash
+
+case "$1" in
+-is) 
+	echo KaNaPi
+	;;
+-i) 
+	echo Distributor ID:	KaNaPi
+	;;
+esac
+

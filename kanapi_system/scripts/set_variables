@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export PATH=`pwd`/bin:$PATH
+
+if [ -n "${LD_LIBRARY_PATH}" ]
+then
+    export LD_LIBRARY_PATH=`pwd`/lib:${LD_LIBRARY_PATH}
+else
+    export LD_LIBRARY_PATH=`pwd`/lib
+fi

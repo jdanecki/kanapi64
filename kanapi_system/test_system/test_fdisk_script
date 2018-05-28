@@ -1,0 +1,6 @@
+losetup -d /dev/loop0
+dd if=/dev/zero of=kanapi_image.x86_64 bs=4096 count=50000
+losetup /dev/loop0 kanapi_image.x86_64
+./fdisk.script | fdisk /dev/loop0
+losetup -d /dev/loop0
+

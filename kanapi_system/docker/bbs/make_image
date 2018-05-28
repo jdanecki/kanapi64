@@ -1,0 +1,21 @@
+#!/bin/bash
+
+USE_LOCAL=1
+
+. version
+
+if [ ! -d kanapi ] 
+then 
+	if [ "${USE_LOCAL}" = "1" ] 
+	then 
+		git clone ../../../../kanapi kanapi
+	else
+		git clone https://github.com/jdanecki/kanapi.git kanapi
+	fi
+else
+	pushd kanapi
+	git pull
+	popd
+fi
+cat Dockerfile.template | sed "s/BASE_IMAGE/${BASE_IMAGE}/" > Dockerfile
+docker build -t kanapi-${NAME}:${VER} . && rm -rf kanapi

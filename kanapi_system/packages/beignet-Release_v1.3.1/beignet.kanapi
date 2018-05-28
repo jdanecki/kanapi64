@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=beignet
+VER=Release_v1.3.1
+URL="git://anongit.freedesktop.org"
+EXT=
+#build depends on
+LIB_DEPENDS="pciaccess"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lm"
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+	pkg_git_clone
+}
+
+pkg_prepare() {
+	echo "nothing to do"
+}
+
+pkg_configure() {
+	local_clone
+	 cmake . -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+        -DLLVM_CONFIG_EXECUTABLE=${KANAPI_BASE}/llvm-${llvm_ver}/bin/llvm-config \
+        -DCMAKE_BUILD_TYPE=Release -DOCLIcd_INCLUDE_PATH=${KANAPI_BASE}/ocl-icd-${ocl_icd_ver}/include \
+		-DENABLE_OPENCL_20=OFF
+}
+
+pkg_build() {
+	cd build
+#	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true utests utest_run
+}
+
+pkg_install() {
+	cd build
+	pkg_install_make
+}
+

@@ -1,0 +1,3 @@
+modprobe kvm-intel
+qemu-system-x86_64 -enable-kvm -hda debian.img -m 512 -cdrom debian-8.7.1-amd64-netinst.iso -boot d
+

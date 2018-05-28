@@ -1,0 +1,5 @@
+VER=test
+NAME=cli
+BASE_IMAGE=cli:12
+SBS_BUILD=6
+

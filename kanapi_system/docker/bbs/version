@@ -1,0 +1,3 @@
+VER=0.10.3
+NAME=bbs
+BASE_IMAGE=sbs:0.10.6

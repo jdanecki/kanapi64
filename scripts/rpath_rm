@@ -1,0 +1,12 @@
+#!/bin/bash
+
+for i in *
+do
+	chrpath -l $i  > /dev/null 2>&1
+	if [ $? = 0 ]
+	then
+		echo "$i contains rpath, removing..."
+		chrpath -d $i
+	fi
+done
+

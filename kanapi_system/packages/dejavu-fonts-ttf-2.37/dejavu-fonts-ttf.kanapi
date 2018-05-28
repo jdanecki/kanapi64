@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=dejavu-fonts-ttf
+VER=2.37
+URL="SF"
+EXT=tar.bz2
+SF_URL="dejavu/dejavu/${VER}/${PACKAGE_NAME}-${VER}.${EXT}"
+#build depends on
+. ../settings
+
+pkg_configure() {
+	rm -rf build
+	mkdir build
+	cp -arv ${PACKAGE_SRCDIR}/ttf build
+	cp -arv ${PACKAGE_SRCDIR}/fontconfig build
+}
+
+pkg_build() {
+	echo "nothing todo"
+}
+
+pkg_install() {
+	mkdir -p ${PREFIX}
+	cp -arv build/ttf ${PREFIX}
+	cp -arv build/fontconfig ${PREFIX}
+
+	cd ${PREFIX}/ttf
+	mkfontscale
+	mkfontdir
+	ln -svf ${PREFIX}/ttf ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/share/fonts
+	ln -svf ${PREFIX}/fontconfig/* ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/etc/fonts/conf.d
+
+	export XDG_DATA_HOME=${KANAPI_HOME}/.local
+	fc-cache -v
+}
+
+pkg_check() {
+	echo ${SF_URL}
+}
+

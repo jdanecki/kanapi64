@@ -1,0 +1,119 @@
+DIR_NAME=$@-$($(@)_ver)
+check_dir=if [ ! -d  $(1) ]; then mkdir $(1) ; ln -svf ../../packages/$(1)/$(2).kanapi $(1); fi
+DATE_RULE=/bin/date > $@
+
+target_package=$(firstword $(shell echo  $(subst _,\ , $@)))
+target_p_ver=$(lastword $(shell echo  $(subst _,\ , $@)))
+target_version=$($(addsuffix _ver, $(target_package)$(target_p_ver)))
+DIR_NAME_VER=$(target_package)-$(target_version)
+
+target_run=make -f ../Makefile -C $(1) kanapi_$(ACTION) PKG=$2 VERBOSE=$(VERBOSE); \
+if [ "$$?" = "0" ] ; then if [ "$$REMOVE_DURING_INSTALL" = "1" -a "$(ACTION)" = "install" ]; then echo "clearing in $(1)"; rm -rf $(1) ; fi ; else false; fi
+
+ifeq ($(ACTION),)
+RUN_TARGET=make kanapi_help
+RUN_TARGET_VER=make kanapi_help
+else
+RUN_TARGET=$(call check_dir,$(DIR_NAME),$@); $(call target_run,$(DIR_NAME),$@)
+RUN_TARGET_VER=$(call check_dir,$(DIR_NAME_VER),$(target_package)); $(call target_run,$(DIR_NAME_VER),$(target_package))
+endif
+
+kanapi_download:
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:start:$(PKG)_download" ; fi
+	@PKG_COLOR=$(colorBoldMagenta) pkg_kanapi $(PKG).kanapi download $(VERBOSE)
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:end:$(PKG)_download" ; fi
+	$(call DATE_RULE)
+
+kanapi_redownload:
+	@PKG_COLOR=$(colorBoldMagenta) pkg_kanapi $(PKG).kanapi redownload $(VERBOSE)
+
+kanapi_prepare: kanapi_download
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:start:$(PKG)_prepare" ; fi
+	@pkg_kanapi $(PKG).kanapi prepare $(VERBOSE)
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:end:$(PKG)_prepare" ; fi
+	$(call DATE_RULE)
+
+kanapi_reprepare: kanapi_download
+	@pkg_kanapi $(PKG).kanapi reprepare $(VERBOSE)
+
+kanapi_configure: kanapi_prepare
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:start:$(PKG)_configure" ; fi
+	@PKG_COLOR=$(colorBrown) pkg_kanapi $(PKG).kanapi configure $(VERBOSE)
+	@#; if [ "$$?" != "0" ] ; then find . -name config.log -exec cat {} \; ; false; fi
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:end:$(PKG)_configure" ; fi
+	$(call DATE_RULE)
+
+kanapi_build: kanapi_configure
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:start:$(PKG)_build" ; fi
+	@PKG_COLOR=$(colorBoldGreen) pkg_kanapi $(PKG).kanapi build $(VERBOSE)
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:end:$(PKG)_build" ; fi
+	$(call DATE_RULE)
+
+kanapi_rebuild_install:
+	@PKG_COLOR=$(colorBoldGreen) pkg_kanapi $(PKG).kanapi rebuild $(VERBOSE)
+	@PKG_COLOR=$(colorBoldBlue)	pkg_kanapi $(PKG).kanapi install $(VERBOSE)
+	@pkg_kanapi $(PKG).kanapi update_meta $(VERBOSE)
+
+kanapi_install: kanapi_build
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:start:$(PKG)_install" ; fi
+	@PKG_COLOR=$(colorBoldBlue) pkg_kanapi $(PKG).kanapi install $(VERBOSE) 
+	@pkg_kanapi $(PKG).kanapi verify $(VERBOSE)
+	@if [ "$${TRAVIS}" = "true" ] ; then echo "travis_fold:end:$(PKG)_install" ; fi
+	@pkg_kanapi $(PKG).kanapi update_meta $(VERBOSE)
+	@if [ "$${CI}" = "true" ] ; then df -h / ; fi
+
+kanapi_reinstall:
+	@PKG_COLOR=$(colorBoldBlue) pkg_kanapi $(PKG).kanapi install $(VERBOSE) 
+	@pkg_kanapi $(PKG).kanapi verify $(VERBOSE)
+	@pkg_kanapi $(PKG).kanapi update_meta $(VERBOSE)
+
+kanapi_uninstall:
+	@pkg_kanapi $(PKG).kanapi uninstall $(VERBOSE)
+
+kanapi_clean:
+	@pkg_kanapi $(PKG).kanapi clean $(VERBOSE)
+
+kanapi_test:
+	@pkg_kanapi $(PKG).kanapi test $(VERBOSE)
+
+kanapi_check:
+	@pkg_kanapi $(PKG).kanapi check $(VERBOSE)
+
+kanapi_verify:
+	@pkg_kanapi $(PKG).kanapi verify $(VERBOSE)
+
+kanapi_reverify:
+	@pkg_kanapi $(PKG).kanapi verify $(VERBOSE)
+
+kanapi_version:
+	@pkg_kanapi $(PKG).kanapi version $(VERBOSE)
+
+kanapi_help:
+	@echo "**********   Help  **********"
+	@echo "run: make package ACTION=action"
+	@echo "where action is one from:"
+	@echo "download    - download sources"
+	@echo "prepare     - uncompress sources"
+	@echo "reprepare   - re-uncompress sources"
+	@echo "configure   - configure package/packages"
+	@echo "build       - build package/packages"
+	@echo "install     - install package/packages"
+	@echo "reconfigure - re-configure package/packages"
+	@echo "rebuild     - re-build package/packages"
+	@echo "reinstall   - re-install package/packages"
+
+kanapi_update_bin:
+	@pkg_kanapi $(PKG).kanapi install_bin_all $(VERBOSE)
+	@pkg_kanapi $(PKG).kanapi install_sbin_all $(VERBOSE)
+	@pkg_kanapi $(PKG).kanapi install_usr_bin_all $(VERBOSE)
+
+kanapi_update_libs:
+	@pkg_kanapi $(PKG).kanapi install_libs $(VERBOSE)
+
+kanapi_update_pc:
+	@pkg_kanapi $(PKG).kanapi install_pc_share_all_only $(VERBOSE)
+	@pkg_kanapi $(PKG).kanapi install_pc_all_only $(VERBOSE)
+
+kanapi_update_meta:
+	@pkg_kanapi $(PKG).kanapi update_meta $(VERBOSE)
+

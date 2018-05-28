@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gsettings-desktop-schemas
+VER=3.22.0
+URL="http://ftp.gnome.org/pub/GNOME/sources/gsettings-desktop-schemas/3.22"
+EXT=tar.xz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+if [ "${KANAPI_TARGET}" = "arm" ]
+then
+	if [ -d "${KANAPI_HOST_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}" ]
+	then
+		export PERL5LIB="${KANAPI_HOST_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+		export PATH=${KANAPI_HOST_BASE}/perl-${perl_ver}/bin:${PATH}
+	fi
+else
+	export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+fi
+
+
+pkg_configure() {	
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+		--enable-introspection=no
+}
+
+update_bashrc() {
+	grep GSETTINGS_SCHEMA_DIR ${HOME}/.bashrc
+	if [ "$?" = "0" ]
+	then
+		 sed -i "s@gsettings-desktop-schemas-.*/share/@gsettings-desktop-schemas-${VER}/share/@" ${HOME}/.bashrc
+	else
+		echo "export GSETTINGS_SCHEMA_DIR=${PREFIX}/share/glib-2.0/schemas" >> ${HOME}/.bashrc
+	fi
+}
+
+pkg_install() {
+	pkg_install_pc_share_all && pkg_install_bin_all && update_bashrc
+}
+

@@ -1,0 +1,4 @@
+VER=0.10.1
+NAME=cli
+BASE_IMAGE=bbs:0.10.3
+

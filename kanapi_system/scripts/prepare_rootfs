@@ -1,0 +1,36 @@
+#!/bin/bash
+
+ARCH=`uname -m`
+VER=0.5
+BASE=/kanapi_${VER}
+
+mkdir -p ${BASE}/${ARCH}/bin
+mkdir -p ${BASE}/${ARCH}/lib
+
+for dir in ${BASE}/${ARCH}/cross/${ARCH}/*
+do
+	for file in $dir/bin/*
+	do
+		if [ -e ${file} ]; then ln -sv ${file} ${BASE}/${ARCH}/bin ; fi
+	done
+done
+
+for dir in gmp* mpc* mpfr*
+do
+	ln -sv ${BASE}/${ARCH}/cross/${ARCH}/$dir/lib/* ${BASE}/${ARCH}/lib
+done
+
+for dir in ${BASE}/${ARCH}/packages/*
+do
+	for file in ${dir}/bin/*
+	do
+		if [ -e ${file} ]; then ln -sv ${file} ${BASE}/${ARCH}/bin; fi
+	done
+	for file in ${dir}/lib/*
+	do
+		if [ -e ${file} ]; then ln -sv ${file} ${BASE}/${ARCH}/lib; fi
+	done
+done
+
+ln -sv ${BASE}/${ARCH}/cross/${ARCH}/glibc*/lib/libm.so.6 ${BASE}/${ARCH}/lib
+

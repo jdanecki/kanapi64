@@ -1,0 +1,3 @@
+VER=5
+NAME=qt
+BASE_IMAGE=x11-lib

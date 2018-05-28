@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=git
+VER=2.16.1
+URL="https://www.kernel.org/pub/software/scm/git"
+EXT=tar.xz
+
+LIB_DEPENDS="zlib libcurl openssl libssh2"
+
+. ../settings
+
+export CFLAGS="${CFLAGS} ${GPG_ERROR_CFLAGS} ${LIBGCRYPT_CFLAGS}"
+export LDFLAGS="${LDFLAGS} ${GPG_ERROR_LDFLAGS} ${LIBGCRYPT_LDFLAGS}"
+export NO_INSTALL_HARDLINKS=1
+
+pkg_configure() {
+	local_copy
+	PERL=${KANAPI_BASE}/perl-${perl_ver}/bin/perl
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  ac_cv_fread_reads_directories=no \
+	ac_cv_snprintf_returns_bogus=no --with-curl --without-expat ac_cv_lib_expat_XML_ParserCreate=no \
+	--with-perl=${PERL}
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j 1 MAKEINFO=true V=1
+}
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true && pkg_install_bin_all && \
+	if [ -d ${PREFIX}/share/man ]; then rm -rf ${PREFIX}/share/man ; fi
+}
+
+pkg_check() {
+	echo "CFLAGS=${CFLAGS}"
+	${PKG_CONFIG} --cflags ${LIB_DEPENDS}
+	ls -l `which perl`
+}

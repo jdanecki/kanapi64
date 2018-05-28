@@ -1,0 +1,10 @@
+--- llvm-3.3.src/lib/Support/Unix/Memory.inc	2016-11-29 11:36:55.588902021 +0100
++++ llvm-3.3.src-patch/lib/Support/Unix/Memory.inc	2016-11-29 11:36:55.594902021 +0100
+@@ -33,6 +33,7 @@
+ #endif
+ 
+ extern "C" void sys_icache_invalidate(const void *Addr, size_t len);
++extern "C" void __clear_cache (char *, char *);
+ 
+ namespace {
+ 

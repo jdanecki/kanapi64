@@ -1,0 +1,44 @@
+#!/bin/bash
+
+export LD_PRELOAD=
+export LD_LIBRARY_PATH=
+
+export PATH=/bin
+
+export HOME=/root
+export XDG_CONFIG_HOME=${HOME}/.config
+export XDG_CACHE_HOME=${HOME}/.cache
+export XDG_DATA_HOME=${HOME}/.local
+export XDG_RUNTIME_DIR=${HOME}/.cache
+
+mount -B /kanapi_external/binary-distros/$1 /kanapi_external/binary-distros/$1-mount
+cd /kanapi_external/binary-distros/$1-mount
+#cp -a /dev/snd/* dev/snd
+mount --bind /dev dev
+mount --bind /dev/pts dev/pts
+mount --bind /tmp tmp
+mount --bind /proc proc
+mount --bind /sys sys
+chroot . ./_game_start $2 $3 $4 $5 $6 $7
+
+#for i in `pidof udevd dbus-daemon systemd-udevd dbus-launch` 
+for i in `pidof dbus-daemon systemd-udevd dbus-launch jackd` 
+do 
+	root=`basename  \`readlink  /proc/$i/root\``
+	echo "$i: root=$root"
+	if [ $root == "$1-mount" ]
+	then
+		echo "kill $i"
+		kill -9 $i
+	fi
+done
+sleep 1
+for dir in proc sys dev/pts dev tmp
+do
+	umount $dir
+done
+cd /
+umount /kanapi_external/binary-distros/$1-mount
+mount
+#umount dev/shm
+

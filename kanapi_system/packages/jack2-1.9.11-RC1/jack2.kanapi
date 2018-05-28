@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=jack2
+VER=1.9.11-RC1
+URL="https://github.com/jackaudio/jack2/releases/download/v1.9.11-RC1"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS="ncurses"
+
+. ../settings
+
+export LDFLAGS="-lreadline ${LDFLAGS} -lstdc++ -L${KANAPI_BASE}/readline-${readline_ver}/lib -lm"
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/readline-${readline_ver}/include"
+
+pkg_configure() {
+	local_copy
+	python waf configure --prefix=${PREFIX} --alsa --readline=yes
+}
+
+pkg_build() {
+	cd  build
+	python waf build
+}
+
+pkg_install() {
+	cd build
+	python waf install && pkg_install_bin_all && pkg_install_libs && pkg_install_pc_all_only
+}
+

@@ -1,0 +1,17 @@
+export LD_PRELOAD=
+export LD_LIBRARY_PATH=
+
+export PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+export HOME=/root
+export XDG_CONFIG_HOME=${HOME}/.config
+export XDG_CACHE_HOME=${HOME}/.cache
+export XDG_DATA_HOME=${HOME}/.local
+export XDG_RUNTIME_DIR=${HOME}/.cache
+
+if [ -z "$1" ]
+then
+    chroot /kanapi_external/binary-distros/`basename $0` /bin/bash 
+else
+    chroot /kanapi_external/binary-distros/`basename $0` $1 $2 $3 $4 $5
+fi

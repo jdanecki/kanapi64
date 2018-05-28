@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=XML-SAX-Base
+VER=1.08
+URL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM"
+EXT=tar.gz
+#build depends on
+. ../settings
+
+pkg_configure() {
+	local_copy
+	perl Makefile.PL PREFIX=${PREFIX}
+}
+
+pkg_build() {
+	pkg_install_local
+}
+
+pkg_install() {
+	export MAKE_JOBS=1
+	pkg_install_local
+}
+

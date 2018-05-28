@@ -1,0 +1,112 @@
+Beta - current phase
+====================
+
+v0.9
+====
+
+* Integration with CI systems: Travis, Shippable, CircleCI, Codeship, Gitlab, SemaphoreCI
+* Integration with docker hub
+* Dropped support for FBS, SBS, KBS
+* Focus on x86_64 architecture only
+* Split packages into groups: SBS, BBS, CLI, X11, GUI, Apps
+* Builds in docker containers
+* Native support for sound frameworks: jack, pulseaudio, and others
+* Native docker support
+* GUI: SDL, SDL2, wxWidgets, fltk
+* Build improvements
+* New music, audio, media applications
+* New packages for game development
+* New versions of selected packages
+* Basic OpenCL support for Intel GPU
+* i3 as main window manager
+* Kernel 4.14.2
+* New network tools
+* Support to run other distributions in chroot: arch, crux, debian, exherbo,
+  fedora, gentoo, gobolinux, lunar, mint, nutyx, opensuse, void, kxstudio
+* Support to run other distributions in qemu: debian, fedora, gobolinux, lunar 
+  nixos, nutyx, pisilinux, quix, rancher-os, slax, solus
+
+v0.8
+====
+
+* GUI support added: Xorg, GTK2, GTK3, QT5
+* About 100 new packages added and about 500 new commits
+* SDL switched to Xorg mode as default
+* Package manager added
+* Kernel updated to 4.9
+* Alsa support added
+* New X window managers: vtwm, ratpoison, i3
+* Build system refactored
+* CI testing using Travis and Codeship, new repository for CI testing
+* Development of KBS was stopped, and KaNaPi is being continued as KS only
+
+v0.7
+====
+
+Changes in KS (KaNaPi System)
+
+* Refactored build system, scripts for packages use pkg-config (even for cross-compilation)
+* Better build machine utilization, number of make's jobs equals number of CPU's 
+* Additional tests for packages
+* Fixes for cross-compilation on different Linux distributions
+* Create pseudo filesystem to check during installation
+* New scripts to create images for test under Qemu for all supported architectures: i686, x86_64 and arm
+
+v0.6
+====
+
+Changes in KBS (KaNaPi Build System)
+
+* gimp 2.8.18
+* binutils 2.27
+* qt-5.7.0
+* cmake 3.6.2
+* llvm 3.9.0
+* qtcreator 4.2.82
+
+Changes in KS (KaNaPi System)
+
+* Refactored and simplified build system
+* Full cross and native gcc compilers 4.8.5 and 4.94
+* gmp 6.1.0
+* mpc 1.0.3
+* mpfr 3.1.5
+* glibc 2.23
+* binutils 2.27
+* Fixes for KaNaPi compilation under Debian, OpenSuSe, Debian, Fedora, Mint 
+* Tests added to check compilers
+* ncurses 6.0.20161029
+* mc 4.8.18 with dependencies
+* vim 8.0
+* make 4.2
+* git 2.10.1
+* openssh 7.3p1 with openssl 
+* SDL 1.2.15 with tests
+* gpm 1.20.7
+
+v0.5
+====
+
+* New build system for i686/x86_64 and arm
+* Automatic build for cross-compilers: binutils, gcc
+* Automatic build for: bash, busybox, cgdb, gdb, gzip, ncurses, readline
+* SDL2 support added to KBS
+
+Alpha goals
+===========
+
+* Recompile selected packages with newer version
+* Remove not used packages
+* Add support for x86_64 architecture
+
+Pre-alpha goals
+===============
+
+* Prepare operating system for children based on Linux kernel and free software for use at home. 
+  System should start from USB stick and work on older machines with limited resources too.
+* Choose set of educational applications and games for children from existing packages and group 
+  them according to the age of child. Projects I've been testing so far contains many applications 
+  with different levels of difficulty.
+* From many of users interfaces XFCE was chosen by children.
+* Prepare framework for creating new applications, so older children can build some new activities.
+

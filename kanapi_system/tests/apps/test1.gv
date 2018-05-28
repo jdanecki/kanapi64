@@ -1,0 +1,7 @@
+digraph G {
+node[fontname="Helvetica"]
+
+	KaNaPi -> test1 
+	KaNaPi[label="KaNaPi http://kanapi.ga"]
+	test1[label="graphviz test"]
+}

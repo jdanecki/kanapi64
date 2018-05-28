@@ -1,0 +1,12 @@
+kanapi_system/x86_64
+kanapi_system/x86_tests
+kanapi_system/test_system
+kanapi_initrd
+kanapi_system/kanapi-apps
+kanapi_system/kanapi-bbs
+kanapi_system/kanapi-cli
+kanapi_system/kanapi-gui
+kanapi_system/kanapi-sbs
+kanapi_system/kanapi-x11
+
+

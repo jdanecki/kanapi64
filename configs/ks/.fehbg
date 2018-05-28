@@ -1,0 +1,2 @@
+#!/bin/sh
+feh  --bg-scale '/kanapi_0.9/x86_64/home/Desktop/desktop.png' 

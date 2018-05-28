@@ -1,0 +1,3 @@
+VER=6
+NAME=cli-lib
+BASE_IMAGE=bbs

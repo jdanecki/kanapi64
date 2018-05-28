@@ -1,0 +1,896 @@
+#set -x
+
+export LANGUAGE="C"
+export LC_ALL="C"
+export LC_MESSAGES="C"
+export LC_COLLATE="C"
+export LC_CTYPE="C"
+export LANG="C"
+
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
+if [ "`id -u`" != "0" ]
+then
+	KANAPI_ROOT="${HOME}/kanapi_${KANAPI_VER}"
+else
+	KANAPI_ROOT="/kanapi_${KANAPI_VER}"
+fi
+KANAPI_BASE=${KANAPI_ROOT}/packages
+KANAPI_HOME=${KANAPI_ROOT}/home
+KANAPI_BIN=${KANAPI_ROOT}/bin
+if [ "${CI}" = "true" ]
+then
+	KANAPI_BUILD_SRC=${HOME}/ci_src
+	alias rm='rm -rf'
+else
+	KANAPI_BUILD_SRC=${HOME}/src
+fi
+USE_WGET=0
+
+##############################################################
+. ${REPO_BASE}/kanapi_system/scripts/config.kanapi
+
+if [ -f ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config ]
+then
+	export KANAPI_PKGCONFIG=${KANAPI_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config
+fi
+
+if [ -x ${KANAPI_BIN}/ccache -a -z "${CI}" ]
+then
+	export USE_CCACHE=1
+fi
+
+if [ "${USE_CCACHE}" = "1" ]
+then
+	export CC="${KANAPI_BASE}/ccache-${ccache_ver}/links/gcc"
+	export KANAPI_C_COMPILER=${CC}
+	if [ -f ${KANAPI_BASE}/glibc-${glibc_ver}/lib/libstdc++.so ]
+	then
+		export CXX="${KANAPI_BASE}/ccache-${ccache_ver}/links/g++"
+		export KANAPI_CXX_COMPILER=${CXX}
+	fi
+fi
+
+export PATH=${KANAPI_BIN}:${PATH}
+
+if [ -z "${KANAPI_C_COMPILER}" ]
+then 
+	KANAPI_C_COMPILER=gcc
+fi
+if [ -z "${KANAPI_CXX_COMPILER}" ]
+then 
+	KANAPI_CXX_COMPILER=g++
+fi
+
+PACKAGE_VER=${PACKAGE_NAME}-${VER}
+PREFIX=${KANAPI_BASE}/${PACKAGE_VER}
+PACKAGE_SRCDIR=${KANAPI_BUILD_SRC}/${PACKAGE_VER}
+PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+STRIP_BINARIES=1
+STRIP_LIBRARIES=1
+
+SF_MIRROR=https://downloads.sourceforge.net/project/kanapi/sources/Packages/mirror
+SH_MIRROR=http://84.38.102.146/~adanecki/kanapi/mirror
+SF_PROJECT=http://downloads.sourceforge.net/project
+GNU_SUNSITE=http://sunsite.icm.edu.pl/pub/gnu
+GNU_MIRROR=http://ftp.gnu.org/pub/gnu
+
+if [ "${URL}" = "SF" ]
+then
+	MIRROR_URL=${SF_PROJECT}
+	PACKAGE_PATH=${SF_URL}
+else
+	if [ "${URL}" = "GNU" ]
+	then
+		MIRROR_URL=${GNU_SUNSITE}
+		PACKAGE_PATH=${PACKAGE_NAME}/${PACKAGE_FILENAME}
+		PACKAGE_LINK_BACKUP=${GNU_MIRROR}
+	else
+		MIRROR_URL=${URL}
+		PACKAGE_PATH=${PACKAGE_FILENAME}
+	fi
+fi
+
+export LIBC_PREFIX="${KANAPI_BASE}/glibc-${glibc_ver}"
+
+export PKG_CONFIG=${KANAPI_PKGCONFIG}
+
+if [ -n "${PKG_CONFIG}" ]
+then
+	export PKG_CONFIG_DIR=${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/pkgconfig
+	if [ -n "${LIB_DEPENDS}" ]
+	then
+		${PKG_CONFIG} --exists ${LIB_DEPENDS}
+		if [ "$?" = "0" ]
+		then
+			export LDFLAGS="`${PKG_CONFIG} --libs ${LIB_DEPENDS}` -ldl"
+			export LD_LIBRARY_PATH=`${PKG_CONFIG} --variable=libdir ${LIB_DEPENDS} | sed "s/ /:/g"`:${LD_LIBRARY_PATH}
+			export CFLAGS=`${PKG_CONFIG} --cflags ${LIB_DEPENDS}`
+		fi
+	fi
+else
+	if [ -d ${KANAPI_BASE}/glib-${glib_ver} ]
+	then
+		export GLIB_CFLAGS="-I${KANAPI_BASE}/glib-${glib_ver}/include -I${KANAPI_BASE}/glib-${glib_ver}/include/glib-2.0 -I${KANAPI_BASE}/glib-${glib_ver}/lib/glib-2.0/include"
+		export GLIB_LIBS="-L${KANAPI_BASE}/glib-${glib_ver}/lib -lglib-2.0 -lgmodule-2.0"
+	fi
+fi
+
+if [ -d ${KANAPI_BASE}/libs ]
+then
+	if [ -n "${LD_LIBRARY_PATH}" ]
+	then
+		export LD_LIBRARY_PATH="${KANAPI_BASE}/libs:${LD_LIBRARY_PATH}"
+	else
+		export LD_LIBRARY_PATH="${KANAPI_BASE}/libs"
+	fi
+fi
+
+if [ -f ${KANAPI_BASE}/ncurses-${ncurses_ver}/bin/ncurses6-config ]
+then
+	NCURSES_CONFIG=${KANAPI_BASE}/ncurses-${ncurses_ver}/bin/ncurses6-config
+	NCURSES_CFLAGS=`${NCURSES_CONFIG} --cflags`
+	NCURSES_LDFLAGS=`${NCURSES_CONFIG} --libs`
+fi
+
+if [ -f ${KANAPI_BASE}/libgpg-error-${libgpg_error_ver}/bin/gpg-error-config ]
+then
+	GPG_ERROR_CONFIG=${KANAPI_BASE}/libgpg-error-${libgpg_error_ver}/bin/gpg-error-config
+	GPG_ERROR_CFLAGS=`${GPG_ERROR_CONFIG} --cflags`
+	GPG_ERROR_LDFLAGS=`${GPG_ERROR_CONFIG} --libs`
+fi
+
+if [ -f ${KANAPI_BASE}/libgcrypt-${libgcrypt_ver}/bin/libgcrypt-config ]
+then
+	LIBGCRYPT_CONFIG=${KANAPI_BASE}/libgcrypt-${libgcrypt_ver}/bin/libgcrypt-config
+	LIBGCRYPT_CFLAGS=`${LIBGCRYPT_CONFIG} --cflags`
+	LIBGCRYPT_LDFLAGS=`${LIBGCRYPT_CONFIG} --libs`
+fi
+
+export CFLAGS="${CFLAGS} -fPIC"
+
+(which grep && which wc) > /dev/null
+if [ "$?" = "0" ]
+then	
+	if [ -r /proc/cpuinfo ] 
+	 then 
+		NR_CPUS=`cat /proc/cpuinfo | grep processor | wc -l` 
+	else
+		NR_CPUS=2
+	fi
+else
+	NR_CPUS=2
+fi
+
+MAKE_JOBS=${NR_CPUS}
+
+if [ "${CI}" = "true" ]
+then
+	REMOVE_DURING_INSTALL=1
+fi
+
+if [ "${SHIPPABLE}" = "true" ]
+then 
+	MAKE_JOBS=2
+	REMOVE_DURING_INSTALL=0
+fi
+
+if [ "${SEMAPHORE}" = "true" ]
+then 
+	MAKE_JOBS=8
+fi
+
+if [ "${CIRCLECI}" = "true" ]
+then 
+	MAKE_JOBS=4
+fi
+
+if [ "x${PKG_VERBOSE}" = "x1" -o "x${PKG_VERBOSE}" = "x3" ]
+then
+	MAKE=make
+	LN_SF="ln -svf"
+	LN_SNF="ln -svnf"
+else
+	MAKE="make -s"
+	LN_SF="ln -sf"
+	LN_SNF="ln -snf"
+fi
+
+local_copy() {
+	rm -rf build 
+	mkdir build
+	cp -ar ${PACKAGE_SRCDIR}/* build
+	find ${PACKAGE_SRCDIR} -maxdepth 1 -name .\* -exec cp -a {} build \; 
+	cd build
+}
+
+go_local_copy() {
+	rm -rf src
+	mkdir -p src/github.com/${PACKAGE_NAME}/${PACKAGE_NAME}
+	cp -ar ${PACKAGE_SRCDIR}/* src/github.com/${PACKAGE_NAME}/${PACKAGE_NAME}
+	find ${PACKAGE_SRCDIR} -maxdepth 1 -name .\* -exec cp -a {}  src/github.com/${PACKAGE_NAME}/${PACKAGE_NAME} \; 
+}
+
+pkg_wget() {
+	if [ -s ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
+	then 
+		echo "$PACKAGE_NAME: already downloaded"
+	else
+		for mirror in ${MIRROR_URL} ${PACKAGE_LINK_BACKUP} ${SF_MIRROR} ${SH_MIRROR}
+		do
+			if [ -n "${mirror}" ]
+			then
+				pkg_download_from_mirror_wget ${mirror}/${PACKAGE_PATH}
+			else
+				continue
+			fi
+			if [ "$?" = 0 ] 
+			then
+				return 0
+			fi
+		done
+		false
+	fi
+}
+
+check_file_type() {
+	FILE=($(file -iL  ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}))
+	if [ "${#FILE[@]}" = "3" ]
+	then
+		MIME=${FILE[1]:0:-1}
+		DOWNLOADED=0
+		echo -n "Checking ${FILE[0]} "
+		case $EXT in
+		bz2) echo -n "bz2 "
+				if [ "${MIME}" = "application/x-bzip2" ] ; then DOWNLOADED=1 ; fi
+				;;
+		tar.bz2) echo -n "tar.bz2 "
+				if [ "${MIME}" = "application/x-bzip2" ] ; then DOWNLOADED=1 ; fi
+				;;
+		src.tar.gz) echo -n "src.tar.gz "
+				if [ "${MIME}" = "application/x-gzip" -o "${MIME}" = "application/gzip" ] ; then DOWNLOADED=1 ; fi
+				;;
+		tar.gz) echo -n "tar.gz "
+				if [ "${MIME}" = "application/x-gzip" -o "${MIME}" = "application/gzip" ] ; then DOWNLOADED=1 ; fi
+				;;
+		tar.xz) echo -n "tar.xz "
+				if [ "${MIME}" = "application/x-xz" ] ; then DOWNLOADED=1 ; fi
+				;;
+		tgz) echo -n "tgz "
+				if [ "${MIME}" = "application/x-gzip" -o "${MIME}" = "application/gzip" ] ; then DOWNLOADED=1 ; fi
+				;;
+		zip) echo -n "zip "
+				if [ "${MIME}" = "application/zip" ] ; then DOWNLOADED=1 ; fi
+				;;
+		*) echo "unknown extension $EXT: ${FILE[1]}"
+			false
+			;;
+		esac
+		if [ "$DOWNLOADED" = "1" ]
+		then 
+			echo " ok"
+			true
+		else
+			echo " Error, got ${MIME}"
+			echo "removing ${FILE[0]:0:-1}"
+			rm -f ${FILE[0]:0:-1}
+			false
+		fi
+	else
+		echo "Error in getting file type: ${FILE}"
+		false
+	fi
+}
+
+pkg_download_from_mirror_curl() {
+	echo "downloading $1"
+	curl --retry 3 -L $1 -o ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+	
+	if [ ! -e ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
+	then 
+		false
+	else
+		check_file_type
+		if [ "$?" = 0 ]
+		then 
+			true
+		else 
+			false
+		fi
+	fi
+}
+
+pkg_download_from_mirror_wget() {
+	echo "downloading $1"
+	wget -t 3 $1 -O ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+	if [ ! -e ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
+	then 
+		false
+	else
+		check_file_type
+		if [ "$?" = 0 ]
+		then 
+			true
+		else 
+			false
+		fi
+	fi
+}
+
+
+pkg_curl() {
+	if [ -s ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
+	then 
+		echo "$PACKAGE_NAME: already downloaded"
+	else		
+		for mirror in ${MIRROR_URL} ${PACKAGE_LINK_BACKUP} ${SF_MIRROR} ${SH_MIRROR}
+		do
+			if [ -n "${mirror}" ]
+			then
+				pkg_download_from_mirror_curl ${mirror}/${PACKAGE_PATH}
+			else
+				continue
+			fi
+			if [ "$?" = 0 ] 
+			then
+				return 0
+			fi
+		done
+		false
+	fi
+}
+
+pkg_download() {
+	if [ "${CI}" = "true" ]
+	then
+			echo "Running under CI, removing sources"
+			rm -rf ${KANAPI_BUILD_SRC}
+			mkdir ${KANAPI_BUILD_SRC}
+	fi
+	if [ "${USE_WGET}" = "1" ]
+	then
+		pkg_wget
+	else
+		pkg_curl
+	fi
+}
+
+pkg_redownload() {
+	if [ "${CI}" = "true" ]
+	then
+		echo "Running under CI, removing sources"
+		rm -rf ${KANAPI_BUILD_SRC}
+		mkdir ${KANAPI_BUILD_SRC}
+	fi
+	if [ -s ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
+	then
+		rm  ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+	fi	
+	pkg_download
+}
+
+
+pkg_git_clone() {
+	if [ -d ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER} ] 
+	then 
+		echo "$PACKAGE_NAME: already downloaded"
+	else
+		echo "cloning from ${URL}/${PACKAGE_NAME}"
+		if [ -n "${EXT}" ]
+		then
+			git clone ${URL}/${PACKAGE_NAME}.${EXT} ${PACKAGE_SRCDIR}
+		else
+			git clone ${URL}/${PACKAGE_NAME} ${PACKAGE_SRCDIR}
+		fi
+	fi
+}
+
+pkg_git_checkout() {
+	cd ${PACKAGE_SRCDIR} && git checkout -f ${VER}
+}
+
+local_clone() {
+	rm -rf build && git clone ${PACKAGE_SRCDIR} build && cd build && git checkout -f ${VER}
+}
+
+pkg_git_submodule_init() {
+	cd ${PACKAGE_SRCDIR}
+	git submodule update --init
+}
+
+pkg_copy() {
+	mkdir ${KANAPI_BUILD_SRC}/${PACKAGE_VER}
+	cp -v ${KANAPI_BUILD_SRC}/${PACKAGE_NAME} ${KANAPI_BUILD_SRC}/${PACKAGE_VER}/${PACKAGE_NAME}
+}
+
+pkg_tar_gz() {
+	 tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
+} 
+
+pkg_tgz() {
+	 tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
+} 
+
+pkg_tar_xz() {
+	 tar -xJf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
+} 
+
+pkg_tar_bz2() {
+	 tar -xjf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
+} 
+
+pkg_zip() {
+	 unzip ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -o -d ${KANAPI_BUILD_SRC}
+} 
+
+pkg_bz2() {
+	mkdir ${KANAPI_BUILD_SRC}/${PACKAGE_VER}
+	bzip2 -d ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -c > ${KANAPI_BUILD_SRC}/${PACKAGE_VER}/${PACKAGE_NAME}
+}
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		echo -n "Preparing ${PACKAGE_FILENAME} ${EXT} "
+		case $EXT in
+		bz2) pkg_bz2 ;;
+		tar.bz2) pkg_tar_bz2 ;;
+		src.tar.gz) pkg_tar_gz ;;
+		tar.gz) pkg_tar_gz ;;
+		tar.xz) pkg_tar_xz ;;
+		tgz) pkg_tgz ;;
+		zip) echo -n "zip "
+				pkg_zip
+				;;
+		*) echo "unknown extension $EXT"
+			false
+			;;
+		esac
+		if [ "$?" = "0" ]
+		then 
+			echo " ok"
+			/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+			true
+		else
+			echo " Error: $?"
+			rm -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+			false
+		fi
+	fi
+}
+
+pkg_reprepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then
+		rm  ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+	pkg_prepare
+}
+
+pkg_version() {
+	echo ${PACKAGE_NAME} ${VER}
+}
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+}
+
+pkg_configure_local() {
+	local_copy
+	./configure --prefix=$PREFIX
+}
+
+pkg_build() {
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+pkg_build_local() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+pkg_update_include() {
+	if [ -z "$DONT_INSTALL_INCLUDE" ]
+	then
+		if [ "${CI}" = "true" ]
+		then
+			update_include ${PREFIX} > /dev/null
+		else
+			update_include ${PREFIX}
+		fi
+	fi
+}
+
+pkg_install_make() {
+	mkdir -p ${PREFIX}
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true && pkg_update_include	
+}
+
+pkg_install() {
+	pkg_install_make
+}	
+
+pkg_install_local() {
+	cd build
+	pkg_install_make
+}	
+
+pkg_install_make_bin_all() {
+	pkg_install_make && pkg_install_bin_all
+}
+
+pkg_install_make_sbin_all() {
+	pkg_install_make && pkg_install_sbin_all
+}
+
+pkg_install_pc() {	
+	pkg_install_make
+	if [ -f ${PREFIX}/lib/pkgconfig/${PACKAGE_NAME}.pc ]
+	then	
+		${LN_SF} ${PREFIX}/lib/pkgconfig/${PACKAGE_NAME}.pc ${PKG_CONFIG_DIR}/${PACKAGE_NAME}.pc
+	fi
+}
+
+pkg_install_pc_share() {	
+	pkg_install_make
+	if [ -f ${PREFIX}/share/pkgconfig/${PACKAGE_NAME}.pc ]
+	then
+		${LN_SF} ${PREFIX}/share/pkgconfig/${PACKAGE_NAME}.pc ${PKG_CONFIG_DIR}/${PACKAGE_NAME}.pc
+	fi
+}
+
+pkg_install_pc_share_all() {
+	pkg_install_make && pkg_install_pc_share_all_only
+}
+
+pkg_install_pc_share_all_only() {
+	for i in ${PREFIX}/share/pkgconfig/*
+	do
+		if [ -f $i ]
+		then
+			${LN_SF} $i ${PKG_CONFIG_DIR}/`basename $i`
+		fi
+	done
+}
+	
+pkg_install_pc_all() {
+	pkg_install_make && pkg_install_pc_all_only
+}
+
+pkg_install_pc_all_only() {
+	for i in ${PREFIX}/lib/pkgconfig/* ${PREFIX}/lib64/pkgconfig/*
+	do
+		if [ -f $i ]
+		then
+			${LN_SF} $i ${PKG_CONFIG_DIR}/`basename $i`
+		fi
+	done
+}
+
+pkg_uninstall() {
+	if [ -d ${PREFIX} ]
+	then	
+		rm -rf ${KANAPI_ROOT}/packages/${PACKAGE_VER}
+	fi
+}
+
+pkg_rebuild() {
+	pkg_configure && pkg_build
+}
+
+pkg_clean() {
+	echo "*** cleaning ${PACKAGE_VER} ***"
+	cd .. ; if [ -d ${PACKAGE_VER} ] ; then rm -rf ${PACKAGE_VER} ; fi
+}
+
+pkg_package() {
+	pkg_download && pkg_prepare && pkg_configure && pkg_build
+}
+
+pkg_update_meta() {
+	if [ -d ${PREFIX} ]
+	then
+		echo "PACKAGE_NAME=${PACKAGE_NAME}" > ${PREFIX}/kanapi.pkg
+		echo "PACKAGE_VER=${VER}" >> ${PREFIX}/kanapi.pkg
+	fi
+}
+
+pkg_strip_binaries() {
+	if [ "${STRIP_BINARIES}" = "1" ]
+	then
+		for b in ${PREFIX}/bin/* ${PREFIX}/usr/bin/* ${PREFIX}/sbin/* ${PREFIX}/usr/sbin/*
+		do
+			if [ -f $b ]
+			then 
+				file -i ${b} | grep application > /dev/null
+				if [ "$?" = "0" ] 
+				then 
+					file ${b} | grep "not stripped"
+					if [ "$?" = "0" ]
+					then
+						echo ${b} | grep strip
+						if [ "$?" = "0" ]
+						then
+							/bin/strip ${b}
+						else
+							strip ${b} 
+						fi
+					fi
+				fi
+			fi
+		done
+	fi
+}
+
+pkg_install_bin() {
+	if [ -f ${PREFIX}/bin/${PACKAGE_NAME} ]
+	then
+		${LN_SF} ${PREFIX}/bin/${PACKAGE_NAME} ${KANAPI_BIN}/${PACKAGE_NAME}
+		pkg_strip_binaries
+	fi
+}
+
+pkg_install_bin_all() {
+	if [ -d ${PREFIX}/bin ]	
+	then
+		if [ ! -d ${KANAPI_BIN} ] ; then mkdir ${KANAPI_BIN} ; fi
+		${LN_SF} ${PREFIX}/bin/* ${KANAPI_BIN}
+		pkg_strip_binaries
+	fi
+}
+
+pkg_install_sbin_all() {
+	if [ -d ${PREFIX}/sbin ]	
+	then
+		if [ ! -d ${KANAPI_BIN} ] ; then mkdir ${KANAPI_BIN} ; fi
+		${LN_SF} ${PREFIX}/sbin/* ${KANAPI_BIN}
+		pkg_strip_binaries
+	fi
+}
+
+pkg_install_usr_bin_all() {
+	if [ -d ${PREFIX}/usr/bin ]	
+	then
+		if [ ! -d ${KANAPI_BIN} ] ; then mkdir ${KANAPI_BIN} ; fi
+		${LN_SF} ${PREFIX}/usr/bin/* ${KANAPI_BIN}
+		pkg_strip_binaries
+	fi
+}
+
+pkg_install_usr_sbin_all() {
+	if [ -d ${PREFIX}/usr/sbin ]	
+	then
+		if [ ! -d ${KANAPI_BIN} ] ; then mkdir ${KANAPI_BIN} ; fi
+		${LN_SF} ${PREFIX}/usr/sbin/* ${KANAPI_BIN}
+		pkg_strip_binaries
+	fi
+}
+
+pkg_strip_libraries() {
+	if [ "${STRIP_LIBRARIES}" = "1" ]
+	then
+		for b in ${PREFIX}/lib/lib* ${PREFIX}/lib64/lib*
+		do
+			if [ -f "$b" ]
+			then 
+				file -i ${b} | grep x-sharedlib > /dev/null 
+				if [ "$?" = "0" ] 
+				then 
+					file ${b} | grep "not stripped"
+					if [ "$?" = "0" ]
+					then
+						strip ${b} 
+					fi
+				fi
+			fi
+		done
+	fi
+}
+
+pkg_install_libs() {
+	if [ ! -d ${KANAPI_BASE}/libs ] ; then mkdir ${KANAPI_BASE}/libs; fi
+	for f in ${PREFIX}/lib/lib*.so* ${PREFIX}/lib/lib*.a   ${PREFIX}/lib/lib*.la ${PREFIX}/lib64/lib*.so* ${PREFIX}/lib64/lib*.a  ${PREFIX}/lib64/lib*.la
+	do
+		if [ -f $f ] 
+		then
+			${LN_SF} $f ${KANAPI_BASE}/libs/`basename $f`
+		fi
+	done
+	if [ "`id -u`" = "0" ]
+	then
+		export LD_LIBRARY_PATH=
+		ldconfig
+	fi
+	pkg_update_include
+	pkg_strip_libraries
+}
+
+pkg_install_all() {
+	pkg_install_pc_all && pkg_install_libs && pkg_install_bin_all
+}
+
+pkg_test() {
+	echo "tests for ${PACKAGE_NAME}"
+	${MAKE} -C ../../tests test_${PACKAGE_NAME} KANAPI_BASE=${KANAPI_BASE}
+}
+
+pkg_check() {
+	echo "!!! Add your tests in ${PACKAGE_NAME}.kanapi file !!!"
+}
+
+pkg_install_schemas() {
+	for i in ${PREFIX}/share/glib-2.0/schemas/*.xml
+	do
+		${LN_SF} $i `${PKG_CONFIG} --variable=prefix gsettings-desktop-schemas`/share/glib-2.0/schemas
+	done
+	glib-compile-schemas `${PKG_CONFIG} --variable=prefix gsettings-desktop-schemas`/share/glib-2.0/schemas
+}
+
+check_script() {
+	echo "checking shell"
+	LINE=`head -n 1 $1`
+	echo $LINE | grep "#!"
+	if [ "$?" = "0" ]
+	then
+		SHL="`echo ${LINE[@]:2} | sed 's/ .*$//' `"
+		echo "checking shell: ${SHL}"
+		if [ -x $SHL ]
+		then 
+			true
+		else
+			echo "shell: <${SHL}> has not found"
+			false
+		fi 
+	else
+		true
+	fi
+}
+
+verify_file() {
+	FILE=($(file -iL $1))
+	if [ "${#FILE[@]}" = "3" ]
+	then
+		MIME=${FILE[1]:0:-1}
+		VERIFIED=0
+		echo -n "Checking ${FILE[0]} "
+		case $MIME in
+		application/x-executable) echo "application "
+				file -L $1 | grep "statically linked"
+				if [ "$?" = "0" ] 
+				 then 
+					VERIFIED=1 
+				else
+					if [ "${CI}" = "true" ]
+					then
+						ldd $1
+					else
+						if [ -x ${KANAPI_BASE}/glibc-${glibc_ver}/lib/ld-${glibc_ver}.so ]
+						then
+							${KANAPI_BASE}/glibc-${glibc_ver}/lib/ld-${glibc_ver}.so --list $1
+						else
+							true
+						fi
+					fi
+					if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				fi
+				;;
+		application/x-sharedlib) echo "library "
+					if [ "${CI}" = "true" ]
+					then
+						ldd $1
+					else
+						if [ -x ${KANAPI_BASE}/glibc-${glibc_ver}/lib/ld-${glibc_ver}.so ]
+						then 
+							${KANAPI_BASE}/glibc-${glibc_ver}/lib/ld-${glibc_ver}.so --list $1
+						else
+							true
+						fi
+					fi
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
+		application/octet-stream) echo "php script"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
+		text/x-shellscript) echo "shell script"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
+		text/x-perl) echo "perl script"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
+		text/x-pascal) echo "pascal/perl script"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
+		text/x-awk) echo "awk script"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
+		text/plain) echo "text file"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				VERIFIED=1
+				;;
+		text/x-python) echo "python script"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
+		image/x-ms-bmp) echo "bmp file"
+				VERIFIED=1
+				;;
+		text/html) echo "html file"
+				VERIFIED=1
+				;;
+		audio/x-wav) echo "wav file"
+				VERIFIED=1
+				;;
+		*) echo "unknown file type: ${FILE[1]}"
+			false
+			;;
+		esac
+		if [ "$VERIFIED" = "1" ]
+		then
+			echo " ok"
+			true
+		else
+			echo " Error, got ${MIME}"
+			false
+		fi
+	else
+		echo "Error in getting file type: ${FILE}"
+		false
+	fi
+}
+
+pkg_verify() {
+	echo "Verifing ${PACKAGE_NAME} in ${PREFIX}"
+	if [ ! -d ${PREFIX} ]
+	then
+		echo "directory ${PREFIX} missing"
+		exit 0
+	fi
+
+	if [ -d "${PREFIX}/share/man" ] ; then rm -r ${PREFIX}/share/man; fi
+	if [ -d "${PREFIX}/share/doc" ] ; then rm -r ${PREFIX}/share/doc; fi
+	if [ -d "${PREFIX}/share/info" ] ; then rm -r ${PREFIX}/share/info; fi
+	if [ -d "${PREFIX}/doc" ] ; then rm -r ${PREFIX}/doc; fi
+	if [ -d "${PREFIX}/man" ] ; then rm -r ${PREFIX}/man; fi
+	
+	for f in ${PREFIX}/bin/* ${PREFIX}/sbin/*  ${PREFIX}/usr/bin/* ${PREFIX}/usr/sbin/*
+	do
+		if [ -f $f ]
+		then
+			verify_file $f
+			if [ "$?" != "0" ]
+			then
+				exit 1
+			fi
+		fi
+	done
+	for f in ${PREFIX}/lib/lib*.so* ${PREFIX}/lib/lib64*.so*
+	do
+		if [ -f $f ]
+		then
+			verify_file $f
+			if [ "$?" != "0" ]
+			then
+				exit 1
+			fi
+		fi
+	done
+	for f in download prepare configure build install verify
+	do
+		if [ ! -f kanapi_${f} ] ; then /bin/date > kanapi_${f} ; fi
+	done
+}
+
+pkg_rm_docker_wa() {
+	mv confdir3 ../t
+	cd .. 
+	rm -rf t
+	true
+}

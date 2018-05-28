@@ -1,0 +1,3 @@
+VER=4
+NAME=apps-gui
+BASE_IMAGE=gui

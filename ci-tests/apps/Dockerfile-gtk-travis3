@@ -1,0 +1,7 @@
+FROM kanapi/kanapi-gtk
+MAINTAINER Jacek Danecki <jacek.m.danecki@gmail.com>
+COPY kanapi /kanapi_build/kanapi
+ENV TRAVIS="true"
+ENV CI="true"
+RUN mkdir -p ${HOME}/ci_src; cd /kanapi_build/kanapi/kanapi_system/kanapi-apps ; ./install apps-gtk3
+CMD ["/bin/bash"]

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+wget http://downloads.sourceforge.net/project/kanapi/images/v0.9/sbs-docker-x86_64.tar.xz
+docker build -t kanapi-sbs:ci --no-cache . && rm sbs-docker-x86_64.tar.xz

@@ -1,0 +1,3 @@
+modprobe kvm-intel
+qemu-system-i386 -enable-kvm -hda fedora.img -m 512 -cdrom Fedora-Workstation-netinst-i386-25-1.3.iso -boot d
+

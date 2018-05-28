@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=package1
+VER=1
+#URL="http://repository_name_for_${PACKAGE_NAME}"
+URL="http://kanapi.ga"
+EXT=tar.bz2
+#build depends on
+. ../settings
+
+pkg_download() {
+#	echo "pkg_download from ${URL}"
+	pkg_curl
+}
+
+pkg_prepare() {
+	echo "pkg_prepare ${PACKAGE_NAME}"
+}
+
+pkg_configure() {
+	echo "pkg_configure ${PACKAGE_NAME}"
+	cp -v ../../packages/package1-1/package1.c .
+}
+
+pkg_build() {
+	echo "pkg_build ${PACKAGE_NAME}"
+	gcc -o package1 package1.c
+}
+
+pkg_install() {
+	echo "pkg_install ${PACKAGE_NAME}"
+	md5sum package1 > package1.md5
+}
+
+pkg_test() {
+	md5sum -c package1.md5
+}
+

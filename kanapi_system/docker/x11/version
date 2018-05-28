@@ -1,0 +1,3 @@
+VER=5
+NAME=x11
+BASE_IMAGE=cli

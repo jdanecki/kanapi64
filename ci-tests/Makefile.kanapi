@@ -1,0 +1,26 @@
+all: required optional
+
+required:
+	cd ../cross_compilers/`uname -m` ; make all ACTION=install
+	cd ../kanapi_system/`uname -m`   ; make required ACTION=install
+
+optional:
+	cd ../kanapi_system/`uname -m`   ; make optional ACTION=install
+
+
+bbs:
+	cd ../kanapi_system/`uname -m`   ; make bbs	 ACTION=install
+
+apps_txt:
+	cd ../kanapi_system/`uname -m`   ; make apps_txt ACTION=install
+
+test: test_cross_compilers
+
+test_cross_compilers:
+	cd ../cross_compilers/`uname -m` ; make gcc ACTION=test
+	cd ../kanapi_system/`uname -m` ; make cross_gcc ACTION=test
+
+vim:
+	cd ../kanapi_system/`uname -m`   ; make vim	 ACTION=install VERBOSE=1
+
+

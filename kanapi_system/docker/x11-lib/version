@@ -1,0 +1,3 @@
+VER=7
+NAME=x11-lib
+BASE_IMAGE=cli-lib

@@ -1,0 +1,256 @@
+#!/bin/bash
+#
+#  Copyright (c) 2012-2017 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+#set -x
+KANAPI_VERSION=0.9
+
+PKG_ACTION="pkg_$1"
+PAR2=$2
+PAR3=$3
+
+SF_URL=http://downloads.sourceforge.net/project/kanapi/packages/v${KANAPI_VERSION}
+PKGS_LIST=packages.md5
+
+check_params() {
+	if [ -n "${PACKAGES_ROOT}" ]
+	then
+		echo "Using ${PACKAGES_ROOT} as packages directory"
+	else
+		PACKAGES_ROOT=/kanapi_${KANAPI_VERSION}/${PKG_ARCH}/packages
+	fi
+}
+
+download() {
+#	wget $1 -O $2a
+	echo "downloading $1"
+	curl -L $1 -o $2
+}
+
+goto_pkg_dir() {
+	check_params
+	if [ ! -d ${PACKAGES_ROOT} ] ; then mkdir -p ${PACKAGES_ROOT} ; fi
+	cd ${PACKAGES_ROOT}
+}
+
+pkg_pull() {
+	#arm i686 x86_64
+	if [ -n "${PAR3}" ] 
+	then
+		PKG_ARCH=${PAR3}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	goto_pkg_dir
+	echo "getting list of packages for ${PKG_ARCH}"
+	download ${SF_URL}/${PKG_ARCH}/packages.md5 ${PKGS_LIST}
+	echo "looking for ${PAR2} in ${PKG_ARCH}"
+	PKGS=`grep ${PAR2} ${PKGS_LIST} | awk '{print $2}'`
+	for p in ${PKGS}
+	do
+		echo "pulling $p"
+		download ${SF_URL}/${PKG_ARCH}/$p $p
+	done
+}
+
+pkg_pull_all() {
+	#arm i686 x86_64
+	if [ -n "${PAR2}" ] 
+	then
+		PKG_ARCH=${PAR2}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	goto_pkg_dir
+	echo "getting list of packages for ${PKG_ARCH}"
+	download ${SF_URL}/${PKG_ARCH}/packages.md5 ${PKGS_LIST}
+	PKGS=`cat ${PKGS_LIST} | awk '{print $2}'`
+	for p in ${PKGS}
+	do
+		echo "pulling $p"
+		download ${SF_URL}/${PKG_ARCH}/$p $p
+	done
+}
+
+pkg_search() {
+	#arm i686 x86_64
+	if [ -n "${PAR3}" ] 
+	then
+		PKG_ARCH=${PAR3}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	goto_pkg_dir
+	if [ ! -f ${PKGS_LIST} ] 
+	then
+		echo "getting list of packages for ${PKG_ARCH}"
+		download ${SF_URL}/${PKG_ARCH}/packages.md5 ${PKGS_LIST}
+	fi
+	echo "looking for ${PAR2}"
+	PKGS=`grep ${PAR2} ${PKGS_LIST} | awk '{print $2}'`
+	for p in ${PKGS}
+	do
+		echo "found: $p"
+	done
+}
+
+pkg_list() {
+	if [ -n "${PAR2}" ] 
+	then
+		PKG_ARCH=${PAR2}
+	else
+		PKG_ARCH=`uname -m`
+	fi	
+	goto_pkg_dir
+	echo "getting list of packages for ${PKG_ARCH} to ${PKGS_LIST}"
+	download ${SF_URL}/${PKG_ARCH}/packages.md5 ${PKGS_LIST}
+}
+
+pkg_check_all() {
+	#arm i686 x86_64
+	if [ -n "${PAR2}" ] 
+	then
+		PKG_ARCH=${PAR2}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	goto_pkg_dir
+	echo "Checking packages with ${PKGS_LIST}"
+	md5sum -w -c ${PKGS_LIST} 
+	echo "Result: $?"
+}
+
+pkg_check() {
+	#arm i686 x86_64
+	if [ -n "${PAR3}" ] 
+	then
+		PKG_ARCH=${PAR3}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	goto_pkg_dir
+	echo "looking for ${PAR2} for ${PKG_ARCH}"
+	grep ${PAR2} ${PKGS_LIST} > ${PAR2}.md5
+	md5sum -w -c ${PAR2}.md5
+	rm ${PAR2}.md5
+}
+
+pkg_installed() {
+	if [ -n "${PAR2}" ] 
+	then
+		PKG_ARCH=${PAR2}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	goto_pkg_dir
+	for i in ./*
+	do 
+		if [ -d $i ] 
+		then
+			pkg=`basename $i`
+			if [ "$pkg" = "libs" -o "$pkg" = "etc" ] ; then continue; fi
+			echo $pkg
+		fi
+	done
+}
+
+pkg_version() {
+	#arm i686 x86_64
+	if [ -n "${PAR3}" ] 
+	then
+		PKG_ARCH=${PAR3}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	goto_pkg_dir
+	PKGS=`ls | grep ${PAR2}`
+	FOUND=0
+	if [ -n "$PKGS" ]
+	then
+		for p in ${PKGS}
+		do
+			. ${p}/kanapi.pkg
+			if [ "$PACKAGE_NAME" = "${PAR2}" ]
+			then
+				echo "${PACKAGE_VER}"
+				FOUND=1
+			fi
+		done
+	fi
+	if [ "$FOUND" = "1" ] 
+	then 
+		true
+	else
+		false
+	fi
+}
+
+pkg_update_links() {
+	if [ -n "${PAR2}" ]
+	then
+		PKG_ARCH=${PAR2}
+	else
+		PKG_ARCH=`uname -m`
+	fi
+	PACKAGES_ROOT=/kanapi_${KANAPI_VERSION}/${PKG_ARCH}/packages
+	DEST_BASE=/kanapi_${KANAPI_VERSION}/${PKG_ARCH}
+
+	if [ ! -d ${PACKAGES_ROOT}/libs ] ; then mkdir ${PACKAGES_ROOT}/libs ; fi
+
+	for p in ${PACKAGES_ROOT}/*
+	do
+		echo "updating $p"
+		if [ -d $p/bin ]; then ln -sf $p/bin/* ${DEST_BASE}/bin; fi
+		if [ -d $p/sbin ]; then ln -sf $p/sbin/*  ${DEST_BASE}/bin; fi
+		if [ -d $p/usr/bin ]; then ln -sf $p/usr/bin/* ${DEST_BASE}/bin; fi
+		if [ -d $p/lib ]
+	   	then	
+			for lib in $p/lib/lib*.so*  $p/lib/lib*.so* 
+			do
+				if [ -f $lib ] ; then ln -sf $lib  ${PACKAGES_ROOT}/libs ; fi
+			done
+	   	fi
+		if [ -d $p/lib64 ]
+	   	then	
+			for lib in $p/lib64/lib*.so*  $p/lib64/lib*.so* 
+			do
+				if [ -f $lib ] ; then ln -sf $lib  ${PACKAGES_ROOT}/libs ; fi
+			done
+	   	fi
+	done
+	ldconfig
+}
+
+pkg_help() {
+	echo "Usage for `basename $0`:"
+	echo "pull package [ arm | i686 | x86_64 ]   - download package"
+	echo "pull_all [ arm | i686 | x86_64 ]       - download all packages"
+	echo "search package [ arm | i686 | x86_64 ] - search package"
+	echo "list [ arm | i686 | x86_64 ]           - get list of packages"
+	echo "check package [ arm | i686 | x86_64 ]  - check md5 sum of package"
+	echo "check_all [ arm | i686 | x86_64 ]      - check md5 sum of all packages"
+	echo "installed [ arm | i686 | x86_64 ]      - show installed packages"
+	echo "version package [ arm | i686 | x86_64 ]- show version of installed package"
+	echo "update_links [ arm | i686 | x86_64 ]   - update links for libs and apps"
+}
+
+pkg_() {
+	pkg_help
+}
+
+${PKG_ACTION}
+

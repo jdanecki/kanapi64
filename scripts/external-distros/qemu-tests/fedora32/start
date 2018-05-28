@@ -1,0 +1,4 @@
+modprobe kvm-intel
+qemu-system-i386 -enable-kvm -hda fedora.img -m 512
+#qemu-system-x86_64  -hda fedora.img -m 512
+

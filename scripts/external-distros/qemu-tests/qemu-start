@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd /kanapi_external/testy-dystrybucje/qemu-tests/$1
+./start
+
+

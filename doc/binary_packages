@@ -1,0 +1,50 @@
+######## Tested binary packages - not included in KaNaPi  #####################
+* bolzplatz2006 - http://sourceforge.net/projects/bp2k6
+* Mythruna 20120627 - http://mythruna.com
+* PuzzleMoppetFullVersion - http://garnetgames.com/puzzlemoppet
+* braid - http://braid-game.com/news/2011/10/braid-is-now-available-direct
+* cogs - http://www.cogsgame.com/
+* jdk1.7.0_21 - http://download.oracle.com
+* jre1.7.0_21 - http://download.oracle.com
+* minecraft - https://minecraft.net
+* montezuma - http://www.java-gaming.org/index.php?topic=27545.0
+* algodoo
+* gimp from fedora 16 and 20
+* gnumeric 1.10 from debian 7.0 
+* gnumeric 1.12 from fedora 20
+* qiv 2.2.4 from ubuntu 12.04 and fedora 20
+* xfburn 0.4.3 from ubuntu 12.04 and fedora 20
+* inkscape 0.48.1 from ubuntu 11.04 niebianska nimfa and fedora 20
+* games from fedora 16 - game spin
+
+* blender
+* kolourpaint from fedora 20
+* gpaint from debian 7
+* abiword from fedora 20
+* firefox from fedora 20
+* pencil from fedora 20
+* hydrogen from opensuse 13.1
+* songwrite from debian 7
+* kanagram from fedora 20 - Kanagram is a game based on anagrams of words
+* kturtle from fedora 20 - The programming language used in KTurtle is loosely based on Logo. 
+* scratch from fedora 20 - http://scratch.mit.edu
+* http://www.lazarus.freepascal.org/ from fedora 20
+* oregano - from debian 7 - tool for schematical capture of electronic circuits
+* qucs from opensuse 13.1 - Circuit Simulator with Graphical User Interface (Qt)
+* xaos from opensuse 13.1
+* geany from opensuse 13.1
+* turtleart from mint 16
+
+Tested distribution under KaNaPi
+
+* android x86 
+* debian
+* doudolinux
+* fedora
+* mint
+* opensuse
+* arch
+* buildroot
+* gobolinux
+
+

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+VER=7.53.1
+perl ${HOME}/src/curl-${VER}/lib/mk-ca-bundle.pl -i 
+

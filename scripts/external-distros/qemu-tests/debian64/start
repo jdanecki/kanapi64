@@ -1,0 +1,2 @@
+modprobe kvm-intel
+qemu-system-x86_64 -enable-kvm -hda debian.img -m 2048 -redir tcp:2222::2222 -redir tcp:8080::8080

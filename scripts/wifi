@@ -1,0 +1,7 @@
+#!/bin/bash
+
+rm /kanapi_0.8/i686/packages/wpa_supplicant-2.6/run/wpa_supplicant/wlan0
+wpa_supplicant -B -Dwext -iwlan0 -c /kanapi_0.8/i686/packages/wpa_supplicant-2.6/etc/wifi.conf
+#sleep 1
+dhclient wlan0 -cf /kanapi_0.8/i686/packages/dhcp-4.3.5/etc/dhclient.conf
+

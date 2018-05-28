@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=nfs-utils
+VER=2.1.1
+EXT=tar.xz
+URL="https://www.kernel.org/pub/linux/utils/nfs-utils/2.1.1/"
+#build depends on
+LIB_DEPENDS="blkid libtirpc libevent libnfsidmap sqlite3"
+
+. ../settings
+
+if [ -n "${PKG_CONFIG}" ]
+then
+	export CFLAGS="${CFLAGS} -I `${PKG_CONFIG} --variable=includedir blkid`"
+fi
+export LDFLAGS="${LDFLAGS} -lrt -lm -lpthread -lresolv"
+export CPP="${KANAPI_C_COMPILER} -E ${CFLAGS}"
+
+pkg_configure() {
+	local_copy
+	./configure --prefix=$PREFIX \
+	--sysconfdir=${PREFIX}/etc --with-statedir=${PREFIX}/var/lib/nfs \
+	--without-tcp-wrappers --disable-gss --enable-libmount-mount \
+	--with-nfsconfig=${PREFIX}/etc/nfs.conf  --with-statduser=kanapi \
+	--disable-ipv6 --disable-nfsv41
+
+	sed -i "s@^sbindir = /sbin@sbindir = ${PREFIX}/sbin@" utils/mount/Makefile
+	sed -i "s@^sbindir = /sbin@sbindir = ${PREFIX}/sbin@" utils/osd_login/Makefile
+}
+
+pkg_build() {
+	pkg_build_local
+}
+
+pkg_install() {
+	cd build 
+	pkg_install_make && pkg_install_sbin_all
+}
+

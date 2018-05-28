@@ -1,0 +1,12 @@
+colorGray='\033[1;30m'
+colorBoldBlue='\033[1;34;40m'
+colorBrown='\033[33;1;40m'
+colorYellow='\033[1;33;40m'
+colorBoldGreen='\033[1;32;40m'
+colorBoldRed='\033[1;31m'
+colorCyan='\033[36m'
+colorBoldCyan='\033[1;36m'
+colorRedWhite='\033[41;37m'
+colorNormal='\033[0m'
+colorBoldMagenta='\033[35;1;40m'
+

@@ -1,0 +1,36 @@
+#!/bin/bash
+#set -x
+PKG_FILE=$1
+PKG_ACTION="pkg_$2"
+PKG_VERBOSE="$3"
+
+if [ "x${PKG_VERBOSE}" = "x1" -o "x${PKG_VERBOSE}" = "x3" ]
+then 
+	echo "running $PKG_FILE ${PKG_ACTION} ${PKG_VERBOSE}"
+fi
+
+. ./$PKG_FILE
+
+if [ -z "${PKG_COLOR}" ]
+then
+	PKG_COLOR='\033[1;36;40m'
+fi
+if [ "x${PKG_VERBOSE}" = "x1" ]
+then
+	echo -e ${PKG_COLOR}
+	${PKG_ACTION}
+	RET=$?
+	echo -e '\033[0m'
+	exit ${RET}
+else
+	if [ "x${PKG_VERBOSE}" = "x2" ]
+	then
+		${PKG_ACTION}
+	else
+		${PKG_ACTION} > /dev/null
+	fi
+fi
+
+#echo "touching ${PACKAGE_NAME}_$2 in `pwd`"
+#/bin/date -Ins > ${PACKAGE_NAME}_$2
+

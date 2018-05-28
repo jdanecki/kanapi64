@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#mount /proc
+#mount /sys
+mount /dev/pts
+mount /dev/shm
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/games
+export SHELL=/bin/bash
+
+if [ ! -d /var/run/dbus ] 
+then
+	mkdir /var/run/dbus
+fi
+
+rm -f /var/run/messagebus.pid
+rm -f /var/run/dbus/pid
+rm -f /var/run/dbus/system_bus_socket
+#udevd --daemon
+/lib/systemd/systemd-udevd --daemon
+udevadm trigger
+udevadm settle
+dbus-daemon --system
+
+/bin/bash
+
+umount /dev/shm
+umount /dev/pts
+umount /sys
+#umount /proc
+

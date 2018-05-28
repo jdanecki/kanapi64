@@ -1,0 +1,1 @@
+git log --pretty=format:user:%aN%n%at --reverse --raw --encoding=UTF-8 --no-renames 

@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=cairo-demos
+VER=02a3208
+URL="git://people.freedesktop.org/~ickle"
+EXT=
+#build depends on
+LIB_DEPENDS="zlib xau expat pixman-1 fontconfig freetype2 xrender libpng xcb-shm"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lrt -lpthread -lresolv"
+
+pkg_download() {
+	pkg_git_clone
+}
+
+pkg_prepare() {
+	echo "nothing to do"
+}
+
+pkg_configure() {
+	local_clone
+	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/poppler.patch
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true CC="${KANAPI_C_COMPILER} ${LDFLAGS}"
+}
+
+pkg_install() {
+	echo "FIXME"
+}
+

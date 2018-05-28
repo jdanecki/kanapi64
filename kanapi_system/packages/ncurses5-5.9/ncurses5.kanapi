@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=ncurses5
+VER=5.9
+URL="http://invisible-mirror.net/archives/ncurses"
+#"ftp://invisible-island.net/ncurses"
+EXT=tar.gz
+#build depends on
+. ../settings
+
+pkg_download() {
+	PACKAGE_VER=ncurses-${VER}
+	PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+	PACKAGE_PATH=${PACKAGE_FILENAME}
+	pkg_curl
+}
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		PACKAGE_VER=ncurses-${VER}
+		PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+		tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
+		ln -svf ${KANAPI_BUILD_SRC}/${PACKAGE_VER} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+}
+
+pkg_configure() {
+	local_copy
+	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/0002-gcc-5.x-MKlib_gen.patch
+	 export CFLAGS="${CFLAGS}"
+	 export LDFLAGS="${LDFLAGS} -ldl"
+	./configure --prefix=$PREFIX --with-shared --enable-termcap --with-termlib
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+pkg_install() {
+	cd build 
+	${MAKE} -j 1 install MAKEINFO=true && ln -svf ${PREFIX}/bin/ncurses5-config ${KANAPI_BASE}/../bin && \
+	pkg_install_libs && \
+	rm -rf ${PREFIX}/man
+}
+

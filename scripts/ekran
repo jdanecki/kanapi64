@@ -1,0 +1,2 @@
+#!/bin/bash
+xrandr -s 1366x768  

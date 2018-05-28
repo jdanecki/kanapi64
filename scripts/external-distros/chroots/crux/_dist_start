@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#mount /proc
+#mount /sys
+mount /dev/pts
+mount /dev/shm
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
+rm -f /var/run/dbus/system_bus_socket
+rm -f /var/run/messagebus.pid
+rm -f /run/dbus/messagebus.pid
+rm -f /run/dbus/pid
+
+/usr/lib/systemd/systemd-udevd --daemon
+udevadm trigger
+udevadm settle
+dbus-daemon --system
+libvirtd -d
+
+/bin/bash
+killall libvirtd
+killall pulseaudio
+killall dnsmasq
+
+umount /dev/shm
+umount /dev/pts
+#umount /sys
+#umount /proc
+

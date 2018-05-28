@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=cacert
+VER=3
+URL="http://www.cacert.org/certs"
+EXT=
+#build depends on
+. ../settings
+
+pkg_download() {
+	for f in root class3 
+	do
+		for i in crt der txt 
+		do
+			if [ -f ${KANAPI_BUILD_SRC}/$f.$i-$VER ] 
+			then 
+				echo "$PACKAGE_NAME: $f.$i-$VER already downloaded"
+			else
+				echo "downloading $f.$i"
+				curl ${URL}/$f.$i -o ${KANAPI_BUILD_SRC}/$f.$i-${VER}
+			fi
+		done
+	done
+}
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		if [ ! -d ${PACKAGE_SRCDIR} ] ; then mkdir ${PACKAGE_SRCDIR} ; fi
+		for f in root class3 
+		do
+			for i in crt der txt 
+			do
+				cp -v ${KANAPI_BUILD_SRC}/$f.${i}-${VER} ${PACKAGE_SRCDIR}/$f.${i}
+			done
+		done
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+}
+
+pkg_configure() {
+	echo "${PACKAGE_NAME}: configure not needed"
+}
+
+pkg_build() {
+	for f in root class3 
+	do
+		for i in crt der txt 
+		do
+			cp -v ${PACKAGE_SRCDIR}/$f.${i} .
+		done
+	done
+}
+
+pkg_install() {
+	mkdir ${PREFIX}
+	for f in root class3 
+	do
+		for i in crt der txt 
+		do
+			cp -v $f.${i} ${PREFIX}/$f.${i}
+		done
+	done
+}	

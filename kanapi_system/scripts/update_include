@@ -1,0 +1,84 @@
+#!/bin/bash
+
+KANAPI_VER=0.10
+
+if [ "`id -u`" != "0" ]
+then
+	KANAPI_ROOT="${HOME}/kanapi_${KANAPI_VER}"
+else
+	KANAPI_ROOT="/kanapi_${KANAPI_VER}"
+fi
+KANAPI_BASE=${KANAPI_ROOT}/packages
+mkdir -p ${KANAPI_BASE}/include
+
+pushd ${KANAPI_BASE}
+
+search_in_dir() {
+	if [ -d $2 ]
+	then
+			name=`echo $2 | sed "s@$1\/@@"` 
+	  	#	echo "dir: $1 --- $2 -> $name"
+			if [ ! -d $name ] ; then mkdir -p $name ; fi
+			for f in $2/*
+			do
+				search_in_dir $1 $f
+			done
+	else
+			name=`echo $2 | sed "s@$1\/@@"` 
+		#	echo "fil: $1 --- $2 -> $name"
+			ln -svf $2 $name
+	 fi
+}
+
+search_include_dir() {
+		 for package in $1/*
+		 do
+		 		echo "looking in $package"
+				if [ -d $package/include ] 
+				then
+					for fd in $package/include/*
+					do
+						dir=`basename $package`
+						if [ "${dir:0:3}" = "gcc" -o "${dir:0:5}" = "glibc" ]
+						then
+							#echo "don't link compiler $dir"
+							continue
+						else
+							#echo "$package ($dir)-> $fd"
+					  		search_in_dir $package $fd
+						fi
+					done
+			  fi
+		 done
+}
+
+search_include_package() {
+	 if [ -d $1/include ] 
+	 then
+		 for fd in $1/include/*
+		 do
+			search_in_dir $1 $fd
+		 done
+	fi
+}
+
+
+PACKAGE="$1"
+if [ -n "$PACKAGE" ]
+then
+		  if [ ! -d ${PACKAGE} ] 
+		  then 
+					 echo "Missing package directory"
+					 popd
+					 exit 2
+		  fi
+			  echo "updating ${PACKAGE}"
+			  search_include_package ${PACKAGE}
+else
+	rm -rf include
+	mkdir include
+	search_include_dir `pwd`
+fi
+
+popd
+

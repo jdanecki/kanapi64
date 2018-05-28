@@ -1,0 +1,119 @@
+#!/bin/bash
+#
+#  Copyright (c) 2012-2016 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+. ../scripts/config.kanapi
+
+echo "Preparing initrd for ${KANAPI_VER} on ${ARCH}"
+if [ -f /sbs.version ]
+then
+	KANAPI_BASE=
+else
+	KANAPI_BASE=/kanapi_${KANAPI_VER}/${ARCH}
+fi
+KANAPI_BASE_LOCAL=kanapi_${KANAPI_VER}/${ARCH}
+INITRD_DIR=initrd-${ARCH}
+
+echo "KANAPI_BASE=${KANAPI_BASE}"
+echo "INITRD_DIR=${INITRD_DIR}"
+rm -rf ${INITRD_DIR}
+mkdir ${INITRD_DIR}
+cd ${INITRD_DIR}
+
+for d in bin dev lib var init init-${ARCH}
+do
+	cp -ar ${KANAPI_BASE}/$d .
+done
+
+mkdir proc
+mkdir etc
+mkdir tmp
+mkdir -p run/mount
+mkdir -p run/shm
+mkdir sys
+rm -rf var/cache
+mkdir var/cache
+
+ln -s bin sbin
+mkdir packages
+cp -ar ${KANAPI_BASE}/packages/busybox* packages
+rm bin/bash
+cp ${KANAPI_BASE}/packages/bash-${bash_ver}/bin/bash bin
+ln -sf busybox bin/uname
+
+mkdir -p packages/glibc-${glibc_ver}/lib
+
+if [ "${ARCH}" = "x86_64" ]
+	then
+	LINKER_NAME=ld-linux-x86-64.so.2
+fi
+if [ "${ARCH}" = "i686" ]
+then
+	LINKER_NAME=ld-linux.so.2
+fi
+if [ "${ARCH}" = "arm" ]
+then
+	LINKER_NAME=ld-linux.so.3
+	cp -ar ../modules-arm/* lib/modules
+fi
+	
+for f in ${LINKER_NAME} libm.so.6 libc.so.6 libdl.so.2
+do	
+	cp ${KANAPI_BASE}/packages/glibc-${glibc_ver}/lib/$f packages/glibc-${glibc_ver}/lib
+done
+
+mkdir -p ${KANAPI_BASE_LOCAL}
+ln -s ../../packages ${KANAPI_BASE_LOCAL}
+ln -s ${KANAPI_BASE_LOCAL}/packages kanapi_packages
+
+echo "nameserver 10.0.2.3" > etc/resolv.conf
+echo "127.0.0.1 localhost" > etc/hosts
+ln -s /proc/mounts etc/mtab
+cp /etc/nsswitch.conf etc/nsswitch
+
+cat <<EOF > etc/group
+kanapi:x:0:
+root:x:0
+EOF
+
+cat <<EOF > etc/passwd
+kanapi:x:0:0:kanapi:/kanapi_0.8/i686/home:/bin/bash
+root:x:0:0:kanapi:/kanapi_packages-old/config/current:/bin/bash
+sshd:x:0:0:kanapi:/kanapi_packages-old/config/current:/bin/bash
+messagebus:x:1:1::/kanapi_packages-old/dbus-1.6.8/var/run/dbus:/bin/false
+user:x:2:2:user:/kanapi_packages-old/config/user:/bin/bash
+EOF
+
+echo "sync
+mount -o remount,ro /packages
+sync
+poweroff -f
+" > bin/koniec
+chmod +x bin/koniec
+ln -sf /bin/koniec bin/finish
+
+echo "sync
+mount -o remount,ro /packages
+sync
+reboot -f
+" > bin/restart
+chmod +x bin/restart
+
+find . -print | cpio -o -Hnewc > ../boot-${ARCH}/initrd
+cd ..
+

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. version
+
+ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}" -q`
+docker start -i -a ${ID}
+

@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=i3
+VER=4.15
+URL="http://i3wm.org/downloads"
+EXT=tar.bz2
+#build depends on
+
+LIB_DEPENDS="xcb-keysyms xau cairo cairo-xcb expat fontconfig freetype2 libpng xcb xrender x11 xext zlib pixman-1 xcb-shm xcb-render yajl\
+   	xcb-cursor xcb-image xcb-renderutil xcb-aux libffi ice pangoft2 gmodule-2.0 x11-xcb harfbuzz gthread-2.0 xcb-keysyms"
+
+. ../settings
+
+if [ -n "${PKG_CONFIG}" ]
+then
+	export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/libev-${libev_ver}/include \
+		-I`${PKG_CONFIG} --variable=includedir cairo-xcb` -I`${PKG_CONFIG} --variable=includedir yajl`/.. "
+fi
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/libev-${libev_ver}/lib -lev -lm -lpthread -lrt -lstdc++"
+export CC="${KANAPI_C_COMPILER} -DSTRIPPED__FILE__=__FILE__"
+
+pkg_install() {
+	if [ ! -d ${HOME}/.config/i3 ] ; then mkdir -p ${HOME}/.config/i3 ; fi
+	if [ ! -f ${HOME}/.config/i3/config ] ; then cp ../../packages/i3-${VER}/config ${HOME}/.config/i3/config ; fi
+	if [ ! -f ${HOME}/.xinitrc ] ; then cp ../../packages/i3-${VER}/.xinitrc ${HOME} ; fi
+	pkg_install_make &&	pkg_install_bin_all 
+}
+
+pkg_check() {
+	echo "${CFLAGS}"
+	${PKG_CONFIG} --libs cairo-xcb
+	${PKG_CONFIG} --cflags cairo-xcb
+	${PKG_CONFIG} --variable=includedir cairo-xcb
+	ls -l `which basename`
+	ls -l `which pwd`
+	pwd -P
+	${PKG_CONFIG} --cflags yajl
+	${PKG_CONFIG} --variable=includedir yajl
+	${PKG_CONFIG} --libs libffi
+
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+}
+

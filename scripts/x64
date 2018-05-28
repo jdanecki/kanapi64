@@ -1,0 +1,4 @@
+#!/bin/bash
+
+/bin64/xinit -- ~/.xserverrc-64
+

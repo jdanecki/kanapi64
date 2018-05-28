@@ -1,0 +1,31 @@
+#!/bin/bash
+
+export LD_PRELOAD=
+export LD_LIBRARY_PATH=
+
+cd /kanapi_external/binary-distros/$1
+#cp -a /dev/snd/* dev/snd
+mount --bind /dev dev
+mount --bind /tmp tmp
+mount --bind /proc proc
+mount --bind /sys sys
+chroot . ./_dist_start
+
+for i in `pidof udevd dbus-daemon systemd-udevd gpg-agent systemd-logind jackd` 
+do 
+	root=`basename  \`readlink  /proc/$i/root\``
+#	echo "root=$root"
+	if [ $root == "$1" ]
+	then
+#		echo "kill $i"
+		kill -9 $i
+	fi
+done
+pwd
+for dir in tmp dev/pts  dev proc sys/fs/cgroup/systemd sys/fs/cgroup sys run/user/1000/gvfs run/user/1000 run/shm
+do
+	umount $dir
+done
+
+#umount dev/shm
+

@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=csound
+VER=6.09.1
+URL="https://github.com/csound/csound/archive"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS="sndfile jack libpulse libcurl python zlib libpng alsa libpulse-simple x11"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lpthread -lm -lrt -lstdc++ -lresolv"
+export CXXFLAGS="${CFLAGS}"
+
+pkg_download() {
+	PACKAGE_PATH=${VER}.${EXT}
+	pkg_curl
+}
+
+pkg_configure() {
+        cmake ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_BUILD_TYPE=Release \
+    	-DLIBSNDFILE_LIBRARY=`${PKG_CONFIG} --variable=libdir sndfile`/libsndfile.so \
+	-DSNDFILE_H_PATH=`${PKG_CONFIG} --variable=includedir sndfile` \
+	-DJACK_LIBRARY=`${PKG_CONFIG} --variable=libdir jack`/libjack.so \
+	-DJACK_HEADER=`${PKG_CONFIG} --variable=includedir jack` \
+	-DPTHREAD_LIBRARY=`${KANAPI_C_COMPILER} -print-file-name=libpthread.so` \
+	-DFLEX_INCLUDE_DIR=${KANAPI_BASE}/flex-${flex_ver}/include \
+	-DPULSEAUDIO_HEADER=`${PKG_CONFIG} --variable=includedir libpulse` \
+	-DPULSEAUDIO_LIBRARY=`${PKG_CONFIG} --variable=libdir libpulse`/libpulse.so \
+	-DCURL_INCLUDE_DIR=`${PKG_CONFIG} --variable=includedir libcurl` \
+	-DCURL_LIBRARY=`${PKG_CONFIG} --variable=libdir libcurl`/libcurl.so \
+	-DZLIB_LIBRARY=`${PKG_CONFIG} --variable=libdir zlib`/libz.so \
+	-DZLIB_INCLUDE_DIR=`${PKG_CONFIG} --variable=includedir zlib` \
+	-DPNG_LIBRARY=`${PKG_CONFIG} --variable=libdir libpng`/libpng.so \
+    -DPNG_PNG_INCLUDE_DIR=`${PKG_CONFIG} --variable=includedir libpng` \
+	-DPYTHON_LIBRARY=`${PKG_CONFIG} --variable=libdir python-2.7`/libpython2.7.so \
+	-DPYTHON_INCLUDE_DIR=`${PKG_CONFIG} --variable=includedir python-2.7` \
+	-DALSA_LIBRARY=`${PKG_CONFIG} --variable=libdir alsa`/libasound.so \
+	-DPULSESIMPLE_LIBRARY=`${PKG_CONFIG} --variable=libdir libpulse-simple`/libpulse-simple.so \
+	-DFLTK_MATH_LIBRARY=`${KANAPI_C_COMPILER} -print-file-name=libm.so`
+#	-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+}
+
+pkg_build() {
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+#	${MAKE} VERBOSE=1 -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+pkg_install() {
+	pkg_install_make && pkg_install_bin_all && pkg_install_libs
+}
+
+pkg_check() {
+	echo "CFLAGS=${CFLAGS}"
+}

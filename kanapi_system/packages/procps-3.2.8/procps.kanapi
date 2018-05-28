@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=procps
+VER=3.2.8
+URL=" http://procps.sourceforge.net"
+EXT=tar.gz
+#build depends on
+. ../settings
+
+pkg_prepare() {
+	pkg_tar_gz
+}
+
+pkg_configure() {	
+	local_copy
+}
+
+pkg_build() {
+	cd build
+	NCURSES="`${PKG_CONFIG} --cflags ncurses` `${PKG_CONFIG} --libs ncurses`"
+	${MAKE} -j ${MAKE_JOBS}  DESTDIR=${PREFIX} CC="${KANAPI_C_COMPILER} ${NCURSES}" ldl="-lproc-${VER} -Lproc"
+}
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} DESTDIR=${PREFIX} install
+	pkg_install_bin_all
+	pkg_install_usr_bin_all
+	pkg_install_sbin_all
+	ln -svf ${PREFIX}/lib64/* ${KANAPI_BASE}/libs
+}
+
+pkg_check() {
+	echo "${KANAPI_BASE}"
+	echo "${PREFIX}"
+}

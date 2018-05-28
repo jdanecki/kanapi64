@@ -1,0 +1,9 @@
+#!/bin/bash
+
+VAL=`cat /sys/class/backlight/intel_backlight/brightness`
+echo "teraz=<$VAL>"
+JAS=$(($VAL-100))
+echo "nowa=<$JAS>"
+echo $JAS  > /sys/class/backlight/intel_backlight/brightness
+
+

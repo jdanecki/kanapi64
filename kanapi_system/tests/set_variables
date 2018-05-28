@@ -1,0 +1,13 @@
+#!/bin/bash
+. ../scripts/config.kanapi
+
+export LIBRARIES_PATH=${KANAPI_BASE}/gmp-${gmp_ver}/lib:${KANAPI_BASE}/mpfr-${mpfr_ver}/lib:${KANAPI_BASE}/mpc-${mpc_ver}/lib
+if [ -n "${LD_LIBRARY_PATH}" ] 
+then
+	export LD_LIBRARY_PATH=${LIBRARIES_PATH}:${LD_LIBRARY_PATH}
+else
+	export LD_LIBRARY_PATH=${LIBRARIES_PATH}
+fi
+export PATH=${KANAPI_BASE}/binutils-${binutils_ver}/bin:${KANAPI_BASE}/gcc-${gcc_ver}/bin:${PATH}
+
+

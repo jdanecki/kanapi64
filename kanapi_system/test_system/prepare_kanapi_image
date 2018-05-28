@@ -1,0 +1,147 @@
+#!/bin/bash
+#
+#  Copyright (c) 2012-2017 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+#4GB
+IMAGE_SIZE_MB=4096
+IMAGE_SIZE_BLOCKS=$(($IMAGE_SIZE_MB * 1024))
+
+if [ -z "$1" ]
+then
+	echo "Run script with arch name, eg:"
+	echo "$0 i686"
+	echo "$0 x86_64"
+	echo "$0 arm"
+	exit 
+fi
+
+export ARCH=$1
+export KANAPI_VER=`cat ../scripts/KANAPI_VER`
+. ../scripts/config.kanapi
+
+KERNEL_VER=4_9_8-${ARCH}
+
+if [ ! -f boot-${ARCH}/${KERNEL_VER} ]
+then
+	echo "downloading kernel image from http://downloads.sourceforge.net/project/kanapi/images/v${KANAPI_VER}/kernel/${KERNEL_VER}"
+	curl -L http://downloads.sourceforge.net/project/kanapi/images/v${KANAPI_VER}/kernel/4_9_8-${ARCH} -o ${KERNEL_VER}
+	curl -L http://downloads.sourceforge.net/project/kanapi/images/v${KANAPI_VER}/kernel/4_9_8-${ARCH}.md5 -o ${KERNEL_VER}.md5
+	md5sum -c ${KERNEL_VER}.md5
+	if [ "$?" = "0" ]
+	then
+		mv ${KERNEL_VER} boot-${ARCH}/${KERNEL_VER}
+	else
+		exit 2
+	fi
+	rm ${KERNEL_VER}.md5
+fi
+
+echo "Preparing image for KaNaPi ${KANAPI_VER} on ${ARCH} size=$((${IMAGE_SIZE_BLOCKS} / 1024)) MB"
+
+if [ ! -f kanapi_image.${ARCH} ]
+then	
+	dd if=/dev/zero of=kanapi_image.${ARCH} bs=1024 count=${IMAGE_SIZE_BLOCKS}
+fi
+sync
+losetup /dev/loop0 kanapi_image.${ARCH}
+
+./fdisk.script | fdisk /dev/loop0
+
+#kpartx -a /dev/loop0
+
+echo "Looking for new partitions"
+cat /proc/partitions
+PARTPROBE=`which partprobe`
+if [ -n "${PARTPROBE}" ]
+then
+	partprobe /dev/loop0
+else
+	grep loop0p1 /proc/partitions > /dev/null
+	if [ "$?" = "0" ]
+	then
+		partx -d /dev/loop0
+	fi
+	partx -a /dev/loop0
+	grep loop0p1 /proc/partitions > /dev/null
+	if [ "$?" = "0" ]
+	then
+		echo "Partitions created"
+	else
+		echo "Partitions were not created"
+		exit
+	fi
+fi
+
+echo "Checking loop devices"
+if [ -b /dev/loop0p1 ] ; then rm /dev/loop0p1 ; fi
+if [ -b /dev/loop0p2 ] ; then rm /dev/loop0p2 ; fi
+LINE=($(grep loop0p1 /proc/partitions ))
+mknod /dev/${LINE[3]} b ${LINE[0]} ${LINE[1]} 
+LINE=($(grep loop0p2 /proc/partitions ))
+mknod /dev/${LINE[3]} b ${LINE[0]} ${LINE[1]} 
+
+mkfs.vfat -I /dev/loop0p1
+
+syslinux /dev/loop0p1
+
+./prepare_initrd
+
+if [ ! -d p1 ]; then mkdir p1; fi
+if [ ! -d p2 ]; then mkdir p2; fi
+
+mount /dev/loop0p1 p1
+cp boot-${ARCH}/* p1
+
+umount --version 2>&1 | grep "BusyBox"
+if [ $? = "0" ]
+then 
+	echo "umount from busybox"
+	UMOUNT="umount -D"
+else
+	echo "umount from util-linux"
+	UMOUNT="umount"
+fi
+
+${UMOUNT} p1
+
+install-mbr -T /dev/loop0 /dev/loop0
+
+mkfs.ext4 -F /dev/loop0p2
+mount /dev/loop0p2 p2
+echo "copying files..."
+cp -ar /kanapi_${KANAPI_VER}/${ARCH}/packages/* p2
+
+mkdir -p p2/config/current/.config/mc
+cp ../configs/mc/ini p2/config/current/.config/mc
+
+ln -s /kanapi_packages/config/current p2/home
+echo "ifconfig eth0 up
+ifconfig eth0 10.0.2.1
+route add default gw 10.0.2.2
+ifconfig -a
+" > p2/config/network
+chmod +x p2/config/network
+
+echo "mkdir -p /packages/glibc-${glibc_ver}/lib/locale
+localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8" > p2/config/create_locale
+chmod +x p2/config/create_locale
+
+${UMOUNT} p2
+sync
+losetup -d /dev/loop0
+

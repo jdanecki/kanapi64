@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# graphics tests
+
+IMAGE=pingwin.png
+
+gimp -s ${IMAGE}
+RESULTS[0]=$?
+
+qiv -f ${IMAGE}
+RESULTS[1]=$?
+
+display ${IMAGE}
+RESULTS[2]=$?
+
+feh ${IMAGE}
+RESULTS[3]=$?
+
+evince test1.pdf
+RESULTS[4]=$?
+
+dotty test1.gv
+RESULTS[5]=$?
+
+# editors tests
+
+gvim -f app-tests
+RESULTS[6]=$?
+
+# opencl tests
+
+clinfo
+RESULTS[7]=$?
+
+# devel tests
+
+qtcreator
+RESULTS[8]=$?
+
+vym
+RESULTS[9]=$?
+
+gitk
+RESULTS[10]=$?
+
+# terminal tests
+
+xterm -e mc
+RESULTS[11]=$?
+
+xterm -e screen
+RESULTS[12]=$?
+
+# disks tests
+
+iotop
+#netlinkerror in docker
+RESULTS[13]=$?
+
+# network tests
+
+curl -O https://jdanecki.github.io/kanapi/kanapi_en.html
+RESULTS[14]=$?
+
+# music tests
+
+#qjackctl
+#hangs in docker
+#RESULTS[15]=$?
+
+csoundqt
+RESULTS[16]=$?
+
+musescore
+RESULTS[17]=$?
+
+echo "----------------  results --------------------------"
+echo "${RESULTS[*]}"
+echo "----------------------------------------------------"
+
+for r in ${!RESULTS[*]}
+do
+	if [ "${RESULTS[$r]}" != "0" ]
+	then
+		echo "error in $r = ${RESULTS[$r]}"
+	fi
+done

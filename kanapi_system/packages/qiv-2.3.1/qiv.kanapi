@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=qiv
+VER=2.3.1
+URL="http://spiegl.de/qiv/download"
+EXT=tgz
+#build depends on
+LIB_DEPENDS="imlib2 x11 xext gdk-2.0 libtiff-4 libexif"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/file-${file_ver}/lib -lmagic -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -ljpeg -lm -lrt -lresolv"
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/file-${file_ver}/include -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
+
+pkg_configure() {
+	local_copy
+	sed -i "s/^LCMS/#LCMS/" Makefile
+	sed -i "s@\./qiv@echo ./qiv@" Makefile
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true PREFIX=${PREFIX} CFLAGS="${CFLAGS}" CC=${KANAPI_C_COMPILER} LIBS="${LDFLAGS}"
+}
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true PREFIX=${PREFIX} CFLAGS="${CFLAGS}" CC=${KANAPI_C_COMPILER} LIBS="${LDFLAGS}"
+	pkg_install_bin_all
+}
+

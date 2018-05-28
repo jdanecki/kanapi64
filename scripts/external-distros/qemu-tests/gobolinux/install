@@ -1,0 +1,2 @@
+qemu-system-x86_64 -enable-kvm -hda image -cdrom GoboLinux-016_rc1-x86_64.iso -m 1024 -boot d
+

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+first_partition() {
+#create first partition as vfat with size 50MB
+echo n
+echo p
+echo 
+echo
+echo "+50M"
+}
+
+set_vfat_type() {
+#set type ad vfat
+echo t
+echo b
+}
+
+second_partirion() {
+#create seconf partition as ext4
+echo n
+echo p
+echo 
+echo
+echo 
+}
+
+activate_boot_partition() {
+#activate first partition
+echo a
+echo 1
+}
+
+show() {
+#show what was done
+echo p
+}
+
+write_and_exit() {
+#write and exit
+echo w
+}
+
+first_partition
+set_vfat_type
+second_partirion
+activate_boot_partition
+show
+write_and_exit
+
+

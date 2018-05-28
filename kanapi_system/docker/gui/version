@@ -1,0 +1,4 @@
+VER=5
+NAME=gui
+BASE_IMAGE=x11
+

@@ -1,0 +1,13 @@
+diff --git a/poppler-demo.c b/poppler-demo.c
+index 92976f9..3aae0a7 100644
+--- a/poppler-demo.c
++++ b/poppler-demo.c
+@@ -148,7 +148,7 @@ main (int argc, char **argv)
+ 
+ 	    cairo_destroy(cr);
+ 
+-	    fps_finish(fb, device->name, version);
++	    fps_finish(fb, device->name, version, "demo");
+ 	    fb->show (fb);
+ 	    fb->destroy (fb);
+ 	    pause();

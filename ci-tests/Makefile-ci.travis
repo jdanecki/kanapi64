@@ -1,0 +1,9 @@
+job1:
+	./apps/start-build-gtk $@
+
+job2:
+	./apps/start-build-gtk $@
+
+job3:
+	./apps/start-build-gtk $@
+

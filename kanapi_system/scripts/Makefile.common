@@ -1,0 +1,14 @@
+ifeq (x$(KANAPI_COMMON_INCLUDED),x)
+KANAPI_COMMON_INCLUDED=1
+
+KANAPI_VER=$(shell cat  $(SCRIPTS_DIR)/KANAPI_VER)
+KANAPI_BASE=/kanapi_$(KANAPI_VER)/packages
+
+COMPILERS=gcc
+
+include $(SCRIPTS_DIR)/config.kanapi
+include $(SCRIPTS_DIR)/config-Makefile.kanapi
+include $(SCRIPTS_DIR)/colors.kanapi
+include $(SCRIPTS_DIR)/rules.kanapi
+endif
+

@@ -1,0 +1,88 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=webkitgtk
+VER=2.14.2
+URL="https://webkitgtk.org/releases"
+EXT=tar.xz
+#build depends on
+
+LIB_DEPENDS="x11 libpng zlib xcomposite xdamage xrender xt \
+	fontconfig sqlite3 gl cairo-xlib xcomposite xdamage xrender \
+	xt gtk+-3.0 gdk-3.0 pangocairo atk gdk-pixbuf-2.0 gio-2.0 \
+	epoxy xcb-render xau libdrm xcursor pango xcb-glx libffi \
+	pixman-1 xcb-dri2 xcb-dri3 gmodule-2.0 libxml-2.0 xi xcb-present \
+       ice expat pangoft2 sm liblzma xcb-shm harfbuzz uuid \
+       xshmfence xcb xinerama x11-xcb xrandr"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt -lresolv -lglapi"
+if [ -n "${PKG_CONFIG}" ]
+then
+	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir cairo-xlib`"
+fi
+
+pkg_configure() {
+	JPEG=${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}
+	ZLIB=`${PKG_CONFIG} --variable=prefix zlib`
+	PNG=`${PKG_CONFIG} --variable=prefix libpng`
+	X11=`${PKG_CONFIG} --variable=prefix x11`
+	XCOMPOSITE=`${PKG_CONFIG} --variable=prefix xcomposite`
+	XDAMAGE=`${PKG_CONFIG} --variable=prefix xdamage`
+	XRENDER=`${PKG_CONFIG} --variable=prefix xrender`
+	XT=`${PKG_CONFIG} --variable=prefix xt`
+
+	cmake -G Ninja ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_C_COMPILER="${KANAPI_C_COMPILER}" \
+    -DCMAKE_CXX_COMPILER="${KANAPI_CXX_COMPILER}" -DPORT=GTK -DENABLE_MINIBROWSER=ON \
+	-DCMAKE_CXX_FLAGS="${CFLAGS} ${LDFLAGS}" \
+	-DENABLE_CREDENTIAL_STORAGE=OFF -DENABLE_GEOLOCATION=OFF -DENABLE_INTROSPECTION=OFF \
+	-DENABLE_SPELLCHECK=OFF -DENABLE_VIDEO=OFF -DENABLE_WEB_AUDIO=OFF -DUSE_LIBNOTIFY=OFF \
+	-DUSE_LIBHYPHEN=OFF \
+	-DJPEG_LIBRARY=${JPEG}/lib/libjpeg.so -DJPEG_INCLUDE_DIR=${JPEG}/include \
+	-DZLIB_LIBRARY=${ZLIB}/lib/libz.so -DZLIB_INCLUDE_DIR=${ZLIB}/include \
+	-DPNG_LIBRARY=${PNG}/lib/libpng.so -DPNG_PNG_INCLUDE_DIR=${PNG}/include \
+	-DX11_X11_LIB=${X11}/lib/libX11.so -DX11_X11_INCLUDE_PATH=${X11}/include \
+	-DX11_Xcomposite_LIB=${XCOMPOSITE}/lib/libXcomposite.so -DX11_Xcomposite_INCLUDE_PATH=${XCOMPOSITE}/include \
+	-DX11_Xdamage_LIB=${XDAMAGE}/lib/libXdamage.so -DX11_Xdamage_INCLUDE_PATH=${XDAMAGE}/include \
+	-DX11_Xrender_LIB=${XRENDER}/lib/libXrender.so -DX11_Xrender_INCLUDE_PATH=${XRENDER}/include \
+	-DX11_Xt_LIB=${XT}/lib/libXt.so -DX11_Xt_INCLUDE_PATH=${XT}/include \
+	-DENABLE_PLUGIN_PROCESS_GTK2=OFF -DUSE_LD_GOLD=OFF
+}
+
+pkg_build() {
+	        ninja
+}
+
+pkg_install() {
+	ninja install && pkg_install_bin_all && pkg_install_libs && pkg_install_pc_all_only
+}
+
+pkg_check() {
+	JPEG=${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}
+	echo "jpeg=${JPEG}"
+	${PKG_CONFIG} --variable=prefix zlib libpng x11 xcomposite xdamage xrender xt
+	X11=`${PKG_CONFIG} --variable=prefix x11`
+	ls -l ${X11}/include/X11
+	${PKG_CONFIG} --cflags ${LIB_DEPENDS}
+	echo "CFLAGS=${CFLAGS}"
+	ccache --version
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+}
+

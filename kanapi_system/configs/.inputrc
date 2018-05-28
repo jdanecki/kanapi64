@@ -1,0 +1,4 @@
+set bell-style none
+"\e[3~": delete-char
+
+

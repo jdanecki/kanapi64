@@ -1,0 +1,120 @@
+#!/bin/bash
+#
+#  Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+KANAPI_VERSION=v0.9
+
+PKG_ACTION="pkg_$1"
+PKG_NAME="$2"
+#arm i686 x86_64
+if [ -n "$3" ]
+then
+	PKG_ARCH="$3"
+else
+	PKG_ARCH=`uname -m`
+fi
+
+. ${HOME}/SF_user
+
+pkg_push() {
+	echo "pushing ${PKG_NAME} for ${PKG_ARCH} as ${SF_USER}"
+	scp ${PKG_NAME} ${SF_USER}@frs.sourceforge.net:/home/frs/project/kanapi/packages/${KANAPI_VERSION}/${PKG_ARCH}
+}
+
+pkg_dir_push() {
+	echo "pushing packages from directory ${PKG_NAME} for ${PKG_ARCH}"
+	cd ${PKG_NAME} 
+	for i in *.xz
+	do 
+		scp $i ${SF_USER}@frs.sourceforge.net:/home/frs/project/kanapi/packages/${KANAPI_VERSION}/${PKG_ARCH}
+	done
+	cd ..
+}
+
+pkg_compress() {
+	echo -n "archiving ${PKG_NAME} "
+	tar cf ${PKG_NAME}.tar ${PKG_NAME}
+	echo "compressing"
+	xz -T 0 -v ${PKG_NAME}.tar
+}
+
+pkg_dir_compress() {
+	echo "compressing packages in directory ${PKG_NAME}"
+	cd ${PKG_NAME} 
+	for i in * 
+	do 
+		if [ -d $i ] 
+	   	then  
+			if [ "$i" != "libs" ]
+			then
+				echo -n "archiving $i "
+				tar cf $i.tar $i
+				echo "compressing"
+				xz -T 0 -v $i.tar
+			fi
+	   	fi
+	done
+	cd ..
+}
+
+pkg_md5() {
+	echo "creating md5 sum for packages in directory ${PKG_NAME}"
+	cd ${PKG_NAME}
+	echo -n > packages
+	for i in *.xz 
+	do 
+		md5sum $i  >> packages
+	done
+	cat packages | awk '{print $2 " " $1}' | sort  | awk '{print $2 "  " $1 }' > packages.md5
+	rm packages
+	cd ..
+}
+
+pkg_md5_push() {
+	echo "pushing md5 file from directory ${PKG_NAME} for ${PKG_ARCH}"
+	cd ${PKG_NAME}
+		scp packages.md5 ${SF_USER}@frs.sourceforge.net:/home/frs/project/kanapi/packages/${KANAPI_VERSION}/${PKG_ARCH}
+	cd ..
+}
+
+
+pkg_release() {
+	pkg_dir_compress
+	pkg_md5
+}
+
+pkg_help() {
+	name=`basename $0`
+	echo "Usage: ${name} command options"
+	echo "commands: push, dir_push, compress, dir_compress, md5, release md5_push"
+	echo "commands with options:"
+	echo "push package [arm | i686 | x86_64 ]       - upload package"
+	echo "dir_push directory [arm | i686 | x86_64 ] - upload packages from directory"
+	echo "compress package                          - compress package"
+	echo "dir_compress directory                    - compress all packages in directory"
+	echo "md5 directory                             - create list of packages"
+	echo "md5_push directory                        - upload md5 sum from directory"
+	echo "release directory                         - prepare new release"
+}
+
+pkg_() {
+	pkg_help
+}
+
+${PKG_ACTION}
+

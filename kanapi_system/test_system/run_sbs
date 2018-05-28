@@ -1,0 +1,4 @@
+#!/bin/bash
+
+chroot sbs-docker /bin/bash
+

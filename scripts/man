@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$1" = "-P" -a "$2" = "cat" ]
+then
+	/bin/nroff -c -mandoc -Tlatin1 $3 
+else
+	/bin/nroff -c -mandoc -Tlatin1 $1 | less
+fi
+
+

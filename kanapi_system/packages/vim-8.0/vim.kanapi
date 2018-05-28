@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=vim
+VER=8.0
+#URL="ftp://ftp.vim.org/pub/vim/unix"
+#use SF mirror
+URL="https://downloads.sourceforge.net/project/kanapi/sources/Packages/mirror"
+EXT=tar.bz2
+#build depends on
+
+. ../settings
+
+export CFLAGS="${NCURSES_CFLAGS} -O2"
+export CPPFLAGS=${CFLAGS}
+export LDFLAGS="${NCURSES_LDFLAGS}"
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		pkg_tar_bz2
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+	${LN_SNF} vim80 ${PACKAGE_SRCDIR}
+}
+
+pkg_configure() {
+	local_copy
+	./configure --prefix=$PREFIX vim_cv_toupper_broken=no \
+	--with-tlib=ncurses vim_cv_terminfo=yes vim_cv_tty_group=world vim_cv_tty_mode=0620 \
+	vim_cv_getcwd_broken=no vim_cv_stat_ignores_slash=no vim_cv_memmove_handles_overlap=yes \
+	--without-x --enable-gui=no ac_cv_header_elf_h=no --disable-selinux
+
+}
+
+pkg_build() {
+	pkg_build_local
+}
+
+pkg_install() {
+	pkg_install_local && pkg_install_bin_all
+}
+
+pkg_check() {
+	echo "PACKAGE_SRCDIR=${PACKAGE_SRCDIR}"
+	echo "CFLAGS=${CFLAGS}"
+	echo "LDFLAGS=${LDFLAGS}"
+	echo "KANAPI_VER=${KANAPI_VER}"
+}
+

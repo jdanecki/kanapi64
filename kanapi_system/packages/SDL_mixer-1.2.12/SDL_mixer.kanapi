@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=SDL_mixer
+VER=1.2.12
+URL="http://www.libsdl.org/projects/SDL_mixer/release"
+EXT=tar.gz
+
+. ../settings
+
+#export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/kanapi_packages/smpeg-3.12.2012/lib"
+#export CFLAGS="`pkg-config --cflags vorbisfile` -I/kanapi_packages/libmad-0.15.1b/include"
+#export LDFLAGS="`pkg-config --libs vorbisfile` -ldl -lrt -lpthread -L/kanapi_packages/libmad-0.15.1b/lib"
+
+pkg_configure() {
+	 ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+#	--enable-music-ogg --enable-music-mod
+#	 --enable-music-mp3
+#	--with-smpeg-prefix=/kanapi_packages/smpeg-3.12.2012 \
+#	--enable-music-mp3-mad-gpl
+}
+
+pkg_install() {
+        pkg_install_pc_all
+        pkg_install_libs
+}
+

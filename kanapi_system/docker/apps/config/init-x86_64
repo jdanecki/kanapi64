@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+#  Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+ARCH=`uname -m`
+KERNEL=`uname -r`
+
+export LANG=pl_PL.UTF-8
+export LC_ALL=pl_PL.UTF-8
+export EDITOR=vim
+export KANAPI_VER=0.9
+export USER=kanapi
+export HOME=/kanapi_0.9/x86_64/home
+export XDG_CONFIG_HOME=${HOME}/.config
+export XDG_CACHE_HOME=${HOME}/.cache
+export XDG_DATA_HOME=${HOME}/.local
+export XDG_RUNTIME_DIR=${HOME}/.cache
+export PATH=/kanapi_0.9/${ARCH}/home/bin:/kanapi_0.9/${ARCH}/bin
+/kanapi_${KANAPI_VER}/${ARCH}/packages/udev-175/libexec/udevd --daemon
+udevadm trigger
+udevadm settle
+
+ssh-keygen -A
+#/bin/sshd
+/bin/localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
+. /kanapi_0.9/${ARCH}/packages/bash-completion-2.4/etc/profile.d/bash_completion.sh
+. /kanapi_0.9/x86_64/packages/mc-4.8.20/libexec/mc/mc.sh
+
+echo "###########################################################"
+echo "#                                                          "
+echo "#                                                          "
+echo "#    Welcome to KaNaPi ${KANAPI_VER} for x86_64            "
+echo "#    Arch: ${ARCH}                                         "
+echo "#    Kernel: ${KERNEL}                                     "
+echo "###########################################################"
+
+/bin/bash
+

@@ -1,0 +1,4 @@
+qemu-system-x86_64 -enable-kvm -hda image -cdrom rancheros.iso -m 1024 -boot d -redir tcp:2222::22
+
+# -smbios type-0,uefi=on
+

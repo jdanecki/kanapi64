@@ -1,0 +1,11 @@
+#!/bin/bash
+
+PKG_FILE=$1
+PKG_ACTION="pkg_$2"
+
+#echo "running $PKG_FILE ${PKG_ACTION}"
+. ./$PKG_FILE
+
+${PKG_ACTION}
+
+

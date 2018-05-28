@@ -1,0 +1,3 @@
+VER=6
+NAME=apps
+BASE_IMAGE=gui

@@ -1,0 +1,24 @@
+#!/bin/bash
+#set -x
+# $1 - package name
+# $2 - verbose|ci
+
+if [ "x$1" == "x" ]
+then
+	echo "package name missing!"
+	echo "use: script_name package_name"
+	echo "where script_name is one from download|prepare|configure|build|install|help|rebuild_install|reinstall|redownload|verify|reverify"
+	echo "for example: download gzip"
+else
+	case "x$2" in
+	xverbose) make $1 ACTION=`basename $0` VERBOSE=1
+		;;
+        xout) make -s $1 ACTION=`basename $0` VERBOSE=2
+		;;
+        xci) make $1 ACTION=`basename $0` VERBOSE=3
+		;;
+	*) make -s $1 ACTION=`basename $0` VERBOSE=0
+		;;
+	esac
+fi
+

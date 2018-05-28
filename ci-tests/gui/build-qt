@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -f Dockerfile-qt -m 4g -t kanapi-qt:ci .
+
