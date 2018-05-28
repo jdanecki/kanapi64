@@ -1,4 +1,4 @@
-glibc_ver=2.23
+glibc_ver=2.25
 binutils_ver=2.30
 cross_gcc_ver=4.9.4
 gmp_ver=6.1.2
