@@ -8,4 +8,5 @@ popd
 
 cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${KANAPI_VER}.${SBS_BUILD}.tar.xz .
 ./make_image
+docker push kanapi/kanapi-${NAME}:${VER}
 
