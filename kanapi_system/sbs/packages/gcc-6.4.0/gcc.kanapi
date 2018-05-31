@@ -51,7 +51,6 @@ pkg_build() {
 }
 
 pkg_install() {
-	MAKE_JOBS=1
 	${MAKE} -j ${MAKE_JOBS}  MAKEINFO=true install
 
 	${LN_SF} ${KANAPI_BASE}/binutils-${binutils_ver}/bin/as ${PREFIX}/libexec/gcc/x86_64-unknown-linux-gnu/${gcc_ver}/as
