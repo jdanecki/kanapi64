@@ -26,8 +26,9 @@ export SBS_BUILD=@SBS_BUILD@
 ARCH=`uname -m`
 
 export KANAPI_VER=`cat ../scripts/KANAPI_VER`
-export IMAGE_VER=${KANAPI_VER}.${SBS_BUILD}
-echo "Preparing SBS-docker for ${KANAPI_VER} on ${ARCH}"
+export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
+export IMAGE_VER=${KANAPI_VER}.${SBS_BUILD}-${KANAPI_BRANCH}
+echo "Preparing SBS-docker for ${KANAPI_VER} on ${ARCH} with ${KANAPI_BRANCH} branch"
 KANAPI_BASE=/kanapi_${KANAPI_VER}
 KANAPI_BASE_PACKAGES=${KANAPI_BASE}/packages
 KANAPI_BASE_LOCAL=kanapi_${KANAPI_VER}

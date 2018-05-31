@@ -6,10 +6,9 @@ pushd ../sbs-docker/interactive/
 ./create_sbs_docker
 popd
 
-cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${KANAPI_VER}.${SBS_BUILD}.tar.xz .
+cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${VER}.tar.xz .
 ./make_image
 
-#BRANCH=`git rev-parse --abbrev-ref HEAD`
 #if [ "${BRANCH}" = "master" ]
 #then
 #	docker push kanapi/kanapi-${NAME}:${VER}
