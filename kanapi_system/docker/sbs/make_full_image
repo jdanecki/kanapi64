@@ -9,12 +9,12 @@ popd
 cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${KANAPI_VER}.${SBS_BUILD}.tar.xz .
 ./make_image
 
-BRANCH=`git rev-parse --abbrev-ref HEAD`
-if [ "${BRANCH}" = "master" ]
-then
-	docker push kanapi/kanapi-${NAME}:${VER}
-else
-	echo "don't push from ${BRANCH} branch"
-fi
+#BRANCH=`git rev-parse --abbrev-ref HEAD`
+#if [ "${BRANCH}" = "master" ]
+#then
+#	docker push kanapi/kanapi-${NAME}:${VER}
+#else
+#	echo "don't push from ${BRANCH} branch"
+#fi
 
 
