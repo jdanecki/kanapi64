@@ -1,0 +1,30 @@
+#!/bin/bash
+
+. version
+
+USE_LOCAL=1
+DIR=`pwd`
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
+
+if [ ! -d ${HOME}/src ] ; then mkdir ${HOME}/src ; fi
+if [ ! -d kanapi ] 
+then 
+	if [ "${USE_LOCAL}" = "1" ] 
+	then
+		git clone -b ${KANAPI_BRANCH} ${REPO_BASE} kanapi
+	else
+		git clone https://github.com/jdanecki/kanapi.git kanapi
+	fi
+else
+	pushd kanapi
+	git pull
+	popd
+fi
+
+docker run -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
+   --cap-add=ALL \
+	-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
+	-v `pwd`/build:/build \
+	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
+
