@@ -28,3 +28,11 @@ docker run -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:
 	-v `pwd`/build:/build \
 	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
 
+if [ "$?" = "0" ]
+then
+	ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}-${KANAPI_BRANCH}" -q`
+	docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} ${VER}-${KANAPI_BRANCH}" ${ID} kanapi/kanapi-${NAME}:${VER}-${KANAPI_BRANCH}
+else 
+	exit 1	
+fi
+
