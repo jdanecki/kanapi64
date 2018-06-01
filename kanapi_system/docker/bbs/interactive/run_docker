@@ -2,6 +2,6 @@
 
 . version
 
-ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}" -q`
+ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}-${KANAPI_BRANCH}" -q`
 docker start -i -a ${ID}
 
