@@ -2,7 +2,6 @@
 
 REPO_BASE=`git rev-parse --show-toplevel`
 KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
-export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
 VER=${KANAPI_VER}.${SBS_BUILD}-${KANAPI_BRANCH}
 NAME=sbs
