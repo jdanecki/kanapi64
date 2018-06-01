@@ -23,7 +23,7 @@ else
 fi
 
 docker create -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
-   --cap-add=ALL \
+	--cap-add=ALL \
 	-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
-	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE}
+	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /bin/bash
 
