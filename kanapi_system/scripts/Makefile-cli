@@ -1,13 +1,10 @@
 #Text only apps, libs 
 #BBS is required to compile below targets
 
-ifeq (x$(KANAPI_TOP),x)
-BASE=
-else
-BASE=$(KANAPI_TOP)/
-endif
+REPO_BASE=$(shell git rev-parse --show-toplevel)
+SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
 
-include $(BASE)../scripts/Makefile.common
+include $(SCRIPTS_DIR)/Makefile.common
 
 cli: cli-base llvm ocl docker-ce
 
