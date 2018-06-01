@@ -118,7 +118,7 @@ do
 	done
 done
 
-for i in packages/gcc-${gcc_ver}/libexec/gcc/${ARCH}-unknown-linux-gnu/${gcc_ver}/*
+for i in packages/gcc-${gcc_ver}/libexec/gcc/${ARCH}-pc-linux-gnu/${gcc_ver}/*
 do		
 	file -i ${i} | grep application > /dev/null
 	if [ "$?" = "0" ] ; then strip ${i} ; fi
