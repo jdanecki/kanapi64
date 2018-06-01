@@ -29,6 +29,11 @@ EXT=tar.gz
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+	sed -i "s/-Werror//g" Makefile
+}
+
 pkg_install() {
 	pkg_install_make &&	pkg_install_sbin_all
 }
