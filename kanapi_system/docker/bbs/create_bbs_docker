@@ -1,13 +1,12 @@
 #!/bin/bash
 
+set -e
 . version
 
 USE_LOCAL=1
 DIR=`pwd`
 REPO_BASE=`git rev-parse --show-toplevel`
 KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
-
-echo "BRANCH=${KANAPI_BRANCH}"
 
 if [ ! -d ${HOME}/src ] ; then mkdir ${HOME}/src ; fi
 if [ ! -d kanapi ] 
@@ -24,11 +23,13 @@ else
 	popd
 fi
 
-cat build.template | sed "s/@KANAPI_VER@/${KANAPI_VER}/" | sed "s/%SBS_BUILD%/${SBS_BUILD}/"  > build
-chmod +x build
-docker create -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
+docker run -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
    --cap-add=ALL \
 	-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
 	-v `pwd`/build:/build \
-	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE}
+	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
+
+ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}-${KANAPI_BRANCH}" -q`
+docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} ${VER}-${KANAPI_BRANCH}" ${ID} kanapi/kanapi-${NAME}:${VER}-${KANAPI_BRANCH}
+docker rm ${ID}
 

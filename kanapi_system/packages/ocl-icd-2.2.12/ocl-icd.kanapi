@@ -17,34 +17,29 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=audiofile
-VER=0.3.6
-URL="http://ftp.acc.umu.se/pub/GNOME/sources/audiofile/0.3"
-EXT=tar.xz
+PACKAGE_NAME=ocl-icd
+VER=2.2.12
+URL="https://forge.imag.fr/frs/download.php/836"
+EXT=tar.gz
 #build depends on
-
-LIB_DEPENDS="alsa"
+#LIB_DEPENDS=""
 
 . ../settings
 
-if [ -n "${PKG_CONFIG}" ]
-then
-	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir alsa`"
-fi
-
-export LIBS="-lm -lstdc++ -lpthread"
-export CXXFLAGS="${CFLAGS}"
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
 	pkg_configure_local
-	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/01_gcc6.patch
+	sed -i "s/inline void dump_vendor_icd/static inline void dump_vendor_icd/" ocl_icd_loader.c
 }
+
 pkg_build() {
 	pkg_build_local
 }
 
 pkg_install() {
 	cd build
-	pkg_install_all
+	pkg_install_pc_all && pkg_install_libs
 }
 

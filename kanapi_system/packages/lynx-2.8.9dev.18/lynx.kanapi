@@ -17,34 +17,37 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=audiofile
-VER=0.3.6
-URL="http://ftp.acc.umu.se/pub/GNOME/sources/audiofile/0.3"
-EXT=tar.xz
+PACKAGE_NAME=lynx
+VER=2.8.9dev.18
+URL="http://invisible-mirror.net/archives/lynx/tarballs"
+EXT=tar.bz2
 #build depends on
-
-LIB_DEPENDS="alsa"
+LIB_DEPENDS=""
 
 . ../settings
 
-if [ -n "${PKG_CONFIG}" ]
-then
-	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir alsa`"
-fi
+export LDFLAGS="${LDFLAGS} `ncurses5-config --libs`"
+export CFLAGS="${CFLAGS} `ncurses5-config --cflags`"
 
-export LIBS="-lm -lstdc++ -lpthread"
-export CXXFLAGS="${CFLAGS}"
-
-pkg_configure() {
-	pkg_configure_local
-	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/01_gcc6.patch
+pkg_download() {
+	PACKAGE_FILENAME=${PACKAGE_NAME}-${VER}.${EXT}
+	PACKAGE_PATH=${PACKAGE_NAME}${VER}.${EXT}
+	
+	pkg_curl
 }
-pkg_build() {
-	pkg_build_local
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		pkg_tar_bz2
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+	${LN_SNF} ${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 }
 
 pkg_install() {
-	cd build
-	pkg_install_all
+	pkg_install_make_bin_all
 }
 

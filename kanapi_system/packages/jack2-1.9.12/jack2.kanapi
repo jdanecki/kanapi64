@@ -17,34 +17,30 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=audiofile
-VER=0.3.6
-URL="http://ftp.acc.umu.se/pub/GNOME/sources/audiofile/0.3"
-EXT=tar.xz
+PACKAGE_NAME=jack2
+VER=1.9.12
+URL="https://github.com/jackaudio/jack2/releases/download/v1.9.12"
+EXT=tar.gz
 #build depends on
-
-LIB_DEPENDS="alsa"
+LIB_DEPENDS="ncurses"
 
 . ../settings
 
-if [ -n "${PKG_CONFIG}" ]
-then
-	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir alsa`"
-fi
-
-export LIBS="-lm -lstdc++ -lpthread"
-export CXXFLAGS="${CFLAGS}"
+export LDFLAGS="-lreadline ${LDFLAGS} -lstdc++ -L${KANAPI_BASE}/readline-${readline_ver}/lib -lm"
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/readline-${readline_ver}/include"
 
 pkg_configure() {
-	pkg_configure_local
-	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/01_gcc6.patch
+	local_copy
+	python waf configure --prefix=${PREFIX} --alsa --readline=yes
 }
+
 pkg_build() {
-	pkg_build_local
+	cd  build
+	python waf build
 }
 
 pkg_install() {
 	cd build
-	pkg_install_all
+	python waf install && pkg_install_bin_all && pkg_install_libs && pkg_install_pc_all_only
 }
 

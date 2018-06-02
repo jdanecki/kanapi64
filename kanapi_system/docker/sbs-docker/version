@@ -2,4 +2,5 @@ VER=test
 NAME=cli
 BASE_IMAGE=cli:12
 SBS_BUILD=6
+export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
 

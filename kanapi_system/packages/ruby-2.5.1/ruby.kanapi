@@ -17,34 +17,29 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=audiofile
-VER=0.3.6
-URL="http://ftp.acc.umu.se/pub/GNOME/sources/audiofile/0.3"
+PACKAGE_NAME=ruby
+VER=2.5.1
+URL="http://ftp.ruby-lang.org/pub/ruby"
 EXT=tar.xz
 #build depends on
 
-LIB_DEPENDS="alsa"
+LIB_DEPENDS="zlib ncurses"
 
 . ../settings
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/readline-${readline_ver}/lib"
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/readline-${readline_ver}/include -O2"
 
-if [ -n "${PKG_CONFIG}" ]
-then
-	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir alsa`"
-fi
-
-export LIBS="-lm -lstdc++ -lpthread"
-export CXXFLAGS="${CFLAGS}"
-
-pkg_configure() {
-	pkg_configure_local
-	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/01_gcc6.patch
-}
-pkg_build() {
-	pkg_build_local
+pkg_configure_target() {	
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
+ 	--enable-shared --enable-rubygems
 }
 
 pkg_install() {
-	cd build
 	pkg_install_all
+}
+
+pkg_check() {
+	echo "PKG_VERBOSE=${PKG_VERBOSE}" > /dev/stderr 
+	set > /dev/stderr
 }
 

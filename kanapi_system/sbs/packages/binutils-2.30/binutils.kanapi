@@ -17,34 +17,35 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=audiofile
-VER=0.3.6
-URL="http://ftp.acc.umu.se/pub/GNOME/sources/audiofile/0.3"
-EXT=tar.xz
-#build depends on
-
-LIB_DEPENDS="alsa"
+PACKAGE_NAME=binutils
+VER=2.30
+URL="GNU"
+EXT=tar.bz2
 
 . ../settings
 
-if [ -n "${PKG_CONFIG}" ]
-then
-	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir alsa`"
-fi
+export CFLAGS="${CFLAGS} -specs=${KANAPI_BASE}/glibc-${glibc_ver}/gcc-specs"
 
-export LIBS="-lm -lstdc++ -lpthread"
-export CXXFLAGS="${CFLAGS}"
+pkg_prepare() {
+	pkg_tar_bz2
+}
 
 pkg_configure() {
-	pkg_configure_local
-	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/01_gcc6.patch
-}
-pkg_build() {
-	pkg_build_local
+	ORIG_FLEX=`which flex`
+	if [ -n "${ORIG_FLEX}" ]
+	then
+		mv ${ORIG_FLEX} /bin/flex.tmp
+	fi
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --without-docdir \
+	--disable-multilib \
+	--enable-threads 
+	if [ -n "${ORIG_FLEX}" ]
+	then
+		mv /bin/flex.tmp ${ORIG_FLEX}
+	fi
 }
 
 pkg_install() {
-	cd build
-	pkg_install_all
+	pkg_install_make && pkg_install_bin_all && pkg_install_libs
 }
 

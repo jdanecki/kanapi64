@@ -6,6 +6,17 @@ pushd ../sbs-docker/interactive/
 ./create_sbs_docker
 popd
 
-cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${KANAPI_VER}.${SBS_BUILD}.tar.xz .
+cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${VER}.tar.xz .
 ./make_image
+
+ID=`docker ps -a --filter "name=kanapi-cli-test-${KANAPI_BRANCH}" -q`
+docker rm ${ID}
+
+#if [ "${BRANCH}" = "master" ]
+#then
+#	docker push kanapi/kanapi-${NAME}:${VER}
+#else
+#	echo "don't push from ${BRANCH} branch"
+#fi
+
 
