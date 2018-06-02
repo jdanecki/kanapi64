@@ -27,12 +27,12 @@ EXT=tar.xz
 
 pkg_prepare() {
 	pkg_tar_xz
-	mkdir -p ${PREFIX}/x86_64-unknown-linux-gnu/lib
-	mkdir -p ${PREFIX}/x86_64-unknown-linux-gnu/include
-	mkdir -p ${PREFIX}/x86_64-unknown-linux-gnu/sys-include
-	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/lib/*     ${PREFIX}/x86_64-unknown-linux-gnu/lib
-	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/include/* ${PREFIX}/x86_64-unknown-linux-gnu/include
-	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/include/* ${PREFIX}/x86_64-unknown-linux-gnu/sys-include
+	mkdir -p ${PREFIX}/x86_64-pc-linux-gnu/lib
+	mkdir -p ${PREFIX}/x86_64-pc-linux-gnu/include
+	mkdir -p ${PREFIX}/x86_64-pc-linux-gnu/sys-include
+	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/lib/*     ${PREFIX}/x86_64-pc-linux-gnu/lib
+	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/include/* ${PREFIX}/x86_64-pc-linux-gnu/include
+	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/include/* ${PREFIX}/x86_64-pc-linux-gnu/sys-include
 }
 
 pkg_configure() {
@@ -53,15 +53,15 @@ pkg_build() {
 pkg_install() {
 	${MAKE} -j ${MAKE_JOBS}  MAKEINFO=true install
 
-	${LN_SF} ${KANAPI_BASE}/binutils-${binutils_ver}/bin/as ${PREFIX}/libexec/gcc/x86_64-unknown-linux-gnu/${gcc_ver}/as
-	${LN_SF} ${KANAPI_BASE}/binutils-${binutils_ver}/bin/ld ${PREFIX}/libexec/gcc/x86_64-unknown-linux-gnu/${gcc_ver}/ld
+	${LN_SF} ${KANAPI_BASE}/binutils-${binutils_ver}/bin/as ${PREFIX}/libexec/gcc/x86_64-pc-linux-gnu/${gcc_ver}/as
+	${LN_SF} ${KANAPI_BASE}/binutils-${binutils_ver}/bin/ld ${PREFIX}/libexec/gcc/x86_64-pc-linux-gnu/${gcc_ver}/ld
 
 	${LN_SF} ${PREFIX}/bin/gcc ${PREFIX}/bin/cc
 
 	LINKER_NAME=ld-linux-x86-64.so.2
-	echo "updating spec to ${LINKER_NAME} in ${PREFIX}/lib/gcc/x86_64-unknown-linux-gnu/${gcc_ver}/specs"
+	echo "updating spec to ${LINKER_NAME} in ${PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}/specs"
 	${PREFIX}/bin/gcc -dumpspecs | sed "s@/lib64/ld-linux-x86-64.so.2@${LIBC_PREFIX}/lib/ld-linux-x86-64.so.2@g" \
-		> ${PREFIX}/lib/gcc/x86_64-unknown-linux-gnu/${gcc_ver}/specs
+		> ${PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}/specs
 	
 	pkg_install_bin_all
 
@@ -78,7 +78,7 @@ pkg_install() {
 
 	for i in cc1 cc1plus collect2 lto-wrapper lto1
 	do
-		patchelf --set-interpreter ${LIBC_PREFIX}/lib/ld-linux-x86-64.so.2 ${PREFIX}/libexec/gcc/x86_64-unknown-linux-gnu/${VER}/$i
+		patchelf --set-interpreter ${LIBC_PREFIX}/lib/ld-linux-x86-64.so.2 ${PREFIX}/libexec/gcc/x86_64-pc-linux-gnu/${VER}/$i
 	done
 }
 
