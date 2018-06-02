@@ -36,14 +36,14 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		pkg_tar_gz
-		${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} ${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {	
 	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	./configure --prefix=$PREFIX \
 	--with-tcl=`${PKG_CONFIG} --variable=libdir tcl`
 }
 
@@ -53,6 +53,6 @@ pkg_build() {
 
 pkg_install() {
 	cd build
-	pkg_install_make && pkg_install_bin_all
+	pkg_install_make_bin_all
 }
 

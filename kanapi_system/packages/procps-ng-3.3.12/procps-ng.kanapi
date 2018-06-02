@@ -32,14 +32,11 @@ export LDFLAGS="${LDFLAGS} -lm"
 
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
 	ac_cv_func_malloc_0_nonnull=yes ac_cv_func_realloc_0_nonnull=yes
 }
 
 pkg_install() {
-	pkg_install_pc_all
-	pkg_install_bin_all
-	pkg_install_sbin_all
-	pkg_install_libs
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_sbin_all && pkg_install_libs
 }
 

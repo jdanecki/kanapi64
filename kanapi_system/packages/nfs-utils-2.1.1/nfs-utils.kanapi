@@ -35,7 +35,7 @@ export CPP="${KANAPI_C_COMPILER} -E ${CFLAGS}"
 
 pkg_configure() {
 	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	./configure --prefix=$PREFIX \
 	--sysconfdir=${PREFIX}/etc --with-statedir=${PREFIX}/var/lib/nfs \
 	--without-tcp-wrappers --disable-gss --enable-libmount-mount \
 	--with-nfsconfig=${PREFIX}/etc/nfs.conf  --with-statduser=kanapi \

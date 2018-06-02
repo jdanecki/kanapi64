@@ -187,10 +187,6 @@ font-cursor-misc:
 libxshmfence:
 	@$(RUN_TARGET)
 
-ifeq ($(KANAPI_TARGET),arm)
-llvm_ver=$(llvm3_3_ver)
-endif	
-
 wayland-protocols: wayland
 	@$(RUN_TARGET)
 
@@ -603,10 +599,6 @@ xvinfo: libXv
 xauth:
 	@$(RUN_TARGET)
 
-ifeq ($(KANAPI_TARGET),arm)
-tk graphviz groff :
-	true
-else
 tk:
 	@$(RUN_TARGET)
 
@@ -615,8 +607,6 @@ graphviz:
 
 groff:
 	@$(RUN_TARGET)
-
-endif
 
 libpng14:
 	@$(RUN_TARGET)

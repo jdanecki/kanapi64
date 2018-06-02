@@ -38,9 +38,9 @@ pkg_prepare() {
 	else
 		PACKAGE_FILENAME=${PACKAGE_NAME}.${VER}.${EXT}
 		tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
-		${LN_SF} ${KANAPI_BUILD_SRC}/jpeg-9b ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} jpeg-9b ${PACKAGE_SRCDIR}
 }
 
 pkg_install() {

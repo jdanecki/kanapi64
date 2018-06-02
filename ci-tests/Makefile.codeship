@@ -1,4 +1,7 @@
-all: bbs
+all: b_0_10
+
+b_0_10:
+	echo "build disabled on branch 0.10"
 
 bbs: check_links
 	cd ../kanapi_system/`uname -m`   ; make pkg-config ACTION=install

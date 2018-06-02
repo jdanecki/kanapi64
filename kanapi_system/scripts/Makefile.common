@@ -1,35 +1,14 @@
 ifeq (x$(KANAPI_COMMON_INCLUDED),x)
 KANAPI_COMMON_INCLUDED=1
 
-ifeq (x$(KANAPI_TOP),x)
-BASE=
-include target_name
-else
-BASE=$(KANAPI_TOP)/
-include $(BASE)target_name
-endif
+KANAPI_VER=$(shell cat  $(SCRIPTS_DIR)/KANAPI_VER)
+KANAPI_BASE=/kanapi_$(KANAPI_VER)/packages
 
-KANAPI_VER=$(shell cat  $(BASE)../scripts/KANAPI_VER)
-CURRENT_ARCH=$(shell uname -m)
-COMPILERS=cross_gcc
-KANAPI_BASE=/kanapi_$(KANAPI_VER)/$(CURRENT_ARCH)/packages
+COMPILERS=gcc
 
-ifeq ($(KANAPI_TARGET),$(CURRENT_ARCH))
-COMPILERS+=gcc
-endif
-
-ifeq ($(CURRENT_ARCH),x86_64)
-ifeq ($(KANAPI_TARGET),i686)
-	DISABLE_PACKAGES=1
-else
-	DISABLE_PACKAGES=0
-endif
-endif
-
-include $(BASE)../../cross_compilers/scripts/config.kanapi
-include $(BASE)../scripts/config.kanapi
-include $(BASE)../scripts/config-Makefile.kanapi
-include $(BASE)../scripts/colors.kanapi
-include $(BASE)../scripts/rules.kanapi
+include $(SCRIPTS_DIR)/config.kanapi
+include $(SCRIPTS_DIR)/config-Makefile.kanapi
+include $(SCRIPTS_DIR)/colors.kanapi
+include $(SCRIPTS_DIR)/rules.kanapi
 endif
 

@@ -48,12 +48,9 @@ pkg_prepare() {
 pkg_configure() {
 	local_copy
 	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/0002-gcc-5.x-MKlib_gen.patch
-	if [ "${KANAPI_TARGET}" = "x86_64" ]
-	 then
-		 export CFLAGS="${CFLAGS}"
-	 	 export LDFLAGS="${LDFLAGS} -ldl"
-	 fi
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-shared --enable-termcap --with-termlib
+	 export CFLAGS="${CFLAGS}"
+	 export LDFLAGS="${LDFLAGS} -ldl"
+	./configure --prefix=$PREFIX --with-shared --enable-termcap --with-termlib
 }
 
 pkg_build() {

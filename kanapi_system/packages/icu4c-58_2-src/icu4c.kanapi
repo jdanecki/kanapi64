@@ -31,29 +31,16 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		pkg_tgz
-		${LN_SF} ${KANAPI_BUILD_SRC}/icu ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} icu ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {	
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then
-		${PACKAGE_SRCDIR}/source/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
-	else
-		if [ ! -d host ]; then mkdir host ; fi
-		cd host
-		${PACKAGE_SRCDIR}/source/configure --prefix=$PREFIX --host=`uname -m`-kanapi-linux-gnu
-		${MAKE} -j ${MAKE_JOBS}
-		cd ..
-		${PACKAGE_SRCDIR}/source/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-cross-build=`pwd`/host
-	fi
+		${PACKAGE_SRCDIR}/source/configure --prefix=$PREFIX  
 }
 
 pkg_install() {
-	pkg_install_pc_all
-	pkg_install_bin_all
-	pkg_install_sbin_all
-	pkg_install_libs
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_sbin_all && pkg_install_libs
 }
 

@@ -30,7 +30,7 @@ LIB_DEPENDS="alsa x11"
 export LDFLAGS="${LDFLAGS} -lrt -ldl -lpthread -lm"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--with-x --enable-alsa --enable-threads 
 }
 

@@ -28,10 +28,10 @@ LIB_DEPENDS="libpng zlib expat x11 xcb xau xext pixman-1"
 . ../settings
 
 export LDFLAGS="${LDFLAGS} -lpthread -lm"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--enable-tee=yes --enable-xcb=yes -enable-pdf --disable-gtk-doc
 #--enable-ps 
 }

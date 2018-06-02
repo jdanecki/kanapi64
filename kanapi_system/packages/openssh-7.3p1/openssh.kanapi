@@ -30,7 +30,7 @@ export CFLAGS="${CFLAGS}"
 export LDFLAGS="${LDFLAGS} -lpthread"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --without-openssl-header-check --disable-strip \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --without-openssl-header-check --disable-strip \
 	--with-privsep-path=${PREFIX}/var/empty
 }
 
@@ -40,11 +40,7 @@ pkg_install() {
 }
 
 pkg_check() {
-	if [ "${KANAPI_TARGET}" = `uname -m` ] 
-	then
-		echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
-	fi
-
+	echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
 	echo "CFLAGS=${CFLAGS}"
 	echo "LDFLAGS=${LDFLAGS}"
 }

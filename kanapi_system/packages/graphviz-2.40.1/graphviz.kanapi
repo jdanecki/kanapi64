@@ -28,8 +28,8 @@ LIB_DEPENDS="expat xaw7 xrender x11 cairo tcl tk xmu xext ice xpm sm ruby-2.4"
 . ../settings
 
 export LDFLAGS="${LDFLAGS} -lm -lrt -lpthread -lresolv -lstdc++"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
-export CXXCPP="${KANAPI_TARGET_NAME}-g++ -E ${CFLAGS} -std=c++11"
+export CPP="gcc -E ${CFLAGS}"
+export CXXCPP="g++ -E ${CFLAGS} -std=c++11"
 if [ -n "${PKG_CONFIG}" ]
 then
 	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir cairo`"
@@ -52,7 +52,7 @@ pkg_configure() {
 	mv configure.tmp configure
 	chmod +x configure
 	export TCLSH_EXEC_PREFIX=`${PKG_CONFIG} --variable=prefix tcl`
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-qt=no
+	./configure --prefix=$PREFIX  --with-qt=no
 }
 
 pkg_build() {

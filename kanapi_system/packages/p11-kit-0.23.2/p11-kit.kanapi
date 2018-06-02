@@ -25,7 +25,7 @@ EXT=tar.gz
 . ../settings
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--without-libtasn1
 }
 

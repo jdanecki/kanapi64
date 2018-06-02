@@ -1,9 +1,0 @@
-. ../../scripts/target_name_x86_64
-
-if [ "x${PKG_VERBOSE}" = "x1" ]
-then
-	echo "*** Processing ${PACKAGE_NAME} for ${KANAPI_TARGET} ***"
-fi
-
-. ../../scripts/settings
-

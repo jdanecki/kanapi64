@@ -32,7 +32,7 @@ export LDFLAGS="${LDFLAGS} -lpthread -L${KANAPI_BASE}/acl-${acl_ver}/lib"
 pkg_configure() {
 	local_copy
 	rm -rf testcases/network/rpc
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	./configure --prefix=$PREFIX  \
 	--with-bash --with-open-posix-testsuite --with-realtime-testsuite --without-modules
 }
 

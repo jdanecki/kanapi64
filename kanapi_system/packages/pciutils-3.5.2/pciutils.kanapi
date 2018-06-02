@@ -35,16 +35,14 @@ pkg_configure() {
 
 pkg_build() {
 	cd build
-	${MAKE} PREFIX=${PREFIX} SHARED=yes ZLIB=yes CROSS_COMPILE=${KANAPI_TARGET_NAME}- CFLAGS="${CFLAGS}"
+	${MAKE} PREFIX=${PREFIX} SHARED=yes ZLIB=yes CFLAGS="${CFLAGS}"
 }
 
 pkg_install() {
 	cd build
 	${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} SHARED=yes install 
 	${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} SHARED=yes install-lib
-	pkg_install_sbin_all
-	pkg_install_libs
-	pkg_install_pc_all_only
+	pkg_install_sbin_all && pkg_install_libs &&	pkg_install_pc_all_only
 }
 
 pkg_check() {

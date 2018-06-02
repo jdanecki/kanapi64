@@ -1,0 +1,148 @@
+#!/bin/bash
+#
+#  Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. ../scripts/config.kanapi
+
+export SBS_BUILD=@SBS_BUILD@
+
+ARCH=`uname -m`
+
+export KANAPI_VER=`cat ../scripts/KANAPI_VER`
+export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
+export IMAGE_VER=${KANAPI_VER}.${SBS_BUILD}-${KANAPI_BRANCH}
+echo "Preparing SBS-docker for ${KANAPI_VER} on ${ARCH} with ${KANAPI_BRANCH} branch"
+KANAPI_BASE=/kanapi_${KANAPI_VER}
+KANAPI_BASE_PACKAGES=${KANAPI_BASE}/packages
+KANAPI_BASE_LOCAL=kanapi_${KANAPI_VER}
+SBS_DIR=sbs-docker
+
+echo "KANAPI_BASE=${KANAPI_BASE}"
+echo "SBS_DIR=${SBS_DIR}"
+rm -rf ${SBS_DIR}
+mkdir ${SBS_DIR}
+cd ${SBS_DIR}
+
+echo "Copying files"
+for d in dev proc run sys tmp
+do
+	cp -ar ${KANAPI_BASE}/$d .
+done
+
+mkdir packages
+mkdir lib
+mkdir -p var/cache
+mkdir -p var/empty
+mkdir -p var/lib/alsa
+mkdir -p var/log
+mkdir -p var/run
+
+for pkg in bash binutils busybox curl file gcc glib glibc gmp libffi libgcrypt \
+	libssh2 make mpc mpfr openssl zlib
+do
+	pkg_v=${pkg}_ver
+	cp -ar ${KANAPI_BASE_PACKAGES}/${pkg}-${!pkg_v} packages
+done
+
+mkdir -p packages/pkg-config-${pkg_config_ver}/share/pkgconfig
+cp -ar ${KANAPI_BASE_PACKAGES}/pkg-config-${pkg_config_ver}/bin packages/pkg-config-${pkg_config_ver}
+for i in aclocal
+do
+	cp -ar ${KANAPI_BASE_PACKAGES}/pkg-config-${pkg_config_ver}/share/$i packages/pkg-config-${pkg_config_ver}/share
+done
+
+for i in `find packages -name pkgconfig | grep lib`
+do
+	ln -s ${KANAPI_BASE}/$i/*.pc packages/pkg-config-${pkg_config_ver}/share/pkgconfig
+done
+
+cp -ar ${KANAPI_BASE_PACKAGES}/linux-headers-${linux_headers_ver} packages
+cp -ar ${KANAPI_BASE_PACKAGES}/libgpg-error-${libgpg_error_ver} packages
+cp -ar ${KANAPI_BASE_PACKAGES}/include packages
+cp -ar ${KANAPI_BASE}/etc .
+
+mkdir -p ${KANAPI_BASE_LOCAL}/home/src
+echo "export PS1='sbs:\w\\\$ '" > ${KANAPI_BASE_LOCAL}/home/.bashrc
+chmod +x ${KANAPI_BASE_LOCAL}/home/.bashrc
+ln -sf .bashrc ${KANAPI_BASE_LOCAL}/home/.bash_profile
+
+ln -sf /packages ${KANAPI_BASE_LOCAL}
+ln -sf /bin ${KANAPI_BASE_LOCAL}/bin
+
+mkdir bin
+mkdir usr
+ln -sf /bin usr/bin
+echo "Preparing libraries"
+mkdir packages/libs
+set +e
+for pkg in packages/*
+do
+	for b in ${pkg}/bin/* ${pkg}/usr/bin/* ${pkg}/sbin/* ${pkg}/usr/sbin/*
+	do
+		if [ -f $b ]
+		then 
+			ln -sf ${KANAPI_BASE}/${b} bin
+			file -i ${b} | grep application > /dev/null
+			if [ "$?" = "0" ] ; then strip ${b} ; fi
+		fi
+	done
+	for b in ${pkg}/lib/lib* ${pkg}/lib64/lib*
+	do
+		if [ -f "$b" ]
+		then 
+			echo $pkg | grep -v -E "glibc|gcc"
+			if [ "$?" = "0" ]
+			then
+				ln -sf ${KANAPI_BASE}/${b} packages/libs
+			fi
+			file -i ${b} | grep x-sharedlib > /dev/null 
+		   	if [ "$?" = "0" ] ; then strip ${b} ; fi
+		fi
+	done
+done
+
+for i in packages/gcc-${gcc_ver}/libexec/gcc/${ARCH}-pc-linux-gnu/${gcc_ver}/*
+do		
+	file -i ${i} | grep application > /dev/null
+	if [ "$?" = "0" ] ; then strip ${i} ; fi
+done
+set -e
+ln -svf bash bin/sh
+echo "${IMAGE_VER} `date -R`" > sbs.version
+mkdir kanapi_build
+
+mkdir usr/local
+ln -sf /packages/include usr/local/include
+ln -sf /packages/libs lib64
+ln -svf /kanapi_build/kanapi/kanapi_system/scripts/pkg_kanapi bin/pkg_kanapi
+ln -svf /kanapi_build/kanapi/kanapi_system/scripts/pkg bin/pkg
+ln -svf /kanapi_build/kanapi/kanapi_system/scripts/pkg_dev bin/pkg_dev
+ln -svf /kanapi_build/kanapi/kanapi_system/scripts/update_include bin/update_include
+cp /kanapi_build/kanapi/kanapi_system/configs/.inputrc ${KANAPI_BASE_LOCAL}/home
+mkdir -p kanapi_${KANAPI_VER}/home/.local
+
+cd ..
+
+echo "Compressing image"
+tar -C sbs-docker -cf sbs-docker-${IMAGE_VER}.tar .
+rm -f sbs-docker-${IMAGE_VER}.tar.xz
+xz -T 0 sbs-docker-${IMAGE_VER}.tar
+md5sum sbs-docker-${IMAGE_VER}.tar.xz > sbs-docker-${IMAGE_VER}.tar.xz.md5
+

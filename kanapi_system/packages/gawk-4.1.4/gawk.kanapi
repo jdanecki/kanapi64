@@ -30,7 +30,7 @@ LIB_DEPENDS="ncurses"
 export LDFLAGS="-L${KANAPI_BASE}/readline-${readline_ver}/lib -lreadline ${LDFLAGS}"
 
 pkg_configure_target() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-readline=${KANAPI_BASE}/readline-${readline_ver} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-readline=${KANAPI_BASE}/readline-${readline_ver} \
 		--disable-nls
 }
 

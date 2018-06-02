@@ -60,7 +60,7 @@ eof
 	export CFLAGS="${NCURSES_CFLAGS}"
 	export LDFLAGS="${NCURSES_LDFLAGS}"
 
-	./configure	--prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
+	./configure	--prefix=$PREFIX  
 }
 
 pkg_build() {

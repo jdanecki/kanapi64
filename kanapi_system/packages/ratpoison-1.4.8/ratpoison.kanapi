@@ -29,11 +29,11 @@ LIB_DEPENDS="x11 xcb xau xext xrender fontconfig expat libpng zlib"
 
 export LIBS="-lpthread -lm"
 export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/readline-${readline_ver}/include"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/readline-${readline_ver}/lib"
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	ac_cv_lib_Xtst_XTestFakeButtonEvent=no
 }
 

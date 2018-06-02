@@ -28,7 +28,7 @@ LIB_DEPENDS="xcb xau"
 . ../settings
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX 
 }
 
 pkg_install() {

@@ -30,7 +30,7 @@ export LIBPNG_CFLAGS=`${PKG_CONFIG} --cflags libpng12`
 export LIBPNG_LIBS=`${PKG_CONFIG} --libs libpng12`
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --disable-sdltest \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --disable-sdltest \
 		--disable-webp
 }
 

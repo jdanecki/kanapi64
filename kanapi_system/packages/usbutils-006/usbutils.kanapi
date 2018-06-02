@@ -29,8 +29,6 @@ LIB_DEPENDS="zlib"
 export LDFLAGS="${LDFLAGS} -lpthread -lrt"
 
 pkg_install() {
-	pkg_install_pc_share
-	pkg_install_bin_all
-	pkg_install_sbin_all
+	pkg_install_pc_share &&	pkg_install_bin_all && pkg_install_sbin_all
 }	
 

@@ -1,15 +1,7 @@
-cross_compilers/arm
-cross_compilers/x86
-cross_compilers/x86_64
-kanapi_system/arm
-kanapi_system/x86
 kanapi_system/x86_64
 kanapi_system/x86_tests
 kanapi_system/test_system
 kanapi_initrd
-sources/RELEASES
-sbs-i686
-sbs-x86_64
 kanapi_system/kanapi-apps
 kanapi_system/kanapi-bbs
 kanapi_system/kanapi-cli

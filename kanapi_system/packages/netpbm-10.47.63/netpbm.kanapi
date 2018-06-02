@@ -32,7 +32,7 @@ export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -lm -lpth
 
 pkg_configure() {
 	local_copy
-	cat ../../../packages/${PACKAGE_NAME}-${VER}/config.kanapi | sed "s#@PREFIX@#${PREFIX}#" | sed "s/@CC@/${KANAPI_TARGET_NAME}-gcc/" | \
+	cat ../../../packages/${PACKAGE_NAME}-${VER}/config.kanapi | sed "s#@PREFIX@#${PREFIX}#" | sed "s/@CC@/gcc/" | \
 	sed "s#@JPEG_INCLUDE@#${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include#" | \
 	sed "s#@ZLIB_INCLUDE@#`${PKG_CONFIG} --variable=includedir zlib`#" | \
 	sed "s#@X11_INCLUDE@#`${PKG_CONFIG} --variable=includedir x11` -I`${PKG_CONFIG} --variable=includedir xproto`#" | \

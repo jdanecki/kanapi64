@@ -36,7 +36,7 @@ fi
 export LIBS="-lncurses -lresolv"
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --cross-prefix="${KANAPI_TARGET_NAME}-" --enable-fdt \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-fdt \
 	 --target-list="arm-softmmu arm-linux-user i386-softmmu i386-linux-user x86_64-softmmu x86_64-linux-user" \
 	 --extra-cflags="${CFLAGS}" --extra-ldflags="${LDFLAGS}" 
 	 echo  "disabled targets: aarch64-softmmu alpha-softmmu 

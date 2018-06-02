@@ -39,11 +39,11 @@ else
 fi
 
 export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -lm -lresolv"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
+export CPP="gcc -E -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
 export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
 
 pkg_configure_target() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--disable-docs
 }
 

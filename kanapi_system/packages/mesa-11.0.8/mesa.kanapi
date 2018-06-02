@@ -29,7 +29,7 @@ export LDFLAGS="-lpthread"
 #export CFLAGS="-I`${LLVM_CONFIG} --includedir`"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--without-gallium-drivers --disable-gallium-llvm --with-dri-drivers="i915,i965,swrast" \
 	--with-egl-platforms=x11,drm,wayland --enable-egl --enable-glx \
 	--enable-gles1 --enable-gles2 --enable-dri 

@@ -30,7 +30,7 @@ LIB_DEPENDS="xt x11 xft xext fontconfig"
 export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt"
 if [ -n "${PKG_CONFIG}" ]
 then
-	export CPP="${KANAPI_TARGET_NAME}-gcc -E `${PKG_CONFIG} --cflags xt`"
+	export CPP="gcc -E `${PKG_CONFIG} --cflags xt`"
 fi
 
 pkg_download() {
@@ -47,13 +47,13 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}${VER}-src.${EXT} -C ${KANAPI_BUILD_SRC}
-		${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} ${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 }
 
 pkg_configure_target() {	
-	${PACKAGE_SRCDIR}/unix/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-x \
+	${PACKAGE_SRCDIR}/unix/configure --prefix=$PREFIX  --with-x \
 		--with-tcl=`${PKG_CONFIG} --variable=libdir tcl`
 }
 

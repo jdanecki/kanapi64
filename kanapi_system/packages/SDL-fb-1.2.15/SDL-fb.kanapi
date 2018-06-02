@@ -29,7 +29,7 @@ pkg_prepare() {
 }
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --disable-pulseaudio --without-x --disable-video-directfb
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --disable-pulseaudio --without-x --disable-video-directfb
 }
 
 pkg_install() {

@@ -25,24 +25,15 @@ EXT=tar.gz
 . ../settings
 
 pkg_configure() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --disable-nls
-	fi
+		${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --disable-nls
 }
 
 pkg_build() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
-	fi
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
 }
 
 pkg_install() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
 		pkg_install_make && pkg_install_bin_all && pkg_install_libs && \
 		rm -rf ${PREFIX}/share/{man,doc,info}
-	fi
 }
 

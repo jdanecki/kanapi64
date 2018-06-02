@@ -27,12 +27,12 @@ LIB_DEPENDS="x11 ice xaw7 xmu sm xcb uuid xau xext xpm"
 
 . ../settings
 
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt"
 MAKE_JOBS=1
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--with-x --with-appresdir=${PREFIX}/app-defaults --with-doc="examples"
 }
 

@@ -31,9 +31,9 @@ export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt -L${KANAPI_BASE}/readline-${readli
 export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/readline-${readline_ver}/include"
 
 pkg_configure_target() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--without-python  --without-systemd --with-slang  --without-selinux \
-	 --enable-fs-paths-default=${KANAPI_TARGET_BIN} --without-ncursesw  --disable-use-tty-group \
+	 --enable-fs-paths-default=${KANAPI_BIN} --without-ncursesw  --disable-use-tty-group \
 	 --without-udev --disable-nls --disable-{login,sulogin,nologin,runuser} --disable-chfn-chsh
 }
 

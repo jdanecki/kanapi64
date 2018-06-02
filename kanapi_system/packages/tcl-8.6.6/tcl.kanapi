@@ -38,14 +38,14 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}${VER}-src.${EXT} -C ${KANAPI_BUILD_SRC}
-		${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} ${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 }
 
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/unix/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
+	${PACKAGE_SRCDIR}/unix/configure --prefix=$PREFIX 
 }
 
 pkg_install() {

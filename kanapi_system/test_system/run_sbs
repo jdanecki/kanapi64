@@ -1,4 +1,4 @@
 #!/bin/bash
 
-chroot sbs-`uname -m` /_start_chroot
+chroot sbs-docker /bin/bash
 

@@ -32,7 +32,7 @@ then
 	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir glu`"
 fi
 
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 pkg_configure() {
         cmake  ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} \

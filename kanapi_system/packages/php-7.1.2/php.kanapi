@@ -30,13 +30,13 @@ export LDFLAGS="${LDFLAGS} -lpthread -lm"
 #export CFLAGS="${CFLAGS} "
 if [ -n "${PKG_CONFIG}" ]
 then
-	export CPP="${KANAPI_TARGET_NAME}-gcc -E `${PKG_CONFIG} --cflags openssl`"
+	export CPP="gcc -E `${PKG_CONFIG} --cflags openssl`"
 	export CC="${KANAPI_C_COMPILER} `${PKG_CONFIG} --cflags openssl`"
 fi
 
 pkg_configure() {
     export EXTENSION_DIR=${PREFIX}/usr/lib/php/extensions
-    ${PACKAGE_SRCDIR}/configure  --prefix=${PREFIX} --host=${KANAPI_TARGET_NAME} \
+    ${PACKAGE_SRCDIR}/configure  --prefix=${PREFIX}  \
     --enable-cli --disable-cgi --enable-pcntl \
 	--mandir=${PREFIX}/usr/share/man \
     --with-config-file-path=${PREFIX}/etc/php \

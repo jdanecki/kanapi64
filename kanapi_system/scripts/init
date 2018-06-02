@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Copyright (c) 2012-2016 Jacek Danecki <jacek.m.danecki@gmail.com>
+#  Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -19,104 +19,62 @@
 
 ARCH=`uname -m`
 KERNEL=`uname -r`
+
 export LANG=pl_PL.UTF-8
 export LC_ALL=pl_PL.UTF-8
 export EDITOR=vim
-
-#mount -t proc proc /proc
-#mount -t sysfs sysfs /sys
-#mount -t devpts devpts /dev/pts
-#mount -t debugfs debugs /sys/kernel/debug
-
-#mount -t ext4 /dev/sdb2 -o noatime /kanapi_packages
-#grep kanapi_packages /proc/mounts
-#if [ $? != 0 ]
-#then
-mount -t ext4 /dev/sda2 -o noatime,commit=60 /kanapi_packages
-#fi
-
-grep kanapi_packages /proc/mounts
-if [ $? != 0 ]
-then
-	echo "#######################################"
-	echo "####   Nie moge wystartowac KaNaPi ####"
-	echo "#######################################"
-	echo "#    Napisz o tym pod adres:          #"
-	echo "#   jacek.m.danecki@gmail.com         #"
-	echo "#######################################"
-	exec /bin/bash
-fi
-
-ln -sfn /kanapi_packages/bin /bin
-rm -rf /root
-
+export KANAPI_VER=@KANAPI_VER@
 export USER=kanapi
-export HOME=/kanapi_packages/config/current
+export HOME=/kanapi_${KANAPI_VER}home
 export XDG_CONFIG_HOME=${HOME}/.config
 export XDG_CACHE_HOME=${HOME}/.cache
 export XDG_DATA_HOME=${HOME}/.local
 export XDG_RUNTIME_DIR=${HOME}/.cache
-export LD_LIBRARY_PATH=/kanapi_packages/libs
-#export BINUTILS_PREFIX="/kanapi_packages/binutils-2.22.51.20120122"
-#export GCC_PREFIX="/kanapi_packages/gcc-4.7.1-a"
-#export PATH=$GCC_PREFIX/bin:$BINUTILS_PREFIX/bin:
-if [ "${ARCH}" = "x86_64" ]
-then
-	export PATH=/bin64:/bin
-	BINDIR=/bin64
-	KANAPI_BASE=/kanapi_packages_x86_64
-else
-	export PATH=/bin
-	BINDIR=/bin
-	KANAPI_BASE=/kanapi_packages
-fi
-echo "czekam na dysk"
-sleep 1
-/bin/disks
+export LD_LIBRARY_PATH=/kanapi_${KANAPI_VER}/packages/libs
+export PATH=/bin
 
 dmesg -n 4
-#depmod -a
 
 ifconfig lo up
-#/bin/bash
 
-$KANAPI_BASE/udev-175/libexec/udevd --daemon
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mkdir /dev/pts
+mount -t devpts devpts /dev/pts
+mount -t debugfs debugs /sys/kernel/debug
+
+/kanapi_${KANAPI_VER}/packages/udev-175/libexec/udevd --daemon
 udevadm trigger
 udevadm settle
-#lsmod
-rm -f /kanapi_packages/dbus-1.6.8/var/run/dbus/pid
-dbus-daemon --system
-alsactl init
-#alsactl restore -f  /t100_B.state
 
-/kanapi_packages/config/network
+#gpm -m /dev/input/mice -t exps2
+#/kanapi_packages/config/network
+
 openvt
 openvt
+#ssh-keygen -A
 /bin/sshd
-#dmesg | grep tsc
+#/bin/localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
 
 echo "###########################################################"
-echo "#                                                         #"
-echo "#                                                         #"
-echo "#                       Witam w KaNaPi dla Lenovo         #"
-echo "                        Arch: ${ARCH}                      "
-echo "                        Kernel: ${KERNEL}                  "
+echo "#                                                          "
+echo "#                                                          "
+echo "#    Welcome to KaNaPi ${KANAPI_VER} for x86_64            "
+echo "#    Arch: ${ARCH}                                         "
+echo "#    Kernel: ${KERNEL}                                     "
 echo "###########################################################"
 
-${BINDIR}/bash
-#kanapi
+/bin/bash
 
 echo "##################################################"
-echo "###       A co chcesz teraz zrobic?            ###"
+echo "###       What do you want to do now?          ###"
 echo "###                                            ###"
-echo "### kanapi - aby uruchomic KaNaPi              ###"
-echo "### spij   - aby uspic komputer                ###"
-echo "### koniec - aby wylaczyc komputer             ###"
+echo "### finish - switch off machine                ###"
+echo "### restart - restart machine                  ###"
 echo "##################################################"
 
 while true
 do
 	/bin/bash
 done
-
 

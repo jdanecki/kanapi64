@@ -211,10 +211,6 @@ bullet3:
 ogre: sdl
 	@$(RUN_TARGET)
 
-ifeq ($(KANAPI_TARGET),arm)
-xflame water qemu gimp apps_qt webkitgtk:
-	true
-else
 webkitgtk: libwebp libsoup glib-networking
 	@$(RUN_TARGET)
 
@@ -231,7 +227,6 @@ xflame: SDL
 
 water: SDL
 	@$(RUN_TARGET)
-endif
 
 qt-creator:
 	@$(RUN_TARGET)

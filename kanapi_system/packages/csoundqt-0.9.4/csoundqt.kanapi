@@ -35,7 +35,7 @@ pkg_download() {
 }
 
 pkg_configure() {
-	${LN_SF} ${KANAPI_BUILD_SRC}/CsoundQt-${VER} ${PACKAGE_SRCDIR}
+	${LN_SNF} CsoundQt-${VER} ${PACKAGE_SRCDIR}
 	local_copy
 	qmake qcs.pro \
 	QMAKE_CXX=${KANAPI_CXX_COMPILER} \

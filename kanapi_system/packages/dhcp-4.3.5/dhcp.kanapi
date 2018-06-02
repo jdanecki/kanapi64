@@ -34,7 +34,7 @@ pkg_configure() {
 	local_copy
 	sed -i "s/^BINDCONFIG=/BINDCONFIG=--enable-linux-caps=no/" configure
 #	chmod +x configure
-	./configure --prefix=${PREFIX} --localstatedir=${PREFIX}/var --host=${KANAPI_TARGET_NAME} \
+	./configure --prefix=${PREFIX} --localstatedir=${PREFIX}/var \
 	--with-randomdev=/dev/random
 }
 
@@ -45,9 +45,7 @@ pkg_build() {
 
 pkg_install() {
 	cd build
-	pkg_install_make
-	pkg_install_bin_all
-	pkg_install_sbin_all
+	pkg_install_make &&  pkg_install_bin_all &&	pkg_install_sbin_all
 	mkdir -p ${PREFIX}/var/db
 	mkdir -p ${PREFIX}/var/run
 	echo "script \"${PREFIX}/etc/dhclient.script\";" > ${PREFIX}/etc/dhclient.conf

@@ -37,36 +37,23 @@ pkg_prepare() {
 }
 
 pkg_configure() {
-	if [ "${KANAPI_TARGET}" = "arm" ]
-	then
-		echo "ltrace disabled on arm, libelf is not supported yet"
-	else
-		local_clone
-		mkdir -p config/autoconf config/m4
-		KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
-		 -I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
-		 -I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
-		autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
-		./configure --prefix=$PREFIX --disable-werror --host=${KANAPI_TARGET_NAME} \
-			ac_cv_header_selinux_selinux_h=no ac_cv_lib_selinux_security_get_boolean_active=no
-	fi
+	local_clone
+	mkdir -p config/autoconf config/m4
+	KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
+	 -I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
+	 -I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
+	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
+	./configure --prefix=$PREFIX --disable-werror \
+		ac_cv_header_selinux_selinux_h=no ac_cv_lib_selinux_security_get_boolean_active=no
 }
 
 pkg_build() {
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		cd build
-		${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
-	fi
+	pkg_build_local
 }
 
 pkg_install() {
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		cd build
-		pkg_install_make
-		pkg_install_bin_all
-	fi
+	cd build
+	pkg_install_make_bin_all
 }
 
 pkg_check() {

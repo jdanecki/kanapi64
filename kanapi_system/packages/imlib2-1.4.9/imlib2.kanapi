@@ -29,10 +29,10 @@ LIB_DEPENDS="libpng zlib x11 ice xcb xext xau libtiff-4"
 
 export LDFLAGS="${LDFLAGS} -lm -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -L${KANAPI_BASE}/bzip2-${bzip2_ver}/lib"
 export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include -I${KANAPI_BASE}/bzip2-${bzip2_ver}/include"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --without-gif --without-id3 --with-x  --with-tiff
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --without-gif --without-id3 --with-x  --with-tiff
 }
 
 pkg_install() {

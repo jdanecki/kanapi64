@@ -30,18 +30,11 @@ LIB_DEPENDS="ncurses"
 READLINE_BASE=${KANAPI_BASE}/readline-${readline_ver}
 export CFLAGS="${CFLAGS} -I${READLINE_BASE}/include -I${READLINE_BASE}/include/readline"
 export LDFLAGS="${LDFLAGS} -L${READLINE_BASE}/lib"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 export CXXFLAGS=${CFLAGS}
 
 pkg_configure() {
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then 
-		export AWK=${KANAPI_TARGET_BIN}/gawk
-	else
-		export AWK=`which gawk`
-	fi
-
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}  \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
 		ac_cv_prog_HAS_MAKEINFO=yes ac_cv_prog_HAS_HELP2MAN=yes ac_cv_file__dev_ptmx=yes ac_cv_func_setpgrp_void=yes \
 		ac_cv_rl_version=${readline_ver}
 }

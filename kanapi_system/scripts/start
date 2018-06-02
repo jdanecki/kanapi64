@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export PATH=/kanapi_${KANAPI_VER}/bin:$PATH
+
+sh
+
+

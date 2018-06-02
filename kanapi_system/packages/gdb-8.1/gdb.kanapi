@@ -27,14 +27,8 @@ export CFLAGS="${NCURSES_CFLAGS}"
 export LDLAGS="${NCURSES_LDFLAGS}"
 export CXXFLAGS=${CFLAGS}
 
-pkg_configure() {
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then 
-		GAWK=${KANAPI_TARGET_BIN}/gawk
-	else
-		GAWK=`which gawk`
-	fi
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} ac_cv_prog_AWK=${GAWK}
+pkg_install() {
+	pkg_install_make_bin_all
 }
 
 pkg_check() {
@@ -43,8 +37,4 @@ pkg_check() {
 	${NCURSES_CONFIG} --cflags
 }
 
-pkg_install() {
-	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true
-	pkg_install_bin_all
-}
 

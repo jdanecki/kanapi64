@@ -1,13 +1,10 @@
 #Text only apps, libs 
 #BBS is required to compile below targets
 
-ifeq (x$(KANAPI_TOP),x)
-BASE=
-else
-BASE=$(KANAPI_TOP)/
-endif
+REPO_BASE=$(shell git rev-parse --show-toplevel)
+SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
 
-include $(BASE)../scripts/Makefile.common
+include $(SCRIPTS_DIR)/Makefile.common
 
 cli: cli-base llvm ocl docker-ce
 
@@ -55,7 +52,7 @@ t_system: mc kmod procps-ng pciutils screen sdparm iotop ntfs-3g_ntfsprogs strac
 	wireless_tools wpa_supplicant dhcp wget network Hermes pci_ids usbutils udev libdrm libev libevdev \
 	cacert cpio hdparm p11-kit iptables dmidecode
 
-mc:  gpm
+mc: 
 	@$(RUN_TARGET)
 
 kmod:
@@ -94,10 +91,6 @@ nasm:
 syslinux: nasm
 	@$(RUN_TARGET)
 
-ifeq ($(DISABLE_PACKAGES),1)
-dhcp mbr bin86:
-	true
-else
 dhcp:
 	@$(RUN_TARGET)
 
@@ -106,7 +99,6 @@ mbr: bin86
 
 bin86:
 	@$(RUN_TARGET)
-endif
 
 libtirpc:
 	@$(RUN_TARGET)
@@ -154,7 +146,7 @@ enet:
 Hermes:
 	@$(RUN_TARGET)
 
-devel: patchelf cgdb strace ltrace ctags chrpath patchelf vala syslinux mbr Hermes pci_ids makefile2graph scons lua tcl swig yajl ruby \
+devel: patchelf cgdb strace ltrace ctags chrpath vala syslinux mbr Hermes pci_ids makefile2graph scons lua tcl swig yajl ruby \
 	database xml expect babl itstool libsigcpp yasm popt go elfutils
 
 gdb:

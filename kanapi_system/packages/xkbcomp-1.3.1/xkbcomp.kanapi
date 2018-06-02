@@ -28,7 +28,7 @@ LIB_DEPENDS="xcb xau"
 . ../settings
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-xkb-config-root=`${PKG_CONFIG} --variable=xkb_base xkeyboard-config` --host=${KANAPI_TARGET_NAME} 
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-xkb-config-root=`${PKG_CONFIG} --variable=xkb_base xkeyboard-config`  
 }
 
 pkg_install() {

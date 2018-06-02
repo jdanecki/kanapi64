@@ -28,8 +28,7 @@ export CC="${KANAPI_C_COMPILER}"
 
 pkg_configure() {
 	export mr_cv_target_elf=yes
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --target=${KANAPI_TARGET_NAME} \
-	--enable-shared 
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --enable-shared 
 }
 
 pkg_install() {

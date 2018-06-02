@@ -24,9 +24,6 @@ EXT=tar.gz
 #build depends on
 . ../settings
 
-export AR=${KANAPI_TARGET_NAME}-ar
-export CXX=${KANAPI_CXX_COMPILER}
-
 pkg_download() {
 	PACKAGE_PATH=v${VER}.${EXT}
 	pkg_curl
@@ -38,11 +35,6 @@ pkg_configure() {
 
 pkg_build() {
 	cd build
-	if [ "${KANAPI_CROSS}" = "1" ]
-	then
-		sed -i "s@print('bootstrap complete.  rebuilding...')@exit()@" configure.py
-	fi
-
 	./configure.py --platform linux --host linux --bootstrap --verbose
 }
 

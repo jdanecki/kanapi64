@@ -31,9 +31,9 @@ LIB_DEPENDS="xaw3d"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-appdefaultdir=${PREFIX}/share/X11/app-defaults
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --with-appdefaultdir=${PREFIX}/share/X11/app-defaults
 	mkdir fig2dev; cd fig2dev
-	${KANAPI_BUILD_SRC}/fig2dev-${VER}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --enable-transfig
+	${KANAPI_BUILD_SRC}/fig2dev-${VER}/configure --prefix=$PREFIX  --enable-transfig
 }
 
 pkg_build() {

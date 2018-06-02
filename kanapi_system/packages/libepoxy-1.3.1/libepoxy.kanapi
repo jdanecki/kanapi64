@@ -28,7 +28,7 @@ pkg_configure() {
 	local_copy
 	sed -i "s@build_egl=yes@build_egl=no@" configure
 	sed -i "s@#define PLATFORM_HAS_EGL 1@//#define PLATFORM_HAS_EGL 1@" src/dispatch_common.h
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	./configure --prefix=$PREFIX 
 }
 
 pkg_build() {

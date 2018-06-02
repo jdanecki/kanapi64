@@ -33,7 +33,7 @@ export CFLAGS="${CFLAGS} -O2"
 export CPPFLAGS="${CFLAGS}"
 if [ -n "${PKG_CONFIG}" ]
 then
-	export CPP="${KANAPI_TARGET_NAME}-gcc -E `${PKG_CONFIG} --cflags x11 xt sm`"
+	export CPP="gcc -E `${PKG_CONFIG} --cflags x11 xt sm`"
 fi
 
 export LDFLAGS="${LDFLAGS} -lm -lrt -lpthread -lresolv"
@@ -52,17 +52,14 @@ pkg_prepare() {
 	else
 		PACKAGE_FILENAME=vim-${VER}.${EXT}
 		pkg_tar_bz2
-		if [ ! -L ${PACKAGE_SRCDIR} ]
-		then
-			${LN_SF} ${KANAPI_BUILD_SRC}/vim80 ${PACKAGE_SRCDIR}
-		fi
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} vim80 ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {
 	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} vim_cv_toupper_broken=no \
+	./configure --prefix=$PREFIX  vim_cv_toupper_broken=no \
 	--with-tlib=ncurses vim_cv_terminfo=yes vim_cv_tty_group=world vim_cv_tty_mode=0620 \
 	vim_cv_getcwd_broken=no vim_cv_stat_ignores_slash=no vim_cv_memmove_handles_overlap=yes \
    	--with-x --enable-gui=gtk2 --enable-fontset=gtk2 --with-local-dir=${PREFIX} \

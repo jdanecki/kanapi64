@@ -30,7 +30,6 @@ EXT=tar.xz
 #export CFLAGS="${CFLAGS} "
 
 pkg_install() {
-	pkg_install_make
-	pkg_install_bin_all
+	pkg_install_make_bin_all
 }
 

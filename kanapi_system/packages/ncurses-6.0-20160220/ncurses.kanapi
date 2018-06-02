@@ -29,6 +29,6 @@ pkg_prepare() {
 }
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-shared --enable-pc-files --without-normal
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --with-shared --enable-pc-files --without-normal
 }
 

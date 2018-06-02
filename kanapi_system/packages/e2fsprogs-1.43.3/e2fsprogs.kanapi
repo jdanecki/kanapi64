@@ -27,7 +27,7 @@ EXT=tar.xz
 export LDFLAGS="-lpthread -ldl"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --enable-elf-shlibs --disable-nls
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-elf-shlibs --disable-nls
 }
 
 pkg_build() {

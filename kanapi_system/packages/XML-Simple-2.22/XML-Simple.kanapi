@@ -32,13 +32,12 @@ pkg_configure() {
 }
 
 pkg_build() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+	pkg_build_local
 }
 
 pkg_install() {
-	cd build
-	${MAKE} -j 1 install MAKEINFO=true
+	export MAKE_JOBS=1
+	pkg_install_local
 }
 
 pkg_check() {

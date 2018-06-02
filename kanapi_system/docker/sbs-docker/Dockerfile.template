@@ -1,0 +1,9 @@
+FROM kanapi/kanapi-BASE_IMAGE
+MAINTAINER Jacek Danecki <jacek.m.danecki@gmail.com>
+ENV HOME=/kanapi_0.10/home
+ENV CI="true"
+RUN mkdir -p ${HOME}/ci_src
+COPY kanapi /kanapi_build/kanapi
+COPY build /
+RUN /build
+CMD ["/bin/bash"]

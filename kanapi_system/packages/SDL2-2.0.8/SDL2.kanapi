@@ -28,7 +28,7 @@ LIB_DEPENDS="x11 gl xext alsa xrandr ice x11-xcb xcursor libunwind SDL2_ttf"
 . ../settings
 
 export LDFLAGS="${LDFLAGS} -lstdc++ -lpthread -lm -ldl -lrt"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 export CFLAGS="${CFLAGS}  -std=gnu11"
 export LIBS="`${PKG_CONFIG} --libs libunwind` -lunwind-x86_64"
 
@@ -37,13 +37,13 @@ pkg_prepare() {
 }
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --disable-video-opengles
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --disable-video-opengles
 	if [ "${CI}" = "true" ]
 	then
 		echo "don't configure SDL tests under CI"
 	else
 		mkdir tests; cd tests
-		${PACKAGE_SRCDIR}/test/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+		${PACKAGE_SRCDIR}/test/configure --prefix=$PREFIX 
 		sed -i -e '/testgles\$(EXE) /,+1d' Makefile
 	fi
 }

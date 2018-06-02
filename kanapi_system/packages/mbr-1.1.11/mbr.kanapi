@@ -29,25 +29,12 @@ EXT=tar.gz
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
-pkg_configure() {	
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
-	fi
-}
-
-pkg_build() {
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
-	fi
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+	sed -i "s/-Werror//g" Makefile
 }
 
 pkg_install() {
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		pkg_install_make
-		pkg_install_sbin_all
-	fi
+	pkg_install_make &&	pkg_install_sbin_all
 }
 

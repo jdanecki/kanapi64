@@ -25,28 +25,17 @@ EXT=tar.gz
 . ../settings
 
 pkg_configure() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		local_copy
-		perl Makefile.PL PREFIX=${PREFIX} EXPATLIBPATH=`${PKG_CONFIG} --variable=libdir  expat` \
-			EXPATINCPATH=`${PKG_CONFIG} --variable=includedir  expat`
-	fi
+	local_copy
+	perl Makefile.PL PREFIX=${PREFIX} EXPATLIBPATH=`${PKG_CONFIG} --variable=libdir  expat` \
+		EXPATINCPATH=`${PKG_CONFIG} --variable=includedir  expat`
 }
 
 pkg_build () {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		cd build
-		${MAKE} -j ${MAKE_JOBS}
-	fi
+	pkg_build_local
 }
 
 pkg_install() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		cd build
-		pkg_install_make
-		pkg_install_bin_all
-	fi
+	cd build
+	pkg_install_make_bin_all
 }
 

@@ -27,7 +27,7 @@ LIB_DEPENDS="x11 xcb xau ice"
 
 . ../settings
 
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 pkg_prepare() {
 	pkg_tar_xz

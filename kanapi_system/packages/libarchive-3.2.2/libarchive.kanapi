@@ -22,10 +22,12 @@ VER=3.2.2
 URL="http://www.libarchive.org/downloads"
 EXT=tar.gz
 #build depends on
+LIB_DEPENDS="openssl"
+
 . ../settings
 
 pkg_configure_target() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
 		--without-xml2 --without-expat --without-bz2lib  --without-openssl \
 		--without-lzmadec --without-lzma  --disable-acl  --without-lzo2 --without-nettle
 }

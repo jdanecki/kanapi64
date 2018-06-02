@@ -32,7 +32,7 @@ export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${per
 
 pkg_configure() {
 	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-cairo --with-python 
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --with-cairo --with-python 
 }
 
 pkg_install() {

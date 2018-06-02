@@ -36,6 +36,6 @@ pkg_install() {
 	cd build
 	${MAKE} DESTDIR=${PREFIX} install
 	if [ ! -d ${KANAPI_HOME}/.icons ] ; then mkdir ${KANAPI_HOME}/.icons ; fi
-   ${LN_SF} ${PREFIX}/usr/local/icons/default ${KANAPI_HOME}/.icons/default   
+   ${LN_SNF} ${PREFIX}/usr/local/icons/default ${KANAPI_HOME}/.icons/default   
 }
 

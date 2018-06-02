@@ -29,7 +29,7 @@ export CFLAGS="${LIBGCRYPT_CFLAGS}"
 export LDFLAGS="${LIBGCRYPT_LDFLAGS}"
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--enable-valgrind=no --enable-introspection=no
 }
 

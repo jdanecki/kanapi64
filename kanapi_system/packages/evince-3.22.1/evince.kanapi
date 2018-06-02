@@ -28,7 +28,7 @@ LIB_DEPENDS="zlib gtk+-3.0 xinerama xrandr xcursor xi xdamage xfixes epoxy pango
 
 export LDFLAGS="${LDFLAGS} -lresolv -lm -lrt -lpthread"
 #export CFLAGS="${CFLAGS} "
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 if [ "${KANAPI_TARGET}" = "arm" ]
 then
@@ -43,7 +43,7 @@ fi
 
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 		--with-keyring=no --disable-nautilus --disable-help \
 		--disable-dbus --disable-libgnome-desktop 
 }

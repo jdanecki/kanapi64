@@ -49,7 +49,6 @@ pkg_build() {
 
 pkg_install() {
 	cd build
-	${MAKE} -j ${MAKE_JOBS} prefix=${PREFIX} install
-	pkg_install_bin_all
+	pkg_install_make_bin_all
 }
 

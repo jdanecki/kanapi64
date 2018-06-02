@@ -30,13 +30,10 @@ EXT=tar.gz
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	if [ ! -d ${PACKAGE_SRCDIR} ] 
-	then
-		${LN_SF} ${KANAPI_BUILD_SRC}/audacity-${PACKAGE_NAME}-${VER} ${PACKAGE_SRCDIR}
-	fi
+	${LN_SNF} audacity-${PACKAGE_NAME}-${VER} ${PACKAGE_SRCDIR}
 	local_copy
 	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/audacity-env-tag.patch
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	./configure --prefix=$PREFIX 
 }
 
 pkg_build() {

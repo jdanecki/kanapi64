@@ -28,7 +28,7 @@ LIB_DEPENDS="x11 xcb xau xext"
 
 . ../settings
 
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 pkg_configure() {
 	local_copy
@@ -41,7 +41,7 @@ pkg_configure() {
 	 -I ${KANAPI_BASE}/esound-${esound_ver}/share/aclocal \
 	 -I ${KANAPI_BASE}/alsa-lib-${alsa_lib_ver}/share/aclocal"
 	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
-	./configure --prefix="${PREFIX}" --host=${KANAPI_TARGET_NAME} --enable-pulseaudio --disable-video-directfb \
+	./configure --prefix="${PREFIX}"  --enable-pulseaudio --disable-video-directfb \
 		--enable-esdtest --enable-esd=yes --enable-alsa --enable-oss
 }
 
@@ -61,5 +61,5 @@ pkg_test() {
 	echo "CFLAGS = ${CFLAGS}"
 	echo "LDFLAGS = ${LDFLAGS}"
 	echo "CPP = ${CPP}"
-	${KANAPI_TARGET_NAME}-gcc --version
+	gcc --version
 }

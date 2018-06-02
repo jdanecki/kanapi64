@@ -31,7 +31,7 @@ LIB_DEPENDS="xmu xext sm ice xpm xcb xau uuid"
 export LDFLAGS="${LDFLAGS} -lpthread -lm -lrt"
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 		--with-manconfig=${PREFIX}/etc/man.conf
 }
 

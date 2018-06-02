@@ -28,12 +28,11 @@ SF_URL="${PACKAGE_NAME}/${PACKAGE_NAME}/${VER}/${PACKAGE_NAME}-${VER}.${EXT}"
 . ../settings
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
 	--disable-libwrap --without-systemdsystemunitdir	
 }
 
 pkg_install() {
-	pkg_install_make
-	pkg_install_bin_all
+	pkg_install_make_bin_all
 }
 

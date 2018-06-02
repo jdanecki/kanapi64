@@ -28,7 +28,7 @@ SF_URL="${PACKAGE_NAME}/${PACKAGE_NAME}/${VER}/${PACKAGE_NAME}-${VER}.${EXT}"
 . ../settings
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
 	--disable-gssapi --sysconfdir=${PREFIX}/etc --disable-ipv6
 }
 

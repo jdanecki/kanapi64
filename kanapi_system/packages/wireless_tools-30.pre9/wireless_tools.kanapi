@@ -40,9 +40,9 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
-		${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}.30 ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} ${PACKAGE_NAME}.30 ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {
@@ -56,7 +56,6 @@ pkg_build() {
 
 pkg_install() {
 	cd build
-	${MAKE} -j ${MAKE_JOBS} install PREFIX=${PREFIX}
-	pkg_install_sbin_all
+	pkg_install_make_sbin_all
 }
 

@@ -32,7 +32,7 @@ EXT=tar.gz
 pkg_configure() {
 	local_copy
 	sed "s/-fforce-mem//" -i configure
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	./configure --prefix=$PREFIX 
 }
 
 pkg_build() {

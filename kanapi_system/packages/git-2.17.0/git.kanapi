@@ -32,13 +32,8 @@ export NO_INSTALL_HARDLINKS=1
 
 pkg_configure() {
 	local_copy
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then
-		PERL=${KANAPI_BASE}/perl-${perl_ver}/bin/perl
-	else
-		PERL=`which perl`
-	fi
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} ac_cv_fread_reads_directories=no \
+	PERL=${KANAPI_BASE}/perl-${perl_ver}/bin/perl
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX ac_cv_fread_reads_directories=no \
 	ac_cv_snprintf_returns_bogus=no --with-curl --without-expat ac_cv_lib_expat_XML_ParserCreate=no \
 	--with-perl=${PERL}
 }

@@ -25,7 +25,7 @@ EXT=tar.bz2
 . ../settings
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-config-dir=${KANAPI_BASE}/xorg-cf-files-${xorg_cf_files_ver}/lib/X11/config
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --with-config-dir=${KANAPI_BASE}/xorg-cf-files-${xorg_cf_files_ver}/lib/X11/config
 }
 
 pkg_install() {

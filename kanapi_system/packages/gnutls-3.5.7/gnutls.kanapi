@@ -33,20 +33,17 @@ export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/gmp-${gmp_ver}/lib -lgmp"
 
 pkg_configure() {
 	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	./configure --prefix=$PREFIX \
 	--with-included-libtasn1  --with-included-unistring  --without-p11-kit
 }
 
 pkg_build() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+	pkg_build_local
 }
 
 pkg_install() {
 	cd build
-	pkg_install_pc_all
-	pkg_install_bin_all
-	pkg_install_libs
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 }
 
 pkg_check() {

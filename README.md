@@ -6,8 +6,9 @@ and free software for use at home.
 Current phase: Beta
 
 Versions: 
-* in development - v0.9
-* released - v0.8
+
+* development - v0.10
+* released - v0.9
 
 License: GPL v.3
 
@@ -20,15 +21,35 @@ Author: jacek.m.danecki@gmail.com
 
 ## SBS images
 
-SBS images on SourceForge https://sourceforge.net/projects/kanapi/files/images/v0.9/
-* sbs-x86_64.tar.xz - base for build in chroot (local and CI)
-* sbs-docker-x86.tar.xz - base for BBS docker image
+SBS images on SourceForge https://sourceforge.net/projects/kanapi/files/images
 
-## Docker images
+* v.0.10
+  - sbs-docker-0.10.6.tar.xz - base for SBS docker image
 
-* SBS image - https://hub.docker.com/r/kanapi/kanapi-sbs
-* BBS image - https://hub.docker.com/r/kanapi/kanapi-bbs
-* CLI image - https://hub.docker.com/r/kanapi/kanapi-cli
+* v0.9
+  - sbs-x86_64.tar.xz - base for build in chroot (local and CI)
+  - sbs-docker-x86.tar.xz - base for SBS docker image
+
+## Main docker images
+
+* SBS image  - https://hub.docker.com/r/kanapi/kanapi-sbs
+* BBS image  - https://hub.docker.com/r/kanapi/kanapi-bbs
+* CLI image  - https://hub.docker.com/r/kanapi/kanapi-cli
+* X11 image  - https://hub.docker.com/r/kanapi/kanapi-x11
+* GUI image  - https://hub.docker.com/r/kanapi/kanapi-gui
+* APPS image - https://hub.docker.com/r/kanapi/kanapi-apps
+
+## Additional docker images
+
+* cli-lib  - https://hub.docker.com/r/kanapi/kanapi-cli-lib 
+* x11-lib  - https://hub.docker.com/r/kanapi/kanapi-x11-lib 
+* gtk      - https://hub.docker.com/r/kanapi/kanapi-gtk
+* qt       - https://hub.docker.com/r/kanapi/kanapi-qt
+* gui      - https://hub.docker.com/r/kanapi/kanapi-gui
+* apps-x11 - https://hub.docker.com/r/kanapi/kanapi-apps-x11
+* apps-gtk - https://hub.docker.com/r/kanapi/kanapi-apps-gtk
+* apps-qt  - https://hub.docker.com/r/kanapi/kanapi-apps-qt
+* apps-gui - https://hub.docker.com/r/kanapi/kanapi-apps-gui
 
 ## System build workflow
 
@@ -61,6 +82,8 @@ SBS images on SourceForge https://sourceforge.net/projects/kanapi/files/images/v
   - docker builds: https://travis-ci.org/jdanecki/kanapi-dockers/builds/355665885
 * SemaphoreCI
   - docker builds: https://semaphoreci.com/jdanecki/kanapi-dockers/
+* Gitlab
+  - docker builds: http://kanapi-project.blogspot.com/2018/05/kanapi-ci-builds-started-on-gitlab.html
 
 ## Repositories
 
@@ -71,4 +94,5 @@ SBS images on SourceForge https://sourceforge.net/projects/kanapi/files/images/v
 * CI tests: https://github.com/jdanecki/ci-tests
 * KaNaPi CI tests on shippable only: https://github.com/jdanecki/kanapi-shippable
 * KaNaPi docker tests: https://github.com/jdanecki/kanapi-dockers
+* KaNaPi on gitlab: http://kanapi-project.blogspot.com/2018/04/kanapi-on-gitlab.html
 

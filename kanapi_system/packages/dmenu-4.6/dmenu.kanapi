@@ -33,7 +33,7 @@ pkg_configure() {
 		sed "s/^XINERAMA/#XINERAMA/" | \
 		sed "s@/usr/include/freetype2@`${PKG_CONFIG} --variable=includedir freetype2`@" | \
 		sed "s@FREETYPEINC = \${X11INC}/freetype2@@" | 
-		sed "s@cc@${KANAPI_TARGET_NAME}-gcc@" \
+		sed "s@cc@gcc@" \
 			> /tmp/tmp_$$
 	mv /tmp/tmp_$$  config.mk
 }

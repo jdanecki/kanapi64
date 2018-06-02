@@ -1,6 +1,6 @@
 #!/bin/bash
 
-KANAPI_VER=0.9
+KANAPI_VER=0.10
 
 if [ "`id -u`" != "0" ]
 then
@@ -8,7 +8,8 @@ then
 else
 	KANAPI_ROOT="/kanapi_${KANAPI_VER}"
 fi
-KANAPI_BASE=${KANAPI_ROOT}/`uname -m`/packages
+KANAPI_BASE=${KANAPI_ROOT}/packages
+mkdir -p ${KANAPI_BASE}/include
 
 pushd ${KANAPI_BASE}
 

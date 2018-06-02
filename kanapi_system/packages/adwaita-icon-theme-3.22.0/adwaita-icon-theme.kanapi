@@ -27,6 +27,6 @@ EXT=tar.xz
 pkg_install() {
 	pkg_install_pc_share_all && \
 	if [ ! -d ${KANAPI_HOME}/.icons ]; then mkdir ${KANAPI_HOME}/.icons; fi && \
-	${LN_SF} ${PREFIX}/share/icons/Adwaita ${KANAPI_HOME}/.icons/Adwaita
+	${LN_SNF} ${PREFIX}/share/icons/Adwaita ${KANAPI_HOME}/.icons/Adwaita
 }
 

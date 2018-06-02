@@ -17,7 +17,5 @@ else
 	git pull
 	popd
 fi
-
-docker build -t kanapi-${NAME}:${VER} .
-rm -rf kanapi
-
+cat Dockerfile.template | sed "s/BASE_IMAGE/${BASE_IMAGE}/" > Dockerfile
+docker build -t kanapi-${NAME}:${VER} . && rm -rf kanapi

@@ -29,7 +29,7 @@ LIB_DEPENDS="gmodule-2.0"
 
 export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
 export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib"
-export CPP="${KANAPI_TARGET_NAME}-gcc -E -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
+export CPP="gcc -E -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
 export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
 
 pkg_prepare() {
@@ -37,7 +37,7 @@ pkg_prepare() {
 }
 
 pkg_configure_target() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  
 }
 
 pkg_install() {

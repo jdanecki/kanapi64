@@ -42,12 +42,12 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		pkg_tar_bz2
-		${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}2-8-8 ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} ${PACKAGE_NAME}2-8-8 ${PACKAGE_SRCDIR}
 }
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
+	pkg_install_make_bin_all
 }
 

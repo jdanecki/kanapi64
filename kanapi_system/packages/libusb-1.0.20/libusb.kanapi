@@ -27,11 +27,10 @@ EXT=tar.bz2
 MAKE_JOBS=1
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --disable-udev --host=${KANAPI_TARGET_NAME} 
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --disable-udev
 }
 
 pkg_install() {
-	pkg_install_pc_all
-	pkg_install_libs
+	pkg_install_pc_all && pkg_install_libs
 }	
 

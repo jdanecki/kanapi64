@@ -26,7 +26,7 @@ EXT=tar.gz
 . ../settings
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}  bash_cv_func_sigsetjmp=yes bash_cv_wcwidth_broken=no
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX bash_cv_func_sigsetjmp=yes bash_cv_wcwidth_broken=no
 
 }
 

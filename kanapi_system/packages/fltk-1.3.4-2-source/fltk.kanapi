@@ -28,12 +28,12 @@ LIB_DEPENDS="x11 gl"
 
 export LDFLAGS="${LDFLAGS} -lm -lpthread"
 export CXXFLAGS="${CFLAGS} "
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 pkg_configure() {
-	${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-1.3.4-2 ${PACKAGE_SRCDIR}
+	${LN_SNF} ${PACKAGE_NAME}-1.3.4-2 ${PACKAGE_SRCDIR}
 	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	./configure --prefix=$PREFIX 
 }
 
 pkg_build() {

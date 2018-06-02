@@ -1,24 +1,14 @@
-all: bbs_sbs core_cli
+all: sbs_docker bbs_docker cli_docker
 
-bbs_sbs:
-	sudo chroot ../sbs-`uname -m` /_start_bbs_build
+sbs_docker:
+	cd ../kanapi_system/docker/sbs; ./make_image
 
-core_cli:
-	sudo bash -c "export PKG_COMMAND=cli; chroot ../sbs-`uname -m` /_start_install"
+cli_docker:
+	cd cli; ./make_image
 
-gui:
-	sudo bash -c "export PKG_COMMAND=t_gui; chroot ../sbs-`uname -m` /_start_install"
-
-bbs: check_links
-	cd ../kanapi_system/`uname -m`   ; make pkg-config ACTION=install
-	cd ../kanapi_system/`uname -m`   ; make bbs	 ACTION=install
-
-check_links:
-	./prepare_links
+bbs_docker:
+	cd bbs; ./make_image
 
 test:
 	echo "tests disabled"
-
-busybox:	
-	cd ../kanapi_system/`uname -m`   ; make busybox	 ACTION=install VERBOSE=1
 

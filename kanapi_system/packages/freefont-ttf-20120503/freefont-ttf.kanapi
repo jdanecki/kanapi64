@@ -30,9 +30,9 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		pkg_zip
-		ln -svf ${KANAPI_BUILD_SRC}/freefont-${VER} ${PACKAGE_SRCDIR} 
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} freefont-${VER} ${PACKAGE_SRCDIR} 
 }
 
 pkg_configure() {

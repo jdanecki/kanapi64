@@ -39,7 +39,6 @@ pkg_install() {
 	cd build
 	${MAKE} -j ${MAKE_JOBS} install INSTALLROOT=${PREFIX} \
 	   	CC="${KANAPI_C_COMPILER} -I`${PKG_CONFIG} --variable=includedir uuid` `${PKG_CONFIG} --libs uuid` -lm -ldl -lpthread -lrt"
-	pkg_install_sbin_all
-	pkg_install_usr_bin_all
+	pkg_install_sbin_all &&	pkg_install_usr_bin_all
 }
 

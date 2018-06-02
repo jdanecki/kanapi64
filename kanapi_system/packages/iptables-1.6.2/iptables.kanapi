@@ -26,11 +26,11 @@ EXT=tar.bz2
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -ldl"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --disable-nftables
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --disable-nftables
 }
 
 pkg_install() {

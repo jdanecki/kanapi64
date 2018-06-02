@@ -28,7 +28,7 @@ LIB_DEPENDS="x11 ice"
 
 export LDFLAGS="${LDFLAGS} -ldl -lm"
 #export CFLAGS="${CFLAGS} "
-export CPP="${KANAPI_TARGET_NAME}-gcc -E ${CFLAGS}"
+export CPP="gcc -E ${CFLAGS}"
 
 pkg_install() {
 	pkg_install_pc_all

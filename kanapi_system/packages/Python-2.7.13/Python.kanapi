@@ -36,8 +36,7 @@ export LDFLAGS="-L${KANAPI_BASE}/readline-${readline_ver}/lib \
 export CPPFLAGS="${CFLAGS}"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --build=`uname -m`-kanapi-linux-gnu \
-	--target=${KANAPI_TARGET_NAME} --enable-shared \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-shared \
 	--disable-ipv6 ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=yes
 # --enable-optimizations
 }
@@ -45,14 +44,6 @@ pkg_configure() {
 pkg_install() {
 	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 	RET=$?
-	for i in gdbus-codegen gtester-report
-	do
-		FILE=`readlink ${KANAPI_TARGET_BIN}/$i`
-		if [ -f "${FILE}" ]
-		then
-			sed -i "s@kanapi_.*bin/@kanapi_${KANAPI_VER}/${KANAPI_TARGET}/bin/@" ${FILE}
-		fi
-	done
 	rm -rf ${PREFIX}/share/man
 	exit ${RET}
 }

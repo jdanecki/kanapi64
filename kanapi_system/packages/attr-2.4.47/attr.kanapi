@@ -25,8 +25,7 @@ EXT=src.tar.gz
 . ../settings
 
 pkg_configure() {
-	local_copy
-	pkg_configure_target
+	pkg_configure_local
 }
 
 pkg_build() {

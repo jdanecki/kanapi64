@@ -42,15 +42,11 @@ pkg_download() {
 	echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
 }
 
-pkg_configure_target() {	
-	if [ ${KANAPI_CROSS} -eq 1 ]
-	then
-		export HELP2MAN=true
-		export PERL=false
-	fi
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --enable-install-program=arch --disable-nls
+pkg_configure_target() {
+	export gl_cv_func_getcwd_path_max=yes
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-install-program=arch --disable-nls
 	RESULT=$? 
-	pkg_rm_docker_wa
+#	pkg_rm_docker_wa
 	return $RESULT
 }
 

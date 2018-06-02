@@ -38,10 +38,7 @@ pkg_download() {
 }
 
 pkg_configure() {
-	if [ ! -d ${PACKAGE_SRCDIR} ]
-	then
-		${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}_${VER//./_} ${PACKAGE_SRCDIR}
-	fi
+	${LN_SNF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}_${VER//./_} ${PACKAGE_SRCDIR}
 	local_copy
 	./bootstrap.sh --with-toolset=gcc --with-icu="`${PKG_CONFIG} --variable=prefix icu-i18n`" --prefix=${PREFIX}
 }

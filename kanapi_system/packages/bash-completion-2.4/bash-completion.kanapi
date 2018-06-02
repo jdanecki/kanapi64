@@ -31,7 +31,7 @@ EXT=tar.xz
 
 pkg_configure() {
 	local_copy
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
 }
 
 pkg_build() {

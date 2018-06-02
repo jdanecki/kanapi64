@@ -40,9 +40,9 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		pkg_tgz
-		${LN_SF} ${KANAPI_BUILD_SRC}/zip${VER} ${PACKAGE_SRCDIR}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} zip${VER} ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {
@@ -57,8 +57,6 @@ pkg_build() {
 }
 
 pkg_install() {
-	cd build
-	${MAKE} prefix=${PREFIX} install
-	pkg_install_bin_all
+	pkg_install_local && pkg_install_bin_all
 }
 

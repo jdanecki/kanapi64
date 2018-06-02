@@ -34,7 +34,7 @@ pkg_configure() {
 	export BUILDCC="${KANAPI_C_COMPILER} -std=c99"
 	sed -e 's|-Werror-implicit-function-declaration|-Wno-error-implicit-function-declaration|g' -i configure
 	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/lua53_compat.patch
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-x --enable-run-as-root \
+	./configure --prefix=$PREFIX  --with-x --enable-run-as-root \
 		--disable-rpath --disable-nls --disable-a52
 }
 

@@ -30,12 +30,11 @@ export CFLAGS="${CFLAGS} ${LIBGCRYPT_CFLAGS}"
 export LDFLAGS="${LDFLAGS} ${LIBGCRYPT_LDFLAGS}"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --without-x
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --without-x
 }
 
 pkg_install() {
-	pkg_install_make
-	pkg_install_bin
+	pkg_install_make_bin_all
 }
 
 pkg_check() {
@@ -51,6 +50,4 @@ pkg_check() {
 	ldd ${PKG_CONFIG}
 	echo ${LD_LIBRARY_PATH}
 	echo ${PATH}
-	echo "CROSS=${KANAPI_CROSS}"
-	echo "KANAPI_TARGET=${KANAPI_TARGET}"
 }

@@ -30,8 +30,7 @@ EXT=tar.gz
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	pkg_configure_local
 }
 
 pkg_build() {

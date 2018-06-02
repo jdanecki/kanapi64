@@ -30,33 +30,21 @@ EXT=tar.gz
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		local_copy
-		if [ "`uname -m`" = "x86_64" ]
-		then
-			patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/bin86-0.16.17-x86_64-1.patch
-		fi
-	fi
+	local_copy
+	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/bin86-0.16.17-x86_64-1.patch
 }
 
 pkg_build() {
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		cd build
-		${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} CC="${KANAPI_C_COMPILER}"
-	fi
+	cd build
+	${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} CC="${KANAPI_C_COMPILER}"
 }
 
 pkg_install() {
-	if [ "${KANAPI_TARGET}" != "arm" ]
-	then
-		cd build
-		mkdir -p ${PREFIX}/bin
-		mkdir -p ${PREFIX}/man/man1
-		${MAKE} -j ${MAKE_JOBS} install PREFIX=${PREFIX}
-		pkg_install_bin_all
-	fi
+	cd build
+	mkdir -p ${PREFIX}/bin
+	mkdir -p ${PREFIX}/man/man1
+	${MAKE} -j ${MAKE_JOBS} install PREFIX=${PREFIX}
+	pkg_install_bin_all
 }
 
 pkg_check() {

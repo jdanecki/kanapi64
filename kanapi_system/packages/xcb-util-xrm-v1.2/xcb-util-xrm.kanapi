@@ -41,7 +41,7 @@ pkg_configure() {
 	-I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal \
 	-I ${KANAPI_BASE}/xorg-server-${xorg_server_ver}/share/aclocal"
 	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	./configure --prefix=$PREFIX 
 }
 
 pkg_build() {

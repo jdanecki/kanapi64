@@ -29,8 +29,8 @@ pkg_install() {
 	if [ "$?" = "0" ]
 	then
 		mkdir ${PREFIX}/links
-		${LN_SF} ${PREFIX}/bin/ccache ${PREFIX}/links/${KANAPI_TARGET_NAME}-gcc 
-		${LN_SF} ${PREFIX}/bin/ccache ${PREFIX}/links/${KANAPI_TARGET_NAME}-g++
+		${LN_SF} ${PREFIX}/bin/ccache ${PREFIX}/links/gcc 
+		${LN_SF} ${PREFIX}/bin/ccache ${PREFIX}/links/g++
 	else
 		exit 1
 	fi

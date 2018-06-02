@@ -40,7 +40,7 @@ pkg_download() {
 }
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 		--enable-readline-mouse --enable-256-color \
 		--enable-luit --enable-exec-xterm --enable-freetype --enable-i18n --enable-wide-chars \
 		--enable-16bit-chars  --enable-toolbar 

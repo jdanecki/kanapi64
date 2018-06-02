@@ -26,7 +26,8 @@ EXT=tgz
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -ldl -lm -lpthread -lrt -lstdc++"
+export LDFLAGS="-ldl -lm -lpthread -lrt -lstdc++"
+export LIBS="${LDFLAGS}"
 #export CFLAGS="${CFLAGS} "
 
 export MAKE_JOBS=1
@@ -46,7 +47,7 @@ pkg_configure() {
 			mv ${KANAPI_BUILD_SRC}/portaudio ${PACKAGE_SRCDIR}
 		fi
 	fi
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-alsa --with-jack  --enable-cxx 
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-alsa --with-jack  --enable-cxx 
 }
 
 pkg_install() {

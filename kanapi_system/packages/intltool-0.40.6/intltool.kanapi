@@ -26,32 +26,7 @@ EXT=tar.bz2
 
 export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
 
-pkg_prepare() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		pkg_tar_bz2
-	fi
-}
-
-pkg_configure() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
-	fi
-}
-
-pkg_build () {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		${MAKE} -j ${MAKE_JOBS}
-	fi
-}
-
 pkg_install() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		pkg_install_make
-		pkg_install_bin_all
-	fi
+	pkg_install_make_bin_all
 }
 

@@ -53,7 +53,7 @@ pkg_configure() {
 		cp -arv ${dir}/lib* /lib
 	done
 
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--prefix=$PREFIX --enable-application=browser \
 	--disable-pulseaudio --enable-alsa --enable-safe-browsing \
 	--with-distribution-id=KaNaPi \

@@ -32,7 +32,7 @@ export QMAKE=qmake
 
 pkg_configure() {
 	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
+	./configure --prefix=$PREFIX 
 }
 
 pkg_build() {

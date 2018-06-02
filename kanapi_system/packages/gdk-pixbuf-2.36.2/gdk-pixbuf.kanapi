@@ -32,17 +32,11 @@ export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
 export CPP="${KANAPI_C_COMPILER} -E ${CFLAGS}"
 
 pkg_configure() {
-	if [ "${KANAPI_CROSS}" = "1" ]
-	then
-		CONF_PAR="enable_gio_sniffing=yes"
-	fi
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 		--without-libtiff  --with-libjpeg ${CONF_PAR}
 }
 
 pkg_install() {
-	pkg_install_pc_all
-	pkg_install_bin_all
-	pkg_install_libs
+	pkg_install_all
 }
 

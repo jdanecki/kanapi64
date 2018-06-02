@@ -23,7 +23,7 @@ Run 'make' command, and wait...
   It depends on what target platform do you want to use.
 - compile all packages in the directory kanapi_system/x86 or kanapi_system/x86_64 or kanapi_system/arm
   using command
-  ./install all	
+  ./install all
 - you can run install script with 'verbose' parameter, to see more details during compilation
 
 Packages will be installed in ${HOME}/kanapi_${KANAPI_VER} directory for normal user,
@@ -36,7 +36,7 @@ or in /kanapi_${KANAPI_VER} for root.
 - Similar to 2 method prepare cross-compilers
 - Compile minimal set of packages in the directory kanapi_system/x86 or kanapi_system/x86_64 or kanapi_system/arm
   using command
-  ./install minimal
+  ./install sbs
 - Prepare SBS, in directory kanapi_system/test_system run command
   ./prepare_sbs
 - Update SBS. In main directory run ./configure update_sbs  

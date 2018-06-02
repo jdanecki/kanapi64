@@ -1,7 +1,0 @@
-KANAPI_TARGET=x86_64
-KANAPI_KERNEL_TARGET=${KANAPI_TARGET}
-
-echo "*** Processing ${PACKAGE_NAME} for ${KANAPI_TARGET} ***"
-
-. ../../scripts/settings
-

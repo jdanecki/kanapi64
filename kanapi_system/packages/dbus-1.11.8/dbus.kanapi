@@ -31,11 +31,11 @@ export LDFLAGS="${LDFLAGS} -lrt -lpthread -lresolv"
 export LIBS="${LDFLAGS}"
 if [ -n "${PKG_CONFIG}" ]
 then 
-	export CPP="${KANAPI_TARGET_NAME}-gcc -E `${PKG_CONFIG} --cflags x11`"
+	export CPP="gcc -E `${PKG_CONFIG} --cflags x11`"
 fi
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} \
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--disable-selinux --disable-systemd --with-session-socket-dir=${PREFIX}/var \
 	--with-test-socket-dir=${PREFIX}/var --with-system-pid-file=${PREFIX}/var/pid \
 	--with-console-auth-dir=${PREFIX}/var --with-dbus-user=kanapi \

@@ -1,3 +1,5 @@
-VER=8
+VER=0.10.3
 NAME=bbs
-BASE_IMAGE=sbs
+export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
+BASE_IMAGE=sbs:0.10.6-${KANAPI_BRANCH}
+

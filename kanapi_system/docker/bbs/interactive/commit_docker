@@ -3,7 +3,7 @@
 
 if [ -n "$1" ]
 then
-	docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} 0.9:${VER}" $1 kanapi/kanapi-${NAME}:${VER}
+	docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} ${VER}-${KANAPI_BRANCH}" $1 kanapi/kanapi-${NAME}:${VER}-${KANAPI_BRANCH}
 else
 	echo "run script with container ID"
 	docker ps -a

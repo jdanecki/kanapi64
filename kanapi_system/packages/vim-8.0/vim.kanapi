@@ -30,7 +30,6 @@ EXT=tar.bz2
 export CFLAGS="${NCURSES_CFLAGS} -O2"
 export CPPFLAGS=${CFLAGS}
 export LDFLAGS="${NCURSES_LDFLAGS}"
-export STRIP=${KANAPI_TARGET_NAME}-strip
 
 pkg_prepare() {
 	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
@@ -38,17 +37,14 @@ pkg_prepare() {
 		echo "$PACKAGE_NAME: already prepared"
 	else
 		pkg_tar_bz2
-		if [ ! -L ${PACKAGE_SRCDIR} ]
-		then
-			${LN_SF} ${KANAPI_BUILD_SRC}/vim80 ${PACKAGE_SRCDIR}
-		fi
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
+	${LN_SNF} vim80 ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {
 	local_copy
-	./configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} vim_cv_toupper_broken=no \
+	./configure --prefix=$PREFIX vim_cv_toupper_broken=no \
 	--with-tlib=ncurses vim_cv_terminfo=yes vim_cv_tty_group=world vim_cv_tty_mode=0620 \
 	vim_cv_getcwd_broken=no vim_cv_stat_ignores_slash=no vim_cv_memmove_handles_overlap=yes \
 	--without-x --enable-gui=no ac_cv_header_elf_h=no --disable-selinux
@@ -56,14 +52,11 @@ pkg_configure() {
 }
 
 pkg_build() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+	pkg_build_local
 }
 
 pkg_install() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true
-	pkg_install_bin_all
+	pkg_install_local && pkg_install_bin_all
 }
 
 pkg_check() {

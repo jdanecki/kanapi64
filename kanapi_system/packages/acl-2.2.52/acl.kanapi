@@ -28,8 +28,7 @@ export CFLAGS="-I${KANAPI_BASE}/attr-${attr_ver}/include"
 export LDFLAGS="-L${KANAPI_BASE}/attr-${attr_ver}/lib"
 
 pkg_configure() {
-	local_copy
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
+	pkg_configure_local
 }
 
 pkg_build() {

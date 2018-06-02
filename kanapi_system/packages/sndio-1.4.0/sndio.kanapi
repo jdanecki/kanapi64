@@ -46,6 +46,6 @@ copy_examples() {
 }
 pkg_install() {
 	cd build
-	pkg_install_pc_all && pkg_install_libs && pkg_install_bin_all && copy_examples
+	pkg_install_all && copy_examples
 }
 

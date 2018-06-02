@@ -35,7 +35,7 @@ pkg_configure() {
 pkg_build() {
 	cd build
 	${MAKE} config.h
-	${KANAPI_TARGET_NAME}-gcc ${CFLAGS} ${LDFLAGS} -o st -DVERSION=\"${VER}\" -D_XOPEN_SOURCE=600 -std=c99 st.c
+	gcc ${CFLAGS} ${LDFLAGS} -o st -DVERSION=\"${VER}\" -D_XOPEN_SOURCE=600 -std=c99 st.c
 }
 
 pkg_install() {
@@ -43,10 +43,7 @@ pkg_install() {
         mkdir -p ${PREFIX}/bin
         cp -v st ${PREFIX}/bin
 	pkg_install_bin_all
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then
-		${KANAPI_BASE}/ncurses5-${ncurses5_ver}/bin/tic -sx st.info
-	fi
+	${KANAPI_BASE}/ncurses5-${ncurses5_ver}/bin/tic -sx st.info
 }
 
 pkg_check() {

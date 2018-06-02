@@ -31,33 +31,24 @@ pkg_download() {
 
 pkg_configure() {
 	local_copy
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
 		touch ChangeLog
 		libtoolize --install --force
 		autoreconf --install --force
-		./configure	--prefix=$PREFIX --host=${KANAPI_TARGET_NAME} 
-	fi
+		./configure	--prefix=$PREFIX  
 }
 
 pkg_build() {
 	cd build
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
 		${MAKE} -C lib -j ${MAKE_JOBS} MAKEINFO=true && ${MAKE} -C src -j ${MAKE_JOBS} MAKEINFO=true && \
 		${MAKE} -C tests -j ${MAKE_JOBS} MAKEINFO=true && ${MAKE} -C tools -j ${MAKE_JOBS} MAKEINFO=true
-	fi
 }
 
 pkg_install() {
 	cd build
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
 		${MAKE} -C lib -j ${MAKE_JOBS} install MAKEINFO=true
 		${MAKE} -C src -j ${MAKE_JOBS} install MAKEINFO=true
 		${MAKE} -C tests -j ${MAKE_JOBS} install MAKEINFO=true
 		${MAKE} -C tools -j ${MAKE_JOBS} install MAKEINFO=true
 		pkg_install_bin_all && pkg_install_libs
-	fi
 }
 

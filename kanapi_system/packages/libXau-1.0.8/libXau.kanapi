@@ -32,7 +32,4 @@ pkg_install() {
 
 pkg_check() {
 	echo "PKG_CONFIG=${PKG_CONFIG}"
-	echo "KANAPI_CROSS=${KANAPI_CROSS}"
-	echo "${KANAPI_CROSS_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config"
-	ls -l "${KANAPI_CROSS_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config"
 }

@@ -4,6 +4,9 @@
 
 USE_LOCAL=1
 DIR=`pwd`
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
+
 if [ ! -d ${HOME}/src ] ; then mkdir ${HOME}/src ; fi
 if [ ! -d kanapi ] 
 then 
@@ -20,5 +23,11 @@ else
 	popd
 fi
 
-docker create -i -t --name kanapi-${NAME}-${VER} -v ${DIR}/kanapi:/kanapi_build/kanapi -v ${HOME}/src:/kanapi_0.9/x86_64/home/src -v ${HOME}/.ccache:/kanapi_0.9/x86_64/home/.ccache -e HOME=/kanapi_0.9/x86_64/home kanapi/kanapi-${NAME}
+docker create -i -t --name kanapi-${NAME}-${VER} \
+ 	--privileged \
+   --cap-add=ALL \
+   --device /dev:/dev \
+   --ipc host \
+	-v ${DIR}/kanapi:/kanapi_build/kanapi -v ${HOME}/src:/${KANAPI_VER}/home/src \
+	-v ${HOME}/.ccache:/${KANAPI_VER}/home/.ccache -e HOME=/${KANAPI_VER}/home kanapi/kanapi-${NAME}
 

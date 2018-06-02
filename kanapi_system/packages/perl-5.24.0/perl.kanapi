@@ -25,42 +25,25 @@ EXT=tar.gz
 . ../settings
 
 pkg_configure() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		local_copy
-		cat ../../../configs/perl-${KANAPI_TARGET}_config.sh | sed "s-@KANAPI_ROOT@-${KANAPI_ROOT}-g" > config.sh
-		./Configure -de -Dprefix=${PREFIX} -Dcf_email="jacek.m.danecki@gmail.com" -Dlocincpth="${LIBC_PREFIX}/include ${KANAPI_BASE}/zlib-${zlib_ver}/include" \
-			-Dloclibpth="${LIBC_PREFIX}/lib ${KANAPI_BASE}/zlib-${zlib_ver}/lib" -Dlibswanted="pthread rt m dl nsl crypt util c z" -Dusethreads \
-			-Dcc=${KANAPI_TARGET_NAME}-gcc -Duseshrplib
-	fi
+	local_copy
+	cat ../../../configs/perl_config.sh | sed "s-@KANAPI_ROOT@-${KANAPI_ROOT}-g" > config.sh
+	./Configure -de -Dprefix=${PREFIX} -Dcf_email="jacek.m.danecki@gmail.com" -Dlocincpth="${LIBC_PREFIX}/include ${KANAPI_BASE}/zlib-${zlib_ver}/include" \
+		-Dloclibpth="${LIBC_PREFIX}/lib ${KANAPI_BASE}/zlib-${zlib_ver}/lib" -Dlibswanted="pthread rt m dl nsl crypt util c z" -Dusethreads \
+		-Dcc=gcc -Duseshrplib
 }
 
 pkg_build() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		cd build
-		MAKE_JOBS=1
-		${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
-	fi
+	cd build
+	MAKE_JOBS=1
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
 }
 
 pkg_install() {
-	if [ ${KANAPI_CROSS} -eq 0 ]
-	then
-		cd build
-		MAKE_JOBS=1
-		pkg_install_make && pkg_install_bin_all
-		if [ "$?" != "0" ] ; then exit 1; fi
-		for i in mtrace glib-mkenums c_rehash
-		do
-			FILE=`readlink ${KANAPI_TARGET_BIN}/$i`
-			if [ -f "${FILE}" ]
-			then
-				sed -i "s@kanapi_.*bin/@kanapi_${KANAPI_VER}/${KANAPI_TARGET}/bin/@" ${FILE}
-			fi
-		done
-		if [ -d ${PREFIX}/man ] ; then rm -rf ${PREFIX}/man ; fi
-	fi
+	cd build
+	MAKE_JOBS=1
+	pkg_install_make && pkg_install_bin_all
+	if [ "$?" != "0" ] ; then exit 1; fi
+	if [ -d ${PREFIX}/man ] ; then rm -rf ${PREFIX}/man ; fi
 }
 
 pkg_check() {

@@ -30,8 +30,7 @@ EXT=tar.xz
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	local_copy
-	./configure --prefix=${PREFIX}
+	pkg_configure_local
 }
 
 

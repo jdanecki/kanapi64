@@ -34,8 +34,7 @@ pkg_configure() {
 }
 
 pkg_build() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true prefix=${PREFIX}
+	pkg_build_local
 }
 
 pkg_install() {

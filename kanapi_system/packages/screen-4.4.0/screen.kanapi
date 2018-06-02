@@ -29,26 +29,8 @@ LIB_DEPENDS="ncurses"
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
-pkg_configure() {	
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then
-		${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME}
-	fi
-}
-
-pkg_build() {
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then
-		${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
-	fi
-}
-
 pkg_install() {
-	if [ "${KANAPI_CROSS}" = "0" ]
-	then
-		MAKE_JOBS=1
-		pkg_install_make
-		pkg_install_bin_all
-	fi
+	MAKE_JOBS=1
+	pkg_install_make_bin_all
 }
 

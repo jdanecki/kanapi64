@@ -30,7 +30,7 @@ LIB_DEPENDS="ncurses"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --enable-nasm --enable-shared
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --enable-nasm --enable-shared
 }
 
 pkg_install() {

@@ -30,7 +30,7 @@ LIB_DEPENDS="liblzma zlib"
 export LDFLAGS="${LDFLAGS} -lpthread"
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --host=${KANAPI_TARGET_NAME} --with-xz --with-zlib
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-xz --with-zlib
 }
 
 pkg_install() {
@@ -39,8 +39,7 @@ pkg_install() {
 	do
 		${LN_SF} ${PREFIX}/bin/kmod ${PREFIX}/bin/$i
 	done
-	pkg_install_bin_all
-	pkg_install_libs
+	pkg_install_bin_all &&	pkg_install_libs
 }
 
 pkg_check() {

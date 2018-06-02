@@ -54,7 +54,7 @@ pkg_configure() {
 	tar -xzf ${KANAPI_BUILD_SRC}/go-1.4.3.tar.gz -C go-1.4
 	if [ ! -L /lib64/ld-linux-x86-64.so.2 ]
 	then
-		${LN_SF} /kanapi_0.9/x86_64/packages/glibc-${glibc_ver}/lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
+		${LN_SF} /kanapi_${KANAPI_VER}/packages/glibc-${glibc_ver}/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
 	fi
 }
 
