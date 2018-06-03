@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd /kanapi_build/kanapi/kanapi_system/kanapi-cli
 if [ "${TRAVIS}" = "true" ]
 then
@@ -7,4 +9,5 @@ then
 else
 	./install cli verbose
 fi
+go clean -cache
 
