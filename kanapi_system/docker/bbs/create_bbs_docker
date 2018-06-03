@@ -23,13 +23,20 @@ else
 	popd
 fi
 
-docker run -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
-   --cap-add=ALL \
-	-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
-	-v `pwd`/build:/build \
-	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
+if [ "${CI}" = "true" ]
+then
+	docker run -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
+		-v `pwd`/build:/build -e CI="true" \
+		-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
+else
+	docker run -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
+	   --cap-add=ALL \
+		-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
+		-v `pwd`/build:/build \
+		-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
+	ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}-${KANAPI_BRANCH}" -q`
+	docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} ${VER}-${KANAPI_BRANCH}" ${ID} kanapi/kanapi-${NAME}:${VER}-${KANAPI_BRANCH}
+	docker rm ${ID}
+fi
 
-ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}-${KANAPI_BRANCH}" -q`
-docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} ${VER}-${KANAPI_BRANCH}" ${ID} kanapi/kanapi-${NAME}:${VER}-${KANAPI_BRANCH}
-docker rm ${ID}
 
