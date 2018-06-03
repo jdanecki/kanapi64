@@ -62,7 +62,7 @@ GUIlib:
 SDL-widgets:
 	@$(RUN_TARGET)
 
-tests: xflame water xclipboard intel-gpu-tools ltp-full hello phoronix-test-suite gperf qemu
+tests: xflame water xclipboard intel-gpu-tools ltp-full hello phoronix-test-suite qemu
 
 xclipboard:
 	@$(RUN_TARGET)
@@ -80,9 +80,6 @@ php:
 	@$(RUN_TARGET)
 
 phoronix-test-suite: php
-	@$(RUN_TARGET)
-
-gperf:
 	@$(RUN_TARGET)
 
 demo: cairo-demos mesa-demos
