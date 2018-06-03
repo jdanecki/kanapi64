@@ -26,9 +26,14 @@ EXT=zip
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
-#export CFLAGS="${CFLAGS} "
-
+export CC="clang"
+export CXX="clang++"
+export GCC_PREFIX=${KANAPI_BASE}/gcc-${gcc_ver}
+export LDFLAGS="${LDFLAGS} -L${LIBC_PREFIX}/lib -L${GCC_PREFIX}/lib64 -L${GCC_PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}"
+export C_INCLUDE_PATH=${LIBC_PREFIX}/include
+export COMPILER_PATH="${GCC_PREFIX}/x86_64-pc-linux-gnu/lib:${GCC_PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}"
+export CPLUS_INCLUDE_PATH="${GCC_PREFIX}/include/c++/${gcc_ver}:${GCC_PREFIX}/include/c++/${gcc_ver}/x86_64-pc-linux-gnu:${LIBC_PREFIX}/include"
+  
 pkg_download() {
 	PACKAGE_FILENAME=${PACKAGE_NAME}-${VER}.${EXT}
 	PACKAGE_PATH=FreeImage3170.zip
