@@ -1,3 +1,4 @@
-VER=5
+VER=0.10.1
 NAME=x11
-BASE_IMAGE=cli
+export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
+BASE_IMAGE=cli:0.10.2-${KANAPI_BRANCH}
