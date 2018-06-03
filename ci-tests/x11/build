@@ -1,4 +1,0 @@
-#!/bin/bash
-
-docker build -m 4g -t kanapi-x11:ci .
-

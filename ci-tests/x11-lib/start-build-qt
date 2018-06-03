@@ -1,7 +1,0 @@
-#!/bin/bash
-
-cd `dirname $0`
-REPO_BASE=`pwd | sed "s@/ci-tests/x11-lib@@"`
-git clone ${REPO_BASE} kanapi
-./build-qt
-

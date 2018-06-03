@@ -1,4 +1,0 @@
-#!/bin/bash
-
-git clone ../../../kanapi kanapi
-docker build -t kanapi-cli-base:ci .
