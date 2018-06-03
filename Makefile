@@ -1,4 +1,13 @@
-# 'test-sbs', 'bbs', 'rebuild', 'install'  targets were prepared for Jenkins config
+all: sbs bbs cli
 
-all test test-sbs bbs bbs_sbs core_cli rebuild install:
-	make -C ci-tests $@
+sbs:
+	cd kanapi_system/docker/sbs; ./make_full_image
+
+bbs:
+	cd kanapi_system/docker/bbs; ./create_bbs_docker
+
+cli:
+	cd kanapi_system/docker/cli; ./create_cli_docker
+
+sbs-bbs: sbs bbs
+
