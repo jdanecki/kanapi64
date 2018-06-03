@@ -3,13 +3,8 @@
 SCRIPTS_DIR=/kanapi_build/kanapi/kanapi_system/scripts
 include $(SCRIPTS_DIR)/Makefile.common
 
-all-sbs bbs-sbs: ccache bash-completion m4 perl autoconf automake libtool bison sed gettext ncurses readline gawk cmake \
+bbs: ccache bash-completion m4 perl autoconf automake libtool bison sed gettext ncurses readline gawk cmake \
 	flex attr acl libarchive e2fsprogs git coreutils diffutils Python ninja tar findutils patch slang util-linux less openssh mtools
-
-# Basic Build System built without SBS
-bbs: ccache busybox bash-completion make perl m4 autoconf automake libtool bison sed gettext ncurses readline gawk openssl cmake \
-	flex attr acl libarchive e2fsprogs git \
-	coreutils diffutils Python ninja tar findutils patch slang util-linux less openssh mtools
 
 ccache:
 	@$(RUN_TARGET)

@@ -26,7 +26,7 @@ EXT=tar.gz
 
 pkg_configure() {
 	local_copy
-	cat ../../../configs/perl_config.sh | sed "s-@KANAPI_ROOT@-${KANAPI_ROOT}-g" > config.sh
+	cat ../../../packages/${PACKAGE_NAME}-${VER}/perl_config.sh | sed "s-@KANAPI_ROOT@-${KANAPI_ROOT}-g" > config.sh
 	./Configure -de -Dprefix=${PREFIX} -Dcf_email="jacek.m.danecki@gmail.com" -Dlocincpth="${LIBC_PREFIX}/include ${KANAPI_BASE}/zlib-${zlib_ver}/include" \
 		-Dloclibpth="${LIBC_PREFIX}/lib ${KANAPI_BASE}/zlib-${zlib_ver}/lib" -Dlibswanted="pthread rt m dl nsl crypt util c z" -Dusethreads \
 		-Dcc=gcc -Duseshrplib

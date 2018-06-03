@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cd /kanapi_build/kanapi/kanapi_system/kanapi-bbs
+cd /kanapi_build/kanapi/kanapi_system/bbs/build
 if [ "${TRAVIS}" = "true" ]
 then
-	./install all-sbs ci
+	./install bbs ci
 else
-	./install all-sbs verbose
+	./install bbs verbose
 fi
 
