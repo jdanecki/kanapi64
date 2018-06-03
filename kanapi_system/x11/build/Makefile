@@ -257,7 +257,7 @@ fonts: fonts-bitmap fonts-type1 fonts-misc fonts-ttf
 
 fonts-ttf: freefont-ttf dejavu-fonts-ttf font-bh-ttf
 
-fontconfig:
+fontconfig: gperf
 	@$(RUN_TARGET)
 
 freefont-ttf: fontconfig
@@ -631,4 +631,8 @@ exif: libexif
 
 libXcomposite:
 	@$(RUN_TARGET)
+
+gperf:
+	@$(RUN_TARGET)
+
 
