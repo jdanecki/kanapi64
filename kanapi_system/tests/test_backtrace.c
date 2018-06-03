@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <execinfo.h>
 
 int main()
 {
@@ -7,7 +8,7 @@ int main()
 	
 	size = backtrace(&array, 1);
 
-	printf("test passed size = %d\n", size);
+	printf("test passed size = %lu\n", size);
 	return 0;
 }
 
