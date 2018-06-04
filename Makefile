@@ -12,4 +12,6 @@ cli:
 x11:
 	cd kanapi_system/docker/x11; ./create_x11_docker
 
+ocl:
+	cd kanapi_system/docker/ocl; ./create_ocl_docker
 
