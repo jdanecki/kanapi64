@@ -1,4 +1,4 @@
-all: sbs bbs cli
+all: sbs bbs cli x11
 
 sbs:
 	cd kanapi_system/docker/sbs; ./make_full_image
@@ -9,5 +9,7 @@ bbs:
 cli:
 	cd kanapi_system/docker/cli; ./create_cli_docker
 
-sbs-bbs: sbs bbs
+x11:
+	cd kanapi_system/docker/x11; ./create_x11_docker
+
 
