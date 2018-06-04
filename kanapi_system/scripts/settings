@@ -20,12 +20,10 @@ fi
 KANAPI_BASE=${KANAPI_ROOT}/packages
 KANAPI_HOME=${KANAPI_ROOT}/home
 KANAPI_BIN=${KANAPI_ROOT}/bin
+KANAPI_BUILD_SRC=${HOME}/src
 if [ "${CI}" = "true" ]
 then
-	KANAPI_BUILD_SRC=${HOME}/ci_src
 	alias rm='rm -rf'
-else
-	KANAPI_BUILD_SRC=${HOME}/src
 fi
 USE_WGET=0
 
