@@ -5,6 +5,6 @@ kanapi_system/sbs/build
 kanapi_system/x11/build
 kanapi_system/ocl/build
 kanapi_system/kanapi-apps
-kanapi_system/kanapi-gui
+kanapi_system/gui/build
 
 

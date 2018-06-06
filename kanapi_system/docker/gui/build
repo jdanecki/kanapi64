@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+cd /kanapi_build/kanapi/kanapi_system/gui/build
+if [ "${TRAVIS}" = "true" ]
+then
+	./install gui ci
+else
+	./install gui verbose
+fi
+
