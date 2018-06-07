@@ -26,7 +26,7 @@ EXT=tar.xz
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -lsndio -lm -ldl -lrt -lpthread"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
