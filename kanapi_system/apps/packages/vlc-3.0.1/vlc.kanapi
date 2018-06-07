@@ -26,7 +26,7 @@ LIB_DEPENDS="ncurses libpng"
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -lm -lrt -lpthread -lresolv"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {

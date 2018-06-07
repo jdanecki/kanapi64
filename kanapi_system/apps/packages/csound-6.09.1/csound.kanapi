@@ -26,7 +26,7 @@ LIB_DEPENDS="sndfile jack libpulse libcurl python zlib libpng alsa libpulse-simp
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lpthread -lm -lrt -lstdc++ -lresolv"
+export LDFLAGS="${LDFLAGS} -lpthread -lm -lrt -lstdc++ -lresolv -lutil -lcrypt"
 export CXXFLAGS="${CFLAGS}"
 
 pkg_download() {

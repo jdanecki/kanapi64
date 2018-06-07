@@ -27,7 +27,7 @@ EXT=tar.xz
 . ../settings
 export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -ldl -lm -lrt -lpthread -lresolv"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {

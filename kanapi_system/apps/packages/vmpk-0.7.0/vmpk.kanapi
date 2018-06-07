@@ -28,7 +28,7 @@ EXT=tar.bz2
 
 #STRIP_BINARIES=0
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -ldl -lrt -lpthread -lresolv"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {

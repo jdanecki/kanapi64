@@ -26,7 +26,7 @@ LIB_DEPENDS="gl"
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -lcrypt -lutil"
 #export CFLAGS="${CFLAGS} "
 
 pkg_download() {
@@ -41,7 +41,7 @@ pkg_configure() {
 	QMAKE_CXX=${KANAPI_CXX_COMPILER} \
 	"CSOUND_INCLUDE_DIR=${KANAPI_BASE}/csound-${csound_ver}/include/csound" \
        	"CSOUND_LIBRARY_DIR=${KANAPI_BASE}/csound-${csound_ver}/lib" \
-	QMAKE_LFLAGS="`${PKG_CONFIG} --libs ${LIB_DEPENDS}`" \
+	QMAKE_LFLAGS="`${PKG_CONFIG} --libs ${LIB_DEPENDS}` ${LDFLAGS}" \
 	QMAKE_INCDIR_OPENGL=`${PKG_CONFIG} --variable=includedir gl`
 }
 

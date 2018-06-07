@@ -22,11 +22,11 @@ VER=2.2.2
 URL="https://github.com/audacity/audacity/archive"
 EXT=tar.gz
 #build depends on
-#LIB_DEPENDS=""
+LIB_DEPENDS="portaudio-2.0"
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -lstdc++ -lrt -lpthread -ldl"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {

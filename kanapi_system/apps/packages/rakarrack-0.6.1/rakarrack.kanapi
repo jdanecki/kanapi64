@@ -22,9 +22,11 @@ VER=0.6.1
 URL="http://downloads.sourceforge.net/${PACKAGE_NAME}"
 EXT=tar.bz2
 #build depends on
-LIB_DEPENDS="libpng14"
+LIB_DEPENDS="libpng14 x11 jack"
 
 . ../settings
+
+export LDFLAGS="${LDFLAGS} -lm -lrt -lpthread -lstdc++"
 
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  

@@ -27,7 +27,7 @@ LIB_DEPENDS="xaw3d"
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -lrt -lpthread -lm"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {	
