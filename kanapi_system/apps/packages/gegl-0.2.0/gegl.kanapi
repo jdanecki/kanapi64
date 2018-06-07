@@ -42,7 +42,7 @@ export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -lm -lres
 export CPP="gcc -E -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
 export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
 
-pkg_configure_target() {	
+pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
 	--disable-docs
 }

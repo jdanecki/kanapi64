@@ -24,7 +24,7 @@ EXT=tar.xz
 #build depends on
 . ../settings
 
-pkg_configure_target() {	
+pkg_configure() {
 	local_copy
 }
 
