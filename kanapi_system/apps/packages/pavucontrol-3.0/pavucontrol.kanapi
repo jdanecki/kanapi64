@@ -26,7 +26,7 @@ LIB_DEPENDS="x11"
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
+export LDFLAGS="${LDFLAGS} -lrt -lpthread -lresolv"
 export CXXFLAGS="${CFLAGS} -std=c++11"
 export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
 
