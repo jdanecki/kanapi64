@@ -1,4 +1,4 @@
-VER=0.10.1
+VER=0.10.2
 NAME=apps
 export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
-BASE_IMAGE=gui:0.10.1-${KANAPI_BRANCH}
+BASE_IMAGE=gui:0.10.2-${KANAPI_BRANCH}
