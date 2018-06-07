@@ -3,8 +3,6 @@ kanapi_system/bbs/build
 kanapi_system/cli/build
 kanapi_system/sbs/build
 kanapi_system/x11/build
-kanapi_system/ocl/build
-kanapi_system/kanapi-apps
 kanapi_system/gui/build
-
-
+kanapi_system/apps/build
+kanapi_system/ocl/build

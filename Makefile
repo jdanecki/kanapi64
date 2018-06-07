@@ -1,4 +1,4 @@
-all: sbs bbs cli x11 gui ocl
+all: sbs bbs cli x11 gui apps ocl
 
 sbs:
 	cd kanapi_system/docker/sbs; ./make_full_image
@@ -17,3 +17,6 @@ ocl:
 
 gui:
 	cd kanapi_system/docker/gui; ./create_gui_docker
+
+apps:
+	cd kanapi_system/docker/apps; ./create_apps_docker

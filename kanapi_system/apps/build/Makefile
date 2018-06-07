@@ -1,10 +1,7 @@
-ifeq (x$(KANAPI_TOP),x)
-BASE=
-else
-BASE=$(KANAPI_TOP)/
-endif
+REPO_BASE=$(shell git rev-parse --show-toplevel)
+SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
 
-include $(BASE)../scripts/Makefile.common
+include $(SCRIPTS_DIR)/Makefile.common
 
 apps: apps-gtk apps-qt apps-x11 apps-gui
 
@@ -26,7 +23,7 @@ apps-x11: apps-libs mpv ClanLib bullet3 feh ogre rakarrack xfig
 
 apps-gui: apps-libs vlc Audacity
 
-apps-manual: tests webkitgtk demo midori firefox compilers
+apps-manual: tests webkitgtk demo midori firefox
 
 sdl: sdl-support sdl2-support
 
@@ -278,17 +275,6 @@ firefox: autoconf213
 autoconf213:
 	DIR_NAME=autoconf-2.13; if [ ! -d  $${DIR_NAME} ]; then mkdir -p $${DIR_NAME} ; ln -svf ../../packages/$${DIR_NAME}/autoconf.kanapi $${DIR_NAME}; fi
 	make -f ../Makefile -C autoconf-2.13 kanapi_$(ACTION) PKG=autoconf KANAPI_TOP=$(PWD) V=$(V)
-
-gcc_5:
-	@$(RUN_TARGET_VER)
-
-gcc_6:
-	@$(RUN_TARGET_VER)
-
-gcc_7:
-	@$(RUN_TARGET_VER)
-
-compilers: binutils gcc_5 gcc_6 gcc_7
 
 libmikmod:
 	@$(RUN_TARGET)
