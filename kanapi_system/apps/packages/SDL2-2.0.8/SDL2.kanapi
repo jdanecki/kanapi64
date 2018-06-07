@@ -30,7 +30,7 @@ LIB_DEPENDS="x11 gl xext alsa xrandr ice x11-xcb xcursor libunwind SDL2_ttf"
 export LDFLAGS="${LDFLAGS} -lstdc++ -lpthread -lm -ldl -lrt"
 export CPP="gcc -E ${CFLAGS}"
 export CFLAGS="${CFLAGS}  -std=gnu11"
-export LIBS="`${PKG_CONFIG} --libs libunwind` -lunwind-x86_64"
+export LIBS="`${PKG_CONFIG} --libs libunwind` -lunwind-x86_64 ${LDFLAGS}"
 
 pkg_prepare() {
 	pkg_tar_gz
