@@ -32,16 +32,22 @@ export CPP="gcc -E ${CFLAGS}"
 export CFLAGS="${CFLAGS}  -std=gnu11"
 export LIBS="`${PKG_CONFIG} --libs libunwind` -lunwind-x86_64 ${LDFLAGS}"
 
+which sdl2-config
+if [ "$?" = "0" ]
+then
+	BUILD_TESTS=1
+else
+	BUILD_TESTS=0
+fi
+
 pkg_prepare() {
 	pkg_tar_gz
 }
 
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --disable-video-opengles
-	if [ "${CI}" = "true" ]
+	if [ "${BUILD_TESTS}" = "1" ]
 	then
-		echo "don't configure SDL tests under CI"
-	else
 		mkdir tests; cd tests
 		${PACKAGE_SRCDIR}/test/configure --prefix=$PREFIX 
 		sed -i -e '/testgles\$(EXE) /,+1d' Makefile
@@ -50,10 +56,8 @@ pkg_configure() {
 
 pkg_build() {
 	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
-	if [ "${CI}" = "true" ]
+	if [ "${BUILD_TESTS}" = "1" ]
 	then
-		echo "don't build SDL tests under CI"
-	else
 		cd tests; ${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
 	fi
 }
@@ -67,11 +71,10 @@ pkg_install_tests() {
 }
 
 pkg_install() {
-	if [ "${CI}" = "true" ]
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+	if [ "${BUILD_TESTS}" = "1" ]
 	then
-		pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
-	else
-		pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs && pkg_install_tests
+		pkg_install_tests
 	fi
 }
 
