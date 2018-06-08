@@ -5,7 +5,7 @@ include $(SCRIPTS_DIR)/Makefile.common
 
 apps: apps-gtk apps-qt apps-x11 apps-gui
 
-apps-libs: libmikmod libmad libva-intel-driver ffmpeg ogl sdl openal-soft fltk
+apps-libs: libmikmod libmad libva-intel-driver ffmpeg ogl sdl openal-soft fltk glew
 
 apps-gtk: apps-libs apps-gtk-libs gimp gvim evince pavucontrol Blue qiv allegro dia patchage
 
