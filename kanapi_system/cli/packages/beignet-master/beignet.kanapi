@@ -41,7 +41,7 @@ pkg_configure() {
 	 cmake ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} \
         -DLLVM_CONFIG_EXECUTABLE=${KANAPI_BASE}/llvm-${llvm_ver}/bin/llvm-config \
         -DCMAKE_BUILD_TYPE=Release -DOCLIcd_INCLUDE_PATH=${KANAPI_BASE}/ocl-icd-${ocl_icd_ver}/include \
-		-DENABLE_OPENCL_20=ON -DEXPERIMENTAL_DOUBLE=ON
+		-DENABLE_OPENCL_20=ON -DEXPERIMENTAL_DOUBLE=OFF
 }
 
 pkg_build() {
