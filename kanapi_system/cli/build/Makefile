@@ -339,7 +339,7 @@ popt:
 ruby:
 	@$(RUN_TARGET)
 
-ocl-icd: 
+ocl-icd:
 	@$(RUN_TARGET)
 
 beignet:
@@ -351,7 +351,7 @@ clinfo:
 clpeak:
 	@$(RUN_TARGET)
 
-ocl: ocl-icd beignet clinfo clpeak
+ocl: ocl-icd beignet clinfo clpeak numactl
 
 alsa-oss:
 	@$(RUN_TARGET)
@@ -420,4 +420,7 @@ libsamplerate: fftw
 	@$(RUN_TARGET)
 
 fftw:
+	@$(RUN_TARGET)
+
+numactl:
 	@$(RUN_TARGET)
