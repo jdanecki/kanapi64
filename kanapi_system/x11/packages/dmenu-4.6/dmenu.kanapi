@@ -41,7 +41,7 @@ pkg_configure() {
 pkg_build() {
 	cd build
 	${MAKE} -j ${MAKE_JOBS} XINERAMAFLAGS="`${PKG_CONFIG} --cflags xproto xft`" CC="${KANAPI_C_COMPILER}" \
-		XINERAMALIBS="`${PKG_CONFIG} --libs fontconfig xft xcb xau libpng zlib expat xrender` -lpthread -lm -ldl"
+		XINERAMALIBS="`${PKG_CONFIG} --libs fontconfig xft xcb xau libpng zlib expat xrender`"
 }
 
 pkg_install() {

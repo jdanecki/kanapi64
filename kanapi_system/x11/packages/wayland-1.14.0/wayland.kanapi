@@ -26,7 +26,7 @@ EXT=tar.xz
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lm -ldl"
+#export LDFLAGS="${LDFLAGS} -lm -ldl"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {

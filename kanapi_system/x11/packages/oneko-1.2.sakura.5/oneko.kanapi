@@ -34,7 +34,7 @@ pkg_configure() {
 pkg_build() {
 	cd build
 	${MAKE} INCLUDES="`pkg-config --cflags x11 xext`" \
-		LOCAL_LDFLAGS="`pkg-config --libs x11 xext xcb xau` -ldl" 
+		LOCAL_LDFLAGS="`pkg-config --libs x11 xext xcb xau`" 
 }
 
 pkg_install() {
