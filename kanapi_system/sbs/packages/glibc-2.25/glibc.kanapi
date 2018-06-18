@@ -52,7 +52,7 @@ pkg_install() {
 	${PREFIX}/bin/localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
 	${LN_SF} ${PREFIX}/lib/ld-linux-x86-64.so.2 ${PREFIX}/lib/ld-linux.so.2
 
-    gcc -dumpspecs | sed "s@/lib64/ld-linux-x86-64.so.2@${PREFIX}/lib/ld-linux-x86-64.so.2@g" > ${PREFIX}/gcc-specs
+   gcc -dumpspecs | sed "s@/lib64/ld-linux-x86-64.so.2@${PREFIX}/lib/ld-linux-x86-64.so.2@g" > ${PREFIX}/gcc-specs
 	${LN_SF} ${KANAPI_BASE}/linux-headers-${linux_headers_ver}/include/* ${PREFIX}/include
 	echo "${KANAPI_BASE}/libs" > ${PREFIX}/etc/ld.so.conf
 	if [ "`id -u`" = "0" ]
@@ -60,5 +60,7 @@ pkg_install() {
 		export LD_LIBRARY_PATH=
 		ldconfig
 	fi
+	mkdir -p ${KANAPI_ROOT}/usr/local/lib
+	ln -s ${PREFIX}/lib/lib* ${KANAPI_ROOT}/usr/local/lib
 }
 
