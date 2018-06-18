@@ -1,4 +1,4 @@
-VER=0.10.1
+VER=0.10.2
 NAME=ocl
 export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
-BASE_IMAGE=sbs:0.10.7-${KANAPI_BRANCH}
+BASE_IMAGE=sbs:0.10.8-${KANAPI_BRANCH}

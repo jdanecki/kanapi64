@@ -9,4 +9,4 @@
 
 # Special docker images
 
-* ocl:0.10.1-master
+* ocl:0.10.2-master
