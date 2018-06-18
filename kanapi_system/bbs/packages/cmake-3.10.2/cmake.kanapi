@@ -26,7 +26,7 @@ LIB_DEPENDS="ncurses"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -ldl -lrt -pthread"
+#export LDFLAGS="${LDFLAGS} "
 export CFLAGS="${CFLAGS} -pthread"
 export CXXFLAG="${CFLAGS}"
 

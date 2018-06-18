@@ -24,7 +24,7 @@ EXT=tar.xz
 #build depends on
 . ../settings
 
-export LDFLAGS="-lpthread -ldl"
+#export LDFLAGS="-lpthread -ldl"
 
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-elf-shlibs --disable-nls

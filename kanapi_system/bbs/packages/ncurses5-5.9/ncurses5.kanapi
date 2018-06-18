@@ -49,7 +49,7 @@ pkg_configure() {
 	local_copy
 	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/0002-gcc-5.x-MKlib_gen.patch
 	 export CFLAGS="${CFLAGS}"
-	 export LDFLAGS="${LDFLAGS} -ldl"
+	 #export LDFLAGS="${LDFLAGS} -ldl"
 	./configure --prefix=$PREFIX --with-shared --enable-termcap --with-termlib
 }
 
