@@ -26,7 +26,7 @@ LIB_DEPENDS="xcb"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/libtool-${libtool_ver}/lib -lresolv -lrt -lpthread -ldl"
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/libtool-${libtool_ver}/lib"
 export CFLAGS="${CFLAGS} -I ${KANAPI_BASE}/libtool-${libtool_ver}/include"
 export CPP="gcc -E ${CFLAGS}"
 

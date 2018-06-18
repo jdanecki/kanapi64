@@ -26,7 +26,7 @@ LIB_DEPENDS="ncurses"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lm -lrt -ldl -lstdc++ -lresolv -lpthread"
+export LDFLAGS="${LDFLAGS} -lstdc++"
 #export CFLAGS="${CFLAGS} "
 
 pkg_install() {

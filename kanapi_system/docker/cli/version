@@ -1,4 +1,4 @@
-VER=0.10.3
+VER=0.10.4
 NAME=cli
 export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
-BASE_IMAGE=bbs:0.10.5-${KANAPI_BRANCH}
+BASE_IMAGE=bbs:0.10.6-${KANAPI_BRANCH}

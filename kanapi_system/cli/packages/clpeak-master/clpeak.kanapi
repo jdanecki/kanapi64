@@ -27,7 +27,7 @@ EXT=
 . ../settings
 
 #export LDFLAGS="${LDFLAGS} "
-export CFLAGS="-ldl "
+#export CFLAGS="-ldl "
 
 pkg_download() {
 	pkg_git_clone
