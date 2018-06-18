@@ -1,6 +1,6 @@
 # Docker images versions
 
-* sbs:0.10.7-master
+* sbs:0.10.8-master
 * bbs:0.10.5-master
 * cli:0.10.3-master
 * x11:0.10.2-master
