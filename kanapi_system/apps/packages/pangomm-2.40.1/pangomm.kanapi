@@ -26,7 +26,7 @@ EXT=tar.xz
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -ldl -lresolv -lrt -lpthread"
+#export LDFLAGS="${LDFLAGS} -ldl -lresolv -lrt -lpthread"
 #export CXXFLAGS="-lrt -lpthread"
 
 pkg_install() {

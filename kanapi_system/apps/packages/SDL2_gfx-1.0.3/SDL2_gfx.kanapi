@@ -26,7 +26,7 @@ LIB_DEPENDS="gl xext x11-xcb x11 ice"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -ldl -lrt -lpthread -lm -lstdc++"
+export LDFLAGS="${LDFLAGS} -lstdc++"
 #export CFLAGS="${CFLAGS} "
 
 pkg_install() {

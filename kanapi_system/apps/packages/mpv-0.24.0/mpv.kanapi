@@ -26,7 +26,7 @@ LIB_DEPENDS="zlib"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lm -lpthread -lsndio -ldl -lrt -lresolv -latomic -lstdc++"
+export LDFLAGS="${LDFLAGS} -lsndio -latomic -lstdc++"
 #export CFLAGS="${CFLAGS} "
 
 pkg_download() {

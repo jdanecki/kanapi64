@@ -26,7 +26,7 @@ LIB_DEPENDS="libdrm"
 
 . ../settings
 
-export LDFLAGS="-lm -ldl"
+#export LDFLAGS="-lm -ldl"
 #export CFLAGS="${CFLAGS} "
 
 pkg_install() {

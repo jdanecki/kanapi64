@@ -5,7 +5,7 @@
 * cli:0.10.4-master
 * x11:0.10.3-master
 * gui:0.10.3-master
-* apps:0.10.2-master
+* apps:0.10.3-master
 
 # Special docker images
 

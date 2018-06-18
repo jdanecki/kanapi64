@@ -26,7 +26,7 @@ EXT=tar.bz2
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -ldl -lrt -lpthread -lresolv"
+#export LDFLAGS="${LDFLAGS} -ldl -lrt -lpthread -lresolv"
 export CXXFLAGS="${CFLAGS} -std=c++11"
 
 pkg_configure() {

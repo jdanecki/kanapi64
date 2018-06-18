@@ -27,7 +27,7 @@ LIB_DEPENDS="x11 xt ice fontconfig xext x11-xcb zlib xrender alsa xcb xcb-shm xc
 . ../settings
 
 unset CFLAGS
-export LDFLAGS="${LDFLAGS} -lm -lpthread -ldl -lrt -lstdc++ -lresolv  -L${KANAPI_BASE}/bzip2-${bzip2_ver}/lib"
+export LDFLAGS="${LDFLAGS} -lstdc++ -L${KANAPI_BASE}/bzip2-${bzip2_ver}/lib"
 #export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/bzip2-${bzip2_ver}/include"
 export AUTOCONF=${KANAPI_BASE}/autoconf-2.13/bin/autoconf
 export SHELL=/bin/bash

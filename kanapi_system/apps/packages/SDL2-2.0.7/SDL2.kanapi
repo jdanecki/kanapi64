@@ -27,7 +27,7 @@ LIB_DEPENDS="x11 gl xext alsa xrandr ice x11-xcb xcursor"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lstdc++ -lpthread -lm -ldl -lrt"
+export LDFLAGS="${LDFLAGS} -lstdc++"
 export CPP="gcc -E ${CFLAGS}"
 export CFLAGS="${CFLAGS}  -std=gnu11"
 

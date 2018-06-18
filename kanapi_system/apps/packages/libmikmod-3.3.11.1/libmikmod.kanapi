@@ -27,7 +27,7 @@ LIB_DEPENDS="alsa x11"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lrt -ldl -lpthread -lm"
+#export LDFLAGS="${LDFLAGS} -lrt -ldl -lpthread -lm"
 
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \

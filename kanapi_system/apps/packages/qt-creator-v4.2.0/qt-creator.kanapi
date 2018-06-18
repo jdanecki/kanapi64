@@ -37,7 +37,7 @@ pkg_configure() {
 	PKGS="Qt5Qml Qt5Help Qt5PrintSupport Qt5Sql Qt5Quick Qt5Xml gl xcb libdrm x11 xext glib-2.0 gmodule-2.0 \
 	        gobject-2.0 gthread-2.0 x11-xcb xcb-glx xcb-dri2 icu-i18n xfixes expat xdamage  xau libffi"
 	qmake -r QMAKE_CXX=${KANAPI_CXX_COMPILER} QMAKE_INCDIR_OPENGL=`${PKG_CONFIG} --variable=includedir gl` \
-	        QMAKE_LFLAGS="`${PKG_CONFIG} --libs ${PKGS}` -lQt5CLucene -lpthread -lm -lrt -ldl -lstdc++ -lglapi " QMAKE_CXXFLAGS=-std=c++11
+	        QMAKE_LFLAGS="`${PKG_CONFIG} --libs ${PKGS}` -lQt5CLucene -lstdc++ -lglapi " QMAKE_CXXFLAGS=-std=c++11
 #xdmcp xxf86vm
 }
 

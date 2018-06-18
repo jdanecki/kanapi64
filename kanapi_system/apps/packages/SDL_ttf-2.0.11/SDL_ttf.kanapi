@@ -26,7 +26,7 @@ LIB_DEPENDS="x11 ice"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -ldl -lm"
+#export LDFLAGS="${LDFLAGS} -ldl -lm"
 #export CFLAGS="${CFLAGS} "
 export CPP="gcc -E ${CFLAGS}"
 

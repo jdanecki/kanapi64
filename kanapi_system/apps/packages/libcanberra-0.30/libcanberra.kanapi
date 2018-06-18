@@ -26,7 +26,7 @@ EXT=tar.xz
 
 . ../settings
 
-export LDFLAGS="-L${KANAPI_BASE}/libtool-${libtool_ver}/lib -ldl"
+export LDFLAGS="-L${KANAPI_BASE}/libtool-${libtool_ver}/lib"
 export CFLAGS="-I${KANAPI_BASE}/libtool-${libtool_ver}/include"
 
 pkg_install() {

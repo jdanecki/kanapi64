@@ -27,7 +27,7 @@ EXT=tar.xz
 . ../settings
 
 #export LDFLAGS="${LDFLAGS} "
-export CXXFLAGS="-ldl"
+#export CXXFLAGS="-ldl"
 
 pkg_install() {
 	pkg_install_pc_all && pkg_install_libs

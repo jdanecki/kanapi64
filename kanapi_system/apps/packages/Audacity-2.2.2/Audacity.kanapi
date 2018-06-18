@@ -26,7 +26,7 @@ LIB_DEPENDS="portaudio-2.0"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lstdc++ -lrt -lpthread -ldl"
+export LDFLAGS="${LDFLAGS} -lstdc++"
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
