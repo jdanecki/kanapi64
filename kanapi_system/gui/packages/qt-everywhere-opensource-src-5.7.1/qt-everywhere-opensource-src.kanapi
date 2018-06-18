@@ -40,7 +40,7 @@ pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX -v -opensource -confirm-license \
 	-qt-xcb -qt-pcre -qt-zlib -qt-libpng \
 	-qt-libjpeg  -pkg-config -icu -gui -qt-xkbcommon -qt-pcre \
-	-lrt  -ldl -lpthread -lresolv -lglapi -nomake examples -strip -no-pch -no-eglfs \
+	-lglapi -nomake examples -strip -no-pch -no-eglfs \
 	-no-directfb -no-linuxfb -no-mirclient -qpa xcb \
 	${LDFLAGS} ${CFLAGS}
 
