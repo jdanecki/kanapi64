@@ -424,3 +424,6 @@ fftw:
 
 numactl:
 	@$(RUN_TARGET)
+
+lm-sensors:
+	@$(RUN_TARGET)
