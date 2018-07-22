@@ -23,9 +23,9 @@ echo $1 | grep "-" > /dev/null
 if [ "$?" = "0" ]
 then
 	NAME=`echo $1 | tr "-" "_" `
-	echo "${FULL_NAME}_ver=\$(${NAME}_ver)" >> ../scripts/config-Makefile.kanapi
+	echo "${FULL_NAME}_ver=\$(${NAME}_ver)" >> ../../scripts/config-Makefile.kanapi
 fi
 
-echo "${NAME}_ver=$2" >> ../scripts/config.kanapi
-echo -e "\n$1:\n\t@\$(RUN_TARGET)" >> ../scripts/Makefile
+echo "${NAME}_ver=$2" >> ../../scripts/config.kanapi
+echo -e "\n$1:\n\t@\$(RUN_TARGET)" >> ../build/Makefile
 
