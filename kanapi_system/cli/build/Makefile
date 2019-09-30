@@ -430,3 +430,8 @@ pocl:
 
 lm-sensors:
 	@$(RUN_TARGET)
+
+bluez:
+	@$(RUN_TARGET)
+
+

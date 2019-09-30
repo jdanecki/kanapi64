@@ -498,3 +498,4 @@ libXaw3d_ver=1.6.2
 numactl_ver=2.0.11
 pocl_ver=1.1
 lm_sensors_ver=3-4-0
+bluez_ver=5.30
