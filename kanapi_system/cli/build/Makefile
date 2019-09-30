@@ -425,5 +425,8 @@ fftw:
 numactl:
 	@$(RUN_TARGET)
 
+pocl:
+	@$(RUN_TARGET)
+
 lm-sensors:
 	@$(RUN_TARGET)
