@@ -17,19 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=@NAME@
-VER=@VER@
-URL="http://"
-EXT=tar.bz2
+PACKAGE_NAME=libepoxy
+VER=1.5.3
+URL="https://github.com/anholt/libepoxy/releases/download/${VER}"
+EXT=tar.xz
 #build depends on
-#LIB_DEPENDS=""
-
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
-#export CFLAGS="${CFLAGS} "
-
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
+	pkg_install_pc_all && pkg_install_libs
 }
 

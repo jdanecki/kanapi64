@@ -636,3 +636,6 @@ gperf:
 	@$(RUN_TARGET)
 
 
+
+xf86-video-amdgpu:
+	@$(RUN_TARGET)
