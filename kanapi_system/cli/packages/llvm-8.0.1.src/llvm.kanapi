@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2019 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=llvm
+VER_NUM=8.0.1
+VER=${VER_NUM}.src
+URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${VER_NUM}"
+EXT=tar.xz
+#build depends on
+
+. ../settings
+
+export LD_LIBRARY_PATH=${KANAPI_BASE}/libs
+
+pkg_download() {
+	pkg_curl
+	PACKAGE_NAME=cfe
+	PACKAGE_VER=${PACKAGE_NAME}-${VER}
+	PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+	PACKAGE_PATH=${PACKAGE_FILENAME}
+	pkg_curl
+}
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		pkg_tar_xz
+		PACKAGE_NAME=cfe
+		PACKAGE_VER=${PACKAGE_NAME}-${VER}
+		PACKAGE_SRCDIR=${KANAPI_BUILD_SRC}/${PACKAGE_VER}
+		PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+		pkg_tar_xz
+		ln -svf ${PACKAGE_SRCDIR} ${KANAPI_BUILD_SRC}/llvm-${VER}/tools/clang
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+}
+
+pkg_configure() {
+	cmake -G Ninja ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_C_COMPILER="${KANAPI_C_COMPILER}" \
+		-DCMAKE_CXX_COMPILER="${KANAPI_CXX_COMPILER}" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON \
+		-DLLVM_TARGETS_TO_BUILD="X86" \
+		-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="AMDGPU" \
+		-DLLVM_ENABLE_TERMINFO=OFF -DLLVM_ENABLE_ZLIB=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF \
+		-DLLVM_INCLUDE_TESTS=ON -DLLVM_INCLUDE_TOOLS=ON -DLLVM_INCLUDE_UTILS=ON
+
+#	LLVM_TARGETS_TO_BUILD="AArch64,ARM,BPF,Hexagon,Mips,MSP430,NVPTX,PowerPC,Sparc,SystemZ,X86,XCore"
+}
+
+pkg_build() {
+	if [ "${CI}" = "true" ] 
+	then
+		ninja -j 2
+	else
+		ninja -j ${MAKE_JOBS}
+	fi
+}
+
+pkg_install() {
+	ninja install && pkg_install_bin_all && pkg_install_libs
+}
+

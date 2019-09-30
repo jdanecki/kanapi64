@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2019 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=compute-runtime
+VER=db8cd0e5
+URL="http://github.com/intel/${PACKAGE_NAME}/archive"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+	PACKAGE_PATH=${VER}.${EXT}
+	pkg_curl	
+}
+
+pkg_prepare() {
+	 mkdir -p ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}
+	 tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} --strip-components=1 -C ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}
+     if [ "$?" = "0" ]
+		then 
+			echo " ok"
+			/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+			true
+		else
+			echo " Error: $?"
+			rm -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+			false
+		fi
+}
+
+pkg_configure() {
+	cmake ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+        -DCMAKE_BUILD_TYPE=Release -DSKIP_UNIT_TESTS=1 -DNEO_DRIVER_VERSION=${VER}
+}
+
+pkg_install() {
+	pkg_install_make
+}
+

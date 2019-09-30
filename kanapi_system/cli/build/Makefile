@@ -441,3 +441,17 @@ libical:
 libclc:
 	@$(RUN_TARGET)
 
+SPIRV-LLVM-Translator:
+	@$(RUN_TARGET)
+
+opencl-clang:
+	@$(RUN_TARGET)
+
+intel-graphics-compiler:
+	@$(RUN_TARGET)
+
+gmmlib:
+	@$(RUN_TARGET)
+
+compute-runtime:
+	@$(RUN_TARGET)
