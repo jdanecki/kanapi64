@@ -435,3 +435,9 @@ bluez:
 	@$(RUN_TARGET)
 
 
+libical:
+	@$(RUN_TARGET)
+
+libclc:
+	@$(RUN_TARGET)
+

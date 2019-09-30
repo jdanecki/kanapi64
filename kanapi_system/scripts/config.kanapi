@@ -499,3 +499,5 @@ numactl_ver=2.0.11
 pocl_ver=1.1
 lm_sensors_ver=3-4-0
 bluez_ver=5.30
+libical_ver=3.0.3
+libclc_ver=0.2.0-585-9f6204e
