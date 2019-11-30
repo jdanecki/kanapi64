@@ -88,6 +88,9 @@ kanapi_reverify:
 kanapi_version:
 	@pkg_kanapi $(PKG).kanapi version $(VERBOSE)
 
+kanapi_url:
+	@pkg_kanapi $(PKG).kanapi url $(VERBOSE)
+
 kanapi_help:
 	@echo "**********   Help  **********"
 	@echo "run: make package ACTION=action"

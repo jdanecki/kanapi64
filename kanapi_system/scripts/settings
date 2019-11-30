@@ -473,6 +473,10 @@ pkg_version() {
 	echo ${PACKAGE_NAME} ${VER}
 }
 
+pkg_url() {
+	echo ${MIRROR_URL}
+}
+
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
 }
