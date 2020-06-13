@@ -43,7 +43,13 @@ pkg-config: glib
 rootfs: pkg-config
 	@$(RUN_TARGET)
 
-file:
+xz:
+	@$(RUN_TARGET)
+
+file: xz
+	@$(RUN_TARGET)
+
+libxml2:
 	@$(RUN_TARGET)
 
 busybox:

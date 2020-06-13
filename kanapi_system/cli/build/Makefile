@@ -34,7 +34,7 @@ bc:
 rplay:
 	@$(RUN_TARGET)
 
-t_compression: gzip unrar zip xz
+t_compression: gzip unrar zip
 
 gzip:
 	@$(RUN_TARGET)

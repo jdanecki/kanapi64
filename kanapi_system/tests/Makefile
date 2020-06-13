@@ -2,11 +2,12 @@ include ../scripts/config.kanapi
 
 RESULTS=/tmp/tests_results
 
-test_gcc: test_gcc0.c test_gcc1.c test_libstdcpp.cpp test_threads.cpp test_shared_future.cpp
+test_gcc: test_gcc0.c test_gcc1.c test_gcc3.c test_libstdcpp.cpp test_threads.cpp test_shared_future.cpp
 	@echo "tests for $@ for TARGET=$(KANAPI_TARGET_NAME)"
 	@if [ ! -d $(RESULTS) ] ; then mkdir $(RESULTS) ; fi
 	. ./set_variables; gcc test_gcc0.c -Wall -o $(RESULTS)/test_gcc0 ; $(RESULTS)/test_gcc0
 	. ./set_variables; gcc test_gcc1.c -Wall -o $(RESULTS)/test_gcc1 ; $(RESULTS)/test_gcc1
+	. ./set_variables; gcc test_gcc3.c -Wall -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D__USE_FILE_OFFSET64 -o $(RESULTS)/test_gcc3 ; $(RESULTS)/test_gcc3
 	. ./set_variables; gcc -fopenmp test_gcc0.c -Wall -o $(RESULTS)/test_gcc2 ; $(RESULTS)/test_gcc2
 	. ./set_variables; g++ test_libstdcpp.cpp -Wall -lstdc++ -std=c++11 -o $(RESULTS)/test_libstdcpp ; $(RESULTS)/test_libstdcpp
 	. ./set_variables; g++ test_threads.cpp -Wall -lstdc++ -std=c++11 -o $(RESULTS)/test_threads -pthread ; $(RESULTS)/test_threads
