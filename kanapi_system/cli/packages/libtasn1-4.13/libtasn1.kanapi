@@ -26,6 +26,7 @@ EXT=tar.gz
 
 . ../settings
 
+CHECK_CERT=0
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 

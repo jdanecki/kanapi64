@@ -26,6 +26,7 @@ then
 	alias rm='rm -rf'
 fi
 USE_WGET=0
+CHECK_CERT=1
 
 ##############################################################
 . ${REPO_BASE}/kanapi_system/scripts/config.kanapi
@@ -34,6 +35,8 @@ if [ -f ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config ]
 then
 	export KANAPI_PKGCONFIG=${KANAPI_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config
 fi
+
+#echo "settings: KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
 
 if [ -x ${KANAPI_BIN}/ccache -a -z "${CI}" ]
 then
@@ -283,8 +286,13 @@ check_file_type() {
 }
 
 pkg_download_from_mirror_curl() {
-	echo "downloading $1"
-	curl --retry 3 -L $1 -o ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+	echo "downloading using curl $1"
+	if [ "${CHECK_CERT}" = "1" ]
+    then
+    	curl --retry 3 -L $1 -o ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+    else
+    	curl -k --retry 3 -L $1 -o ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+    fi
 	
 	if [ ! -e ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
 	then 
@@ -301,8 +309,13 @@ pkg_download_from_mirror_curl() {
 }
 
 pkg_download_from_mirror_wget() {
-	echo "downloading $1"
-	wget -t 3 $1 -O ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+	echo "downloading using wget $1"
+	if [ "${CHECK_CERT}" = "1" ]
+    then
+    	wget -t 3 $1 -O ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+    else
+    	wget --no-check-certificate -t 3 $1 -O ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+    fi
 	if [ ! -e ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ] 
 	then 
 		false
