@@ -11,7 +11,9 @@ Versions:
 
 License: GPL v.3
 
-Look into doc directory to learn how to build KaNaPi.
+The simplest way to try KaNaPi is to use docker images from docker hub.
+For more details see: https://github.com/jdanecki/kanapi#main-docker-images
+
 More details on https://jdanecki.github.io/kanapi
 
 Author: jacek.m.danecki@gmail.com
