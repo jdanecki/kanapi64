@@ -26,7 +26,7 @@ then
 	alias rm='rm -rf'
 fi
 USE_WGET=0
-CHECK_CERT=1
+CHECK_CERT=0
 
 ##############################################################
 . ${REPO_BASE}/kanapi_system/scripts/config.kanapi
