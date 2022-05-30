@@ -332,3 +332,6 @@ xfig: libXaw3d
 
 dosbox:
 	@$(RUN_TARGET)
+
+fuse:
+	@$(RUN_TARGET)
