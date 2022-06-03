@@ -1,7 +1,12 @@
 Beta - current phase
 ====================
 
-v0.10 - wip
+v0.11 - wip
+====
+
+- Simplify building dependencies
+
+v0.10 - on hold
 =====
 
 * Removed cross-compilation. Build only on x86_64 architecture

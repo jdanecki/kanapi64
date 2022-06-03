@@ -1,6 +1,6 @@
 FROM kanapi/kanapi-BASE_IMAGE
 MAINTAINER Jacek Danecki <jacek.m.danecki@gmail.com>
-ENV HOME=/kanapi_0.10/home
+ENV HOME=/kanapi_0.11/home
 ENV CI="true"
 RUN mkdir -p ${HOME}/src
 COPY kanapi /kanapi_build/kanapi

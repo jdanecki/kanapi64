@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=rootfs
+VER=0.7
+URL=""
+EXT=tar.bz2
+#build depends on
+. ../settings
+
+pkg_download() {
+	echo "nothing to be done here"
+}
+
+pkg_prepare() {
+	echo "nothing to be done here"
+}
+
+pkg_configure() {
+	echo "nothing to be done here"
+}
+
+pkg_build() {
+	echo "nothing to be done here"
+}
+
+pkg_install() {
+	for i in dev etc home lib/modules proc run/shm sys tmp var/empty var/lib/alsa var/run
+	do
+		mkdir -p ${KANAPI_ROOT}/$i
+	done
+	${LN_SF} . ${KANAPI_ROOT}/kanapi_${KANAPI_VER}
+	
+	if [ "`id -u`" = "0" ]
+	then
+		cp -ar /dev/* ${KANAPI_ROOT}/dev
+	fi
+	cp -a ../../packages/${PACKAGE_NAME}-${VER}/etc/* ${KANAPI_ROOT}/etc
+	cat ${REPO_BASE}/kanapi_system/scripts/init  | sed "s/@KANAPI_VER@/${KANAPI_VER}/" > ${KANAPI_ROOT}/init
+	cat ${REPO_BASE}/kanapi_system/scripts/start | sed "s/@KANAPI_VER@/${KANAPI_VER}/" > ${KANAPI_ROOT}/start
+	chmod +x ${KANAPI_ROOT}/init
+	chmod +x ${KANAPI_ROOT}/start
+}	
+

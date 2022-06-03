@@ -2,10 +2,10 @@
 
 . version
 
-if [ ! -f sbs-docker-${VER}-${KANAPI_BRANCH}.tar.xz ]
+if [ ! -f sbs-docker-${VER}.tar.xz ]
 then
-	wget http://downloads.sourceforge.net/project/kanapi/images/v${KANAPI_VER}/sbs-docker-${VER}-${KANAPI_BRANCH}.tar.xz
+	wget http://downloads.sourceforge.net/project/kanapi/images/v${KANAPI_VER}/sbs-docker-${VER}.tar.xz
 fi
-cat Dockerfile.template | sed "s/VER/${VER}-${KANAPI_BRANCH}/" > Dockerfile
-docker build -t kanapi/kanapi-${NAME}:${VER}-${KANAPI_BRANCH} .
+cat Dockerfile.template | sed "s/VER/${VER}/" > Dockerfile
+docker build -t kanapi/kanapi-${NAME}:${VER} .
 
