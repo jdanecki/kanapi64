@@ -28,5 +28,5 @@ docker create -i -t --name kanapi-${NAME}-${VER} -v ${DIR}/kanapi:/kanapi_build/
    --cap-add=ALL \
 	-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
 	-v `pwd`/build:/build \
-	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE}
+	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} bash
 

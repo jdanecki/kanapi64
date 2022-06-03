@@ -17,21 +17,32 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=mpfr
-VER=4.1.0
-URL="http://mpfr.loria.fr/mpfr-current"
+PACKAGE_NAME=glib
+VER=2.73
+URL="http://ftp.gnome.org/pub/gnome/sources/glib/2.73"
 EXT=tar.xz
 
 . ../settings
 
-pkg_prepare() {
-	pkg_tar_xz
+export CFLAGS="-I${KANAPI_BASE}/libffi-${libffi_ver}/lib/libffi-${libffi_ver}/include -I${KANAPI_BASE}/zlib-${zlib_ver}/include"
+export LIBFFI_CFLAGS="-I${KANAPI_BASE}/libffi-${libffi_ver}/lib/libffi-${libffi_ver}/include"
+export LIBS="-L${KANAPI_BASE}/libffi-${libffi_ver}/lib -lffi -L${KANAPI_BASE}/zlib-${zlib_ver}/lib "
+export LIBFFI_LIBS="-L${KANAPI_BASE}/libffi-${libffi_ver}/lib -lffi "
+
+pkg_download() {
+    PACKAGE_PATH=${PACKAGE_VER}.0.${EXT}
+	pkg_curl	
 }
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver}
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX glib_cv_stack_grows=yes glib_cv_uscore=no --disable-libmount \
+		--with-pcre=internal --disable-libelf
 }
 
 pkg_install() {
-	pkg_install_make &&	pkg_install_libs
+	pkg_install_make && pkg_install_libs && pkg_install_bin_all
+}
+
+pkg_check() {
+	echo "KANAPI_BASE=${KANAPI_BASE}"
 }

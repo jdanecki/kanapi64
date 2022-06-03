@@ -17,21 +17,30 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=mpfr
-VER=4.1.0
-URL="http://mpfr.loria.fr/mpfr-current"
-EXT=tar.xz
+PACKAGE_NAME=busybox
+VER=1.34.1
+URL="https://www.busybox.net/downloads"
+EXT=tar.bz2
 
 . ../settings
 
-pkg_prepare() {
-	pkg_tar_xz
+pkg_configure() {
+	cp ../../packages/${PACKAGE_NAME}-${VER}/busybox.config .config
+	${MAKE} CONFIG_PREFIX=${PREFIX} KBUILD_SRC=${PACKAGE_SRCDIR} -f ${PACKAGE_SRCDIR}/Makefile oldconfig
 }
 
-pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver}
+pkg_build() {
+	${MAKE} CONFIG_PREFIX=${PREFIX} -j ${MAKE_JOBS} 
 }
 
 pkg_install() {
-	pkg_install_make &&	pkg_install_libs
+	${MAKE} CONFIG_PREFIX=${PREFIX} -j ${MAKE_JOBS} install
+	pkg_install_bin_all && pkg_install_sbin_all && pkg_install_usr_bin_all && pkg_install_usr_sbin_all
+	rm ${KANAPI_BIN}/init
+}
+
+pkg_check() {
+	echo "CC=${CC}"
+	echo "CXX=${CXX}"
+	echo $REPO_BASE
 }

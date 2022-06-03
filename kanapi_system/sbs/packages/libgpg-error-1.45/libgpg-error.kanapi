@@ -17,21 +17,24 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=mpfr
-VER=4.1.0
-URL="http://mpfr.loria.fr/mpfr-current"
-EXT=tar.xz
-
+PACKAGE_NAME=libgpg-error
+VER=1.45
+URL="ftp://ftp.gnupg.org/gcrypt/libgpg-error"
+EXT=tar.bz2
+#build depends on
 . ../settings
 
-pkg_prepare() {
-	pkg_tar_xz
+pkg_configure() {
+	local_copy
+	ln -s lock-obj-pub.x86_64-pc-linux-gnu.h src/syscfg/lock-obj-pub.linux-gnu.h
+	./configure --prefix=$PREFIX
 }
 
-pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver}
+pkg_build() {
+	pkg_build_local
 }
 
 pkg_install() {
-	pkg_install_make &&	pkg_install_libs
+	cd build
+	pkg_install_make && pkg_install_libs && pkg_install_bin_all
 }

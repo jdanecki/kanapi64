@@ -56,5 +56,9 @@ pkg_install() {
 	cat ${REPO_BASE}/kanapi_system/scripts/start | sed "s/@KANAPI_VER@/${KANAPI_VER}/" > ${KANAPI_ROOT}/start
 	chmod +x ${KANAPI_ROOT}/init
 	chmod +x ${KANAPI_ROOT}/start
-}	
+}
+
+pkg_verify() {
+	echo "nothing to be done here"
+}
 

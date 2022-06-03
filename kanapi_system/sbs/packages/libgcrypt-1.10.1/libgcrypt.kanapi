@@ -17,21 +17,26 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=mpfr
-VER=4.1.0
-URL="http://mpfr.loria.fr/mpfr-current"
-EXT=tar.xz
-
+PACKAGE_NAME=libgcrypt
+VER=1.10.1
+URL="ftp://ftp.gnupg.org/gcrypt/libgcrypt"
+EXT=tar.bz2
+#build depends on
 . ../settings
 
-pkg_prepare() {
-	pkg_tar_xz
-}
+USE_WGET=1
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver}
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX ac_cv_sys_symbol_underscore=no \
+	--with-libgpg-error-prefix=`${GPG_ERROR_CONFIG} --prefix`
+}
+
+pkg_check() {
+	echo "gpg-error-config --cflags = ${GPG_ERROR_CFLAGS}"
+	echo "gpg-error-config --libs = ${GPG_ERROR_LDFLAGS}"
+	echo "gpg-error-config --prefix = ${GPG_ERROR_CONFIG} --prefix"
 }
 
 pkg_install() {
-	pkg_install_make &&	pkg_install_libs
+	pkg_install_make && pkg_install_libs && pkg_install_bin_all
 }

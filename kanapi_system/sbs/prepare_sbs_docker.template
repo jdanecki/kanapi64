@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#  Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#  Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -26,9 +26,8 @@ export SBS_BUILD=@SBS_BUILD@
 ARCH=`uname -m`
 
 export KANAPI_VER=`cat ../scripts/KANAPI_VER`
-export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
-export IMAGE_VER=${KANAPI_VER}.${SBS_BUILD}-${KANAPI_BRANCH}
-echo "Preparing SBS-docker for ${KANAPI_VER} on ${ARCH} with ${KANAPI_BRANCH} branch"
+export IMAGE_VER=${KANAPI_VER}.${SBS_BUILD}
+echo "Preparing SBS-docker for ${KANAPI_VER} on ${ARCH}"
 KANAPI_BASE=/kanapi_${KANAPI_VER}
 KANAPI_BASE_PACKAGES=${KANAPI_BASE}/packages
 KANAPI_BASE_LOCAL=kanapi_${KANAPI_VER}
@@ -54,7 +53,7 @@ mkdir -p var/lib/alsa
 mkdir -p var/log
 mkdir -p var/run
 
-for pkg in bash binutils busybox curl file gcc glib glibc gmp libffi libgcrypt \
+for pkg in bash binutils busybox curl xz file gcc glib glibc gmp libffi libgcrypt \
 	libssh2 make mpc mpfr openssl zlib
 do
 	pkg_v=${pkg}_ver
@@ -144,6 +143,6 @@ cd ..
 echo "Compressing image"
 tar -C sbs-docker -cf sbs-docker-${IMAGE_VER}.tar .
 rm -f sbs-docker-${IMAGE_VER}.tar.xz
-xz -T 0 sbs-docker-${IMAGE_VER}.tar
+${KANAPI_BASE_PACKAGES}/xz-${xz_ver}/bin/xz -T 0 sbs-docker-${IMAGE_VER}.tar
 md5sum sbs-docker-${IMAGE_VER}.tar.xz > sbs-docker-${IMAGE_VER}.tar.xz.md5
 

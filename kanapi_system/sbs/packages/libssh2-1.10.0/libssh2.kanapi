@@ -17,21 +17,37 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=mpfr
-VER=4.1.0
-URL="http://mpfr.loria.fr/mpfr-current"
-EXT=tar.xz
+PACKAGE_NAME=libssh2
+VER=1.10.0
+URL="https://www.libssh2.org/download"
+EXT=tar.gz
 
 . ../settings
 
-pkg_prepare() {
-	pkg_tar_xz
-}
+export LDFLAGS="${LDFLAGS} -L${LD_LIBRARY_PATH}"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver}
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX 
+}
+
+pkg_build() {
+	 ${MAKE} V=1 -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+
+pkg_check() {
+	echo "gpg-error-config --cflags = ${GPG_ERROR_CFLAGS}"
+	echo "gpg-error-config --libs = ${GPG_ERROR_LDFLAGS}"
+	echo "libgcrypt-config --cflags = ${LIBGCRYPT_CFLAGS}"
+	echo "libgcrypt-config --libs = ${LIBGCRYPT_LDFLAGS}"
+	echo "libgcrypt-config --prefix `${LIBGCRYPT_CONFIG} --prefix`"
+	echo "pkg-config --variable=prefix zlib = `${PKG_CONFIG} --variable=prefix zlib`"
+	echo "CFLAGS=${CFLAGS}"
+	echo "LDFLAGS=${LDFLAGS}"
+	echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
+	echo "PATH=${PATH}"
 }
 
 pkg_install() {
-	pkg_install_make &&	pkg_install_libs
+	pkg_install_pc && pkg_install_libs
 }

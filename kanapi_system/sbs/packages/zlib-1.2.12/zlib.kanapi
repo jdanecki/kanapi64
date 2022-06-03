@@ -17,21 +17,39 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=mpfr
-VER=4.1.0
-URL="http://mpfr.loria.fr/mpfr-current"
-EXT=tar.xz
+PACKAGE_NAME=zlib
+VER=1.2.12
+URL=" https://zlib.net"
+EXT=tar.gz
+SF_URL="libpng/zlib/${VER}/${PACKAGE_NAME}-${VER}.${EXT}"
+#build depends on
+#LIB_DEPENDS=""
 
 . ../settings
 
-pkg_prepare() {
-	pkg_tar_xz
-}
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver}
+	local_copy
+	prefix=$PREFIX ${PACKAGE_SRCDIR}/configure 
+}
+
+pkg_build() {
+	pkg_build_local
 }
 
 pkg_install() {
-	pkg_install_make &&	pkg_install_libs
+	cd build
+	if [ -n "${PKG_CONFIG}" ]
+	then
+		pkg_install_pc
+	else
+		pkg_install_make
+	fi
+	pkg_install_libs
+}
+
+pkg_check() {
+	echo "PKG_CONFIG=${PKG_CONFIG}"
 }

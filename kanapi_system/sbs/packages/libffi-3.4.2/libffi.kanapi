@@ -17,21 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=mpfr
-VER=4.1.0
-URL="http://mpfr.loria.fr/mpfr-current"
-EXT=tar.xz
+PACKAGE_NAME=libffi
+VER=3.4.2
+URL="https://github.com/libffi/libffi/releases/download/v${VER}"
+EXT=tar.gz
 
 . ../settings
 
-pkg_prepare() {
-	pkg_tar_xz
-}
-
-pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver}
-}
-
 pkg_install() {
-	pkg_install_make &&	pkg_install_libs
+	pkg_install_pc_all
+	if [ -d ${PREFIX}/lib64 ]
+	then
+		${LN_SF} ${PREFIX}/lib64/* ${PREFIX}/lib
+	fi
+	pkg_install_libs
 }
