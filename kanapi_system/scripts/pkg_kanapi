@@ -2,7 +2,8 @@
 #set -x
 PKG_FILE=$1
 PKG_ACTION="pkg_$2"
-PKG_VERBOSE="$3"
+#PKG_VERBOSE="$3"
+PKG_VERBOSE="1"
 
 if [ "x${PKG_VERBOSE}" = "x1" -o "x${PKG_VERBOSE}" = "x3" ]
 then 

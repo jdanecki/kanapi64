@@ -44,42 +44,42 @@ kanapi\_system/apps/packages/<package\_name>-<package\_version> directory
 * Download package by calling command
 ```
 cd kanapi_system/apps/build
-./download <package_name> verbose
+./download <package_name>
 ```
 
 * Prepare package sources by calling command
 
 ```
 cd kanapi_system/apps/build
-./prepare <package_name> verbose
+./prepare <package_name>
 ```
 
 * Configure package  by calling command
 
 ```
 cd kanapi_system/apps/build
-./configure <package_name> verbose
+./configure <package_name>
 ```
 
 * Build package  by calling command
 
 ```
 cd kanapi_system/apps/build
-./build <package_name> verbose
+./build <package_name>
 ```
 
 * Install package  by calling command
 
 ```
 cd kanapi_system/apps/build
-./install <package_name> verbose
+./install <package_name>
 ```
 
 * Verify package installation by calling command
 
 ```
 cd kanapi_system/apps/build
-./verify <package_name> verbose
+./verify <package_name>
 ```
 
 * To get more info about others commands run
