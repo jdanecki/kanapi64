@@ -510,3 +510,4 @@ xf86_video_amdgpu_ver=19.0.1
 dosbox_ver=0.74-3
 p11_kit_ver=0.24.1
 fuse_ver=2.9.7
+libcap_ver=2.64

@@ -335,3 +335,6 @@ dosbox:
 
 fuse:
 	@$(RUN_TARGET)
+
+libcap:
+	@$(RUN_TARGET)
