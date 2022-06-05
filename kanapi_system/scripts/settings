@@ -912,7 +912,15 @@ pkg_rm_docker_wa() {
 	true
 }
 
+pkg_repo_tags() {
+    echo "checking ${REPO_URL}"
+    curl -L -o tmp.html ${REPO_URL}/tags                                                                 
+    lynx -dump -force_html -listonly tmp.html | grep releases\/tag
+    rm tmp.html
+}
+
 pkg_repo() {
+    echo "checking ${URL}"
     curl -L -o tmp.html ${URL}
     lynx -dump -force_html -listonly tmp.html | tail
     rm tmp.html
