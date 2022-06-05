@@ -920,9 +920,13 @@ pkg_repo_tags() {
 }
 
 pkg_repo() {
+	if [ "${URL}" = "GNU" ] 
+	then
+        URL="${GNU_SUNSITE}/${PACKAGE_NAME}"
+    fi
     echo "checking ${URL}"
     curl -L -o tmp.html ${URL}
-    lynx -dump -force_html -listonly tmp.html | tail
+    lynx -dump -force_html -listonly tmp.html  | tail
     rm tmp.html
 }
 
