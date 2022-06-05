@@ -7,7 +7,7 @@ Current phase: Beta
 
 Versions: 
 
-* development - v0.10
+* development - v0.11
 
 License: GPL v.3
 
