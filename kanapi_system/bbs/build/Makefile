@@ -3,8 +3,15 @@
 SCRIPTS_DIR=/kanapi_build/kanapi/kanapi_system/scripts
 include $(SCRIPTS_DIR)/Makefile.common
 
-bbs: ccache bash-completion m4 perl autoconf automake libtool bison sed gettext ncurses readline gawk cmake \
+bbs: check_bash ccache bash-completion m4 perl autoconf automake libtool bison sed gettext ncurses readline gawk cmake \
 	flex attr acl libarchive e2fsprogs git coreutils diffutils Python ninja tar findutils patch slang util-linux less openssh mtools
+
+check_bash:
+#busybox from sbs provides bash, and needs to be replaced
+	ls -l /bin/bash
+	ls -l $(KANAPI_BASE)/bash-$(bash_ver)/bin/bash
+	ln -sfv $(KANAPI_BASE)/bash-$(bash_ver)/bin/bash /bin/bash
+	ls -l /bin/bash
 
 ccache:
 	@$(RUN_TARGET)
