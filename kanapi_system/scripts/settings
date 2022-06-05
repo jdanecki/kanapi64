@@ -911,3 +911,10 @@ pkg_rm_docker_wa() {
 	rm -rf t
 	true
 }
+
+pkg_repo() {
+    curl -L -o tmp.html ${URL}
+    lynx -dump -force_html -listonly tmp.html | tail
+    rm tmp.html
+}
+

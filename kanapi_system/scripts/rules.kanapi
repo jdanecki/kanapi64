@@ -91,6 +91,9 @@ kanapi_version:
 kanapi_url:
 	@pkg_kanapi $(PKG).kanapi url $(VERBOSE)
 
+kanapi_repo:
+	@pkg_kanapi $(PKG).kanapi repo $(VERBOSE)
+
 kanapi_help:
 	@echo "**********   Help  **********"
 	@echo "run: make package ACTION=action"
