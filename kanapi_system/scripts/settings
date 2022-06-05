@@ -912,6 +912,18 @@ pkg_rm_docker_wa() {
 	true
 }
 
+pkg_repo_url() {
+    echo "checking $1"
+    curl -L -o tmp.html $1
+    if [ "${DONT_TAIL}" = "1" ]
+    then
+        lynx -dump -force_html -listonly tmp.html
+    else
+        lynx -dump -force_html -listonly tmp.html  | tail
+    fi
+    rm tmp.html
+}
+
 pkg_repo_tags() {
     echo "checking ${REPO_URL}"
     curl -L -o tmp.html ${REPO_URL}/tags                                                                 
@@ -924,9 +936,6 @@ pkg_repo() {
 	then
         URL="${GNU_SUNSITE}/${PACKAGE_NAME}"
     fi
-    echo "checking ${URL}"
-    curl -L -o tmp.html ${URL}
-    lynx -dump -force_html -listonly tmp.html  | tail
-    rm tmp.html
+    pkg_repo_url ${URl}
 }
 
