@@ -12,7 +12,7 @@ if [ ! -d kanapi ]
 then 
 	if [ "${USE_LOCAL}" = "1" ] 
 	then
-		git clone -b ${KANAPI_BRANCH} ${REPO_BASE} kanapi
+		git clone ${REPO_BASE} kanapi
 	else
 		git clone https://github.com/jdanecki/kanapi.git kanapi
 	fi
@@ -22,8 +22,10 @@ else
 	popd
 fi
 
-docker create -i -t --name kanapi-${NAME}-${VER}-${KANAPI_BRANCH} -v ${DIR}/kanapi:/kanapi_build/kanapi \
+docker create -i -t --name kanapi-${NAME}-${VER} \
 	--cap-add=ALL \
-	-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
-	-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /bin/bash
+    -v ${DIR}/kanapi:/kanapi_build/kanapi \
+    -v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src \
+    -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
+    -e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /bin/bash
 
