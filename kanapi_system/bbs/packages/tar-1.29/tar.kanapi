@@ -26,7 +26,7 @@ EXT=tar.xz
 
 export FORCE_UNSAFE_CONFIGURE=1
 
-pkg_configure_target() {	
+pkg_configure() {	
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \ 
  	--without-selinux --disable-nls
 	RESULT=$? 

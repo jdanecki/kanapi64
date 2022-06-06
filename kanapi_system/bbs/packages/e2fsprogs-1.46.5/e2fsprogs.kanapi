@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,47 +18,38 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=coreutils
-VER=8.25
-URL="GNU"
+PACKAGE_NAME=e2fsprogs
+VER=1.46.5
+URL="https://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v${VER}"
 EXT=tar.xz
 #build depends on
 . ../settings
 
-export FORCE_UNSAFE_CONFIGURE=1
-
-pkg_download() {
-	if [ "${TRAVIS}" = "true" ]
-	then
-		if [ "${SHIPPABLE}" != "true" ]
-		then
-			echo "Running under Travis, removing sources"
-			rm -rf ${KANAPI_BUILD_SRC}
-			mkdir ${KANAPI_BUILD_SRC}
-		fi
-	fi
-	which curl
-	ldd `which curl`
-	pkg_curl
-	echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
-}
+#export LDFLAGS="-lpthread -ldl"
 
 pkg_configure() {
-	export gl_cv_func_getcwd_path_max=yes
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-install-program=arch --disable-nls
-	RESULT=$? 
-#	pkg_rm_docker_wa
-	return $RESULT
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-elf-shlibs --disable-nls
+}
+
+pkg_build() {
+	MAKE_JOBS=1
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
 }
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all && \
+	${MAKE} -j ${MAKE_JOBS} install &&  ${MAKE} -j ${MAKE_JOBS} install-libs
+	if [ "$?" ! = "0" ] ; then exit 1 ; fi
+	for i in ${PREFIX}/lib/pkgconfig/*
+	do
+		if [ -f $i ]
+		then
+			${LN_SF} $i ${PKG_CONFIG_DIR}/`basename $i`
+		fi
+	done
+	pkg_update_include && pkg_install_bin_all && pkg_install_sbin_all && pkg_install_libs && \
 	rm -rf ${PREFIX}/share/{man,info}
 }
 
 pkg_check() {
-	perl -v
-	echo "PATH=${PATH}"
-
+	echo "CFLAGS=${CFLAGS}"
 }
-

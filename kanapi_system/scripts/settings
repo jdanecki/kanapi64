@@ -773,7 +773,7 @@ verify_file() {
 		VERIFIED=0
 		echo -n "Checking ${FILE[0]} "
 		case $MIME in
-		application/x-executable) echo "application "
+        application/x-pie-executable | application/x-executable) echo "application "
 				file -L $1 | grep "statically linked"
 				if [ "$?" = "0" ] 
 				 then 

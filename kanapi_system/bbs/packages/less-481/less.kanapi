@@ -27,7 +27,7 @@ LIB_DEPENDS="ncurses"
 
 . ../settings
 
-pkg_configure_target() {	
+pkg_configure() {	
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
 	--with-regex=none
 }

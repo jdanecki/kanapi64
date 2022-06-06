@@ -24,7 +24,7 @@ EXT=tar.gz
 #build depends on
 . ../settings
 
-pkg_configure_target() {	
+pkg_configure() {	
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
  	--without-selinux --disable-nls
 	RESULT=$? 

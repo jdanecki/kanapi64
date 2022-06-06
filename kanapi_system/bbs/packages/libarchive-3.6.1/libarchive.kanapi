@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,25 +18,23 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=gawk
-VER=4.1.4
-URL="GNU"
+PACKAGE_NAME=libarchive
+VER=3.6.1
+URL="http://www.libarchive.org/downloads"
 EXT=tar.xz
 #build depends on
-
-LIB_DEPENDS="ncurses"
+LIB_DEPENDS="openssl"
 
 . ../settings
 
-export LDFLAGS="-L${KANAPI_BASE}/readline-${readline_ver}/lib -lreadline ${LDFLAGS}"
-
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-readline=${KANAPI_BASE}/readline-${readline_ver} \
-		--disable-nls
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
+		--without-xml2 --without-expat --without-bz2lib  --without-openssl \
+		--without-lzmadec --without-lzma  --disable-acl  --without-lzo2 --without-nettle
 }
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all && \
-	rm -rf ${PREFIX}/share/{man,info}
+	pkg_install_pc && pkg_install_bin_all && pkg_install_libs && \
+	rm -rf ${PREFIX}/share/man
 }
 

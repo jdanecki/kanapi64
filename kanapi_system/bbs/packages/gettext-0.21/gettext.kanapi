@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,25 +18,25 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=gawk
-VER=4.1.4
+PACKAGE_NAME=gettext
+VER=0.21
 URL="GNU"
 EXT=tar.xz
 #build depends on
-
-LIB_DEPENDS="ncurses"
-
 . ../settings
 
-export LDFLAGS="-L${KANAPI_BASE}/readline-${readline_ver}/lib -lreadline ${LDFLAGS}"
-
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-readline=${KANAPI_BASE}/readline-${readline_ver} \
-		--disable-nls
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
+	--disable-curses --without-{emacs,git} --disable-nls --disable-{,native-}java --disable-csharp
 }
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all && \
-	rm -rf ${PREFIX}/share/{man,info}
+	pkg_install_make &&	pkg_install_bin_all && pkg_install_libs && \
+	rm -rf ${PREFIX}/share/{man,doc,info}
 }
 
+pkg_check() {
+	sed --version
+	which sed
+	ldd `which sed`
+}

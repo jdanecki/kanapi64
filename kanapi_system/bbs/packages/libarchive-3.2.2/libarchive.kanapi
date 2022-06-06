@@ -26,7 +26,7 @@ LIB_DEPENDS="openssl"
 
 . ../settings
 
-pkg_configure_target() {	
+pkg_configure() {	
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
 		--without-xml2 --without-expat --without-bz2lib  --without-openssl \
 		--without-lzmadec --without-lzma  --disable-acl  --without-lzo2 --without-nettle
