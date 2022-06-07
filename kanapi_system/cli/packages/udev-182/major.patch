@@ -1,0 +1,34 @@
+diff -Nurp udev-182-orig/src/cdrom_id/cdrom_id.c udev-182/src/cdrom_id/cdrom_id.c
+--- udev-182-orig/src/cdrom_id/cdrom_id.c	2012-01-29 00:15:46.952827023 +0000
++++ udev-182/src/cdrom_id/cdrom_id.c	2022-06-11 21:44:18.101977401 +0000
+@@ -33,6 +33,7 @@
+ #include <time.h>
+ #include <scsi/sg.h>
+ #include <sys/types.h>
++#include <sys/sysmacros.h>
+ #include <sys/stat.h>
+ #include <sys/time.h>
+ #include <sys/ioctl.h>
+diff -Nurp udev-182-orig/src/libudev.h udev-182/src/libudev.h
+--- udev-182-orig/src/libudev.h	2012-01-29 00:15:46.960827009 +0000
++++ udev-182/src/libudev.h	2022-06-11 21:40:25.557979619 +0000
+@@ -14,6 +14,7 @@
+ 
+ #include <stdarg.h>
+ #include <sys/types.h>
++#include <sys/sysmacros.h>
+ #include <sys/stat.h>
+ 
+ #ifdef __cplusplus
+diff -Nurp udev-182-orig/src/scsi_id/scsi_serial.c udev-182/src/scsi_id/scsi_serial.c
+--- udev-182-orig/src/scsi_id/scsi_serial.c	2012-01-29 00:15:46.959827011 +0000
++++ udev-182/src/scsi_id/scsi_serial.c	2022-06-11 21:45:44.486976577 +0000
+@@ -33,7 +33,7 @@
+ #include <scsi/sg.h>
+ #include <linux/types.h>
+ #include <linux/bsg.h>
+-
++#include <sys/sysmacros.h>
+ #include "libudev.h"
+ #include "libudev-private.h"
+ #include "scsi.h"

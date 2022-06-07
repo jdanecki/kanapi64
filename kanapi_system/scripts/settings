@@ -258,6 +258,9 @@ check_file_type() {
 		tar.xz) echo -n "tar.xz "
 				if [ "${MIME}" = "application/x-xz" ] ; then DOWNLOADED=1 ; fi
 				;;
+		tar.lz) echo -n "tar.lz "
+				if [ "${MIME}" = "application/x-lzip" ] ; then DOWNLOADED=1 ; fi
+				;;
 		tgz) echo -n "tgz "
 				if [ "${MIME}" = "application/x-gzip" -o "${MIME}" = "application/gzip" ] ; then DOWNLOADED=1 ; fi
 				;;
@@ -427,6 +430,10 @@ pkg_tar_xz() {
 	 tar -xJf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
 } 
 
+pkg_tar_lz() {
+	 tar -xf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
+}
+
 pkg_tar_bz2() {
 	 tar -xjf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
 } 
@@ -452,6 +459,7 @@ pkg_prepare() {
 		src.tar.gz) pkg_tar_gz ;;
 		tar.gz) pkg_tar_gz ;;
 		tar.xz) pkg_tar_xz ;;
+		tar.lz) pkg_tar_lz ;;
 		tgz) pkg_tgz ;;
 		zip) echo -n "zip "
 				pkg_zip
@@ -576,7 +584,7 @@ pkg_install_pc_all() {
 }
 
 pkg_install_pc_all_only() {
-	for i in ${PREFIX}/lib/pkgconfig/* ${PREFIX}/lib64/pkgconfig/*
+	for i in ${PREFIX}/lib/pkgconfig/* ${PREFIX}/lib64/pkgconfig/* ${PREFIX}/share/pkgconfig/*
 	do
 		if [ -f $i ]
 		then
@@ -831,7 +839,7 @@ verify_file() {
 				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
 				VERIFIED=1
 				;;
-		text/x-python) echo "python script"
+		text/x-script.python | text/x-python) echo "python script"
 				check_script $1
 				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
 				;;
@@ -934,6 +942,10 @@ pkg_repo() {
 	if [ "${URL}" = "GNU" ] 
 	then
         URL="${GNU_MIRROR}/${PACKAGE_NAME}"
+    fi
+	if [ "${URL}" = "SF" ] 
+	then
+        URL="${SF_PROJECT}/${PACKAGE_NAME}"
     fi
     pkg_repo_url ${URL}
 }

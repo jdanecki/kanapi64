@@ -6,12 +6,22 @@ SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-cli: cli-base llvm ocl docker-ce
+cli: cli-base cli-devel 
+	
+cli-base: t_compression t_system vim bc
 
-cli-base: t_compression t_system devel vim bc sound 
+cli-devel: devel1
+
+docker: docker-ce
+
+boot: syslinux mbr linux
+
 
 cli-lib: pci_ids libusb udev libdrm libev libevdev cacert libsigcpp sound popt llvm babl \
 	itstool gnutls lua yasm
+
+disabled: ntfs-3g_ntfsprogs nfs llvm iotop ltrace wget enet Hermes libdrm rplay esound gstreamer \
+	sndio portaudio fluidsynth libmodplug sox rsync udev vala Hermes makefile2graph
 
 linux:
 	@$(RUN_TARGET)
@@ -28,13 +38,13 @@ patchelf:
 vim:
 	@$(RUN_TARGET)
 
-bc:
+bc: ed
 	@$(RUN_TARGET)
 
 rplay:
 	@$(RUN_TARGET)
 
-t_compression: gzip unrar zip
+t_compression: gzip unrar zip lzip
 
 gzip:
 	@$(RUN_TARGET)
@@ -48,9 +58,9 @@ zip:
 xz:
 	@$(RUN_TARGET)
 
-t_system: mc kmod procps-ng pciutils screen sdparm iotop ntfs-3g_ntfsprogs strace ltrace syslinux mbr nfs \
-	wireless_tools wpa_supplicant dhcp wget network Hermes pci_ids usbutils udev libdrm libev libevdev \
-	cacert cpio hdparm p11-kit iptables dmidecode
+t_system: mc kmod procps-ng pciutils screen sdparm strace \
+	 network pci_ids usbutils7 eudev usbutils libev libevdev cacert cpio hdparm \
+	 p11-kit iptables dmidecode
 
 mc: 
 	@$(RUN_TARGET)
@@ -82,7 +92,7 @@ strace:
 libelf:
 	@$(RUN_TARGET)
 
-ltrace: libelf
+ltrace: elfutils
 	@$(RUN_TARGET)
 
 nasm:
@@ -135,7 +145,7 @@ nettle:
 wget: gnutls
 	@$(RUN_TARGET)
 
-network: iproute2 enet rsync lynx bridge-utils ethtool
+network: wireless_tools wpa_supplicant dhcp iproute2 lynx bridge-utils ethtool
 
 iproute2:
 	@$(RUN_TARGET)
@@ -146,8 +156,10 @@ enet:
 Hermes:
 	@$(RUN_TARGET)
 
-devel: patchelf cgdb strace ltrace ctags chrpath vala syslinux mbr Hermes pci_ids makefile2graph scons lua tcl swig yajl ruby \
-	database xml expect babl itstool libsigcpp yasm popt go elfutils
+devel1: patchelf cgdb strace ltrace ctags chrpath
+
+devel2: scons lua tcl swig yajl ruby database xml expect babl itstool \
+	libsigcpp yasm popt go
 
 gdb:
 	@$(RUN_TARGET)
@@ -177,7 +189,7 @@ lua:
 apps_txt: gzip mc vim kmod procps-ng bc pciutils wireless_tools wpa_supplicant dhcp screen sdparm iotop wget usbutils rplay \
 	ntfs-3g_ntfsprogs unrar
 
-sound: rplay alsa-utils esound gstreamer jack2 pulseaudio alsa-plugins alsa-oss sndio portaudio fluidsynth libmodplug sox
+sound: alsa-utils jack2 pulseaudio alsa-plugins alsa-oss
 
 alsa-lib:
 	@$(RUN_TARGET)
@@ -262,10 +274,13 @@ pci_ids:
 libusb:
 	@$(RUN_TARGET)
 
-usbutils: libusb
+usbutils7: libusb
 	@$(RUN_TARGET)
 
-udev:
+usbutils:
+	@$(RUN_TARGET)
+
+udev: pci_ids
 	@$(RUN_TARGET)
 
 xml: XML-Simple libxml2
@@ -362,7 +377,7 @@ cpio:
 rsync:
 	@$(RUN_TARGET)
 
-lynx:
+lynx: gnutls
 	@$(RUN_TARGET)
 
 hdparm:
@@ -380,7 +395,8 @@ p11-kit: libtasn1
 libtasn1:
 	@$(RUN_TARGET)
 
-docker-ce: cgroupfs-mount containerd runc moby-extras tini docker-machine
+#go moby-extras docker-machine tini
+docker-ce: cgroupfs-mount containerd runc
 	@$(RUN_TARGET)
 
 cgroupfs-mount:
@@ -413,7 +429,10 @@ dmidecode:
 elfutils:
 	@$(RUN_TARGET)
 
-ethtool:
+libmnl:
+	@$(RUN_TARGET)
+
+ethtool: libmnl
 	@$(RUN_TARGET)
 
 libsamplerate: fftw
@@ -434,7 +453,6 @@ lm-sensors:
 bluez:
 	@$(RUN_TARGET)
 
-
 libical:
 	@$(RUN_TARGET)
 
@@ -444,14 +462,26 @@ libclc:
 SPIRV-LLVM-Translator:
 	@$(RUN_TARGET)
 
-opencl-clang:
+opencl-clang: llvm SPIRV-LLVM-Translator 
 	@$(RUN_TARGET)
 
-intel-graphics-compiler:
+intel-graphics-compiler: opencl-clang
 	@$(RUN_TARGET)
 
 gmmlib:
 	@$(RUN_TARGET)
 
-compute-runtime:
+compute-runtime: gmmlib intel-graphics-compiler
+	@$(RUN_TARGET)
+
+gperf:
+	@$(RUN_TARGET)
+
+eudev: gperf
+	@$(RUN_TARGET)
+
+lzip:
+	@$(RUN_TARGET)
+
+ed:
 	@$(RUN_TARGET)

@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=wpa_supplicant
+VER=2.10
+URL="http://w1.fi/releases"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS="openssl libnl-3.0"
+DONT_TAIL=1
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lrt -lm -lpthread"
+#export CFLAGS="${CFLAGS} "
+
+pkg_configure() {
+	local_copy
+	cat  ../../../packages/${PACKAGE_NAME}-${VER}/defconfig > wpa_supplicant/.config
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} -C wpa_supplicant LIBDIR=${PREFIX}/lib BINDIR=${PREFIX}/bin CC="${KANAPI_C_COMPILER}"
+}
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} -C wpa_supplicant install LIBDIR=${PREFIX}/lib BINDIR=${PREFIX}/bin CC="${KANAPI_C_COMPILER}" \
+		&&	pkg_install_bin_all
+	if [ "$?" = "0" ]
+	then
+		for i in etc run 
+		do
+			if [ ! -d ${PREFIX}/$i ]
+			then
+				mkdir ${PREFIX}/$i
+			fi
+		done
+
+		echo "ctrl_interface=${PREFIX}/run/wpa_supplicant
+		network={
+				ssid=ssid
+				psk=password
+		}" > ${PREFIX}/etc/wifi.conf
+	else
+		false
+	fi
+}
+
+pkg_check() {
+	echo ${CFLAGS}
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+}

@@ -19,7 +19,7 @@
 
 PACKAGE_NAME=patchelf
 VER=0.9
-URL="https://nixos.org/releases/patchelf/patchelf-0.9"
+URL="https://releases.nixos.org/?prefix=patchelf/patchelf-0.9"
 EXT=tar.bz2
 #build depends on
 . ../settings

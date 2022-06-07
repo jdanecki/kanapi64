@@ -19,8 +19,8 @@
 
 PACKAGE_NAME=zip
 VER=30
-URL="ftp://ftp.info-zip.org/pub/infozip/src"
-EXT=tgz
+URL="https://downloads.sourceforge.net/infozip"
+EXT=tar.gz
 #build depends on
 #LIB_DEPENDS=""
 

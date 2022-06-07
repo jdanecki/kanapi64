@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -48,4 +48,10 @@ pkg_install() {
 	cp build/cgroupfs-umount ${PREFIX}/bin
 	pkg_install_bin_all
 }
+
+pkg_repo() {
+    URL="https://github.com/tianon/cgroupfs-mount/tags"
+    pkg_repo_url ${URL}
+}
+
 

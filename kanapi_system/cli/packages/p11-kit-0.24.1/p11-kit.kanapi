@@ -26,8 +26,8 @@ EXT=tar.xz
 
 . ../settings
 
-echo "PKG_CONFIG=${PKG_CONFIG}"
-echo "KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
+#echo "PKG_CONFIG=${PKG_CONFIG}"
+#echo "KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
 
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
@@ -67,7 +67,7 @@ install_certificates() {
 }
 
 prepare_certificates() {
-	export NSS_VERSION=3.78
+	export NSS_VERSION=3.79
 	rm -rf nss; mkdir -p nss
 	echo curl -o nss/nss-${NSS_VERSION}.tar.gz https://ftp.mozilla.org/pub/security/nss/releases/NSS_${NSS_VERSION//./_}_RTM/src/nss-${NSS_VERSION}.tar.gz
 	curl -o nss/nss-${NSS_VERSION}.tar.gz https://ftp.mozilla.org/pub/security/nss/releases/NSS_${NSS_VERSION//./_}_RTM/src/nss-${NSS_VERSION}.tar.gz
