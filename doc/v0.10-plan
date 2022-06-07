@@ -1,7 +1,0 @@
-WIP 
-===
-
-* Update packages
-* select the fastest compiler for builds: gcc, clang
-* update kernel to the latest 
-* CI integration tuning

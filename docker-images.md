@@ -1,4 +1,9 @@
-# Docker images versions
+# Docker images versions for KaNaPi 0.11 (work in progress)
+
+* sbs:0.11.1
+* bbs:0.11.1
+
+# Docker images versions for KaNaPi 0.10 (development halted)
 
 * sbs:0.10.9-master
 * bbs:0.10.6-master
@@ -7,11 +12,11 @@
 * gui:0.10.3-master
 * apps:0.10.3-master
 
-# Special docker images
+## Special docker images
 
 * ocl:0.10.2-master
 
-# Docker dependencies
+## Docker dependencies
 
 * sbs:0.10:9-master - based on cli:12
 * bbs:0.10.6-master - based on sbs:0.10.8-master

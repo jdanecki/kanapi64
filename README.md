@@ -11,13 +11,6 @@ Versions:
 
 License: GPL v.3
 
-The simplest way to try KaNaPi is to use docker images from docker hub.
-For more details see: https://github.com/jdanecki/kanapi#main-docker-images
-
-More details on https://jdanecki.github.io/kanapi
-
-Author: jacek.m.danecki@gmail.com
-
 ## KaNaPi components
 
 * Sbs - small build system: kanapi\_system/sbs
@@ -27,7 +20,30 @@ Author: jacek.m.danecki@gmail.com
 * Gui - Gtk2/3 and Qt support, libs built on top of X11: kanapi\_system/kanapi-gui
 * Apps - Applications and libs built on top Gui: kanapi\_system/kanapi-apps
 
-## Adding new package to KaNaPi (for example for apps)
+## Docker images
+
+The simplest way to try KaNaPi is to use docker images from docker hub.
+
+* SBS image  - https://hub.docker.com/r/kanapi/kanapi-sbs
+* BBS image  - https://hub.docker.com/r/kanapi/kanapi-bbs
+* CLI image  - https://hub.docker.com/r/kanapi/kanapi-cli
+* X11 image  - https://hub.docker.com/r/kanapi/kanapi-x11
+* GUI image  - https://hub.docker.com/r/kanapi/kanapi-gui
+* APPS image - https://hub.docker.com/r/kanapi/kanapi-apps
+
+Docker images versions are described [here](docker-images.md)
+
+# Authors 
+
+- Jacek Danecki
+- Kamil Danecki
+- Piotr Danecki
+
+More details about KaNaPi on https://jdanecki.github.io/kanapi
+
+[Changelog](doc/changelog)
+
+## Adding new package to KaNaPi (for example to apps component)
 
 * In git repository goto kanapi\_system/apps/packages
 * Create directory for new package by running command
@@ -88,4 +104,5 @@ cd kanapi_system/apps/build
 cd kanapi_system/apps/build
 ./help
 ```
+
 
