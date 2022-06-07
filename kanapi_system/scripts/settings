@@ -934,8 +934,8 @@ pkg_repo_tags() {
 pkg_repo() {
 	if [ "${URL}" = "GNU" ] 
 	then
-        URL="${GNU_SUNSITE}/${PACKAGE_NAME}"
+        URL="${GNU_MIRROR}/${PACKAGE_NAME}"
     fi
-    pkg_repo_url ${URl}
+    pkg_repo_url ${URL}
 }
 
