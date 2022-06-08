@@ -73,7 +73,6 @@ STRIP_BINARIES=1
 STRIP_LIBRARIES=1
 
 SF_MIRROR=https://downloads.sourceforge.net/project/kanapi/sources/Packages/mirror
-SH_MIRROR=http://84.38.102.146/~adanecki/kanapi/mirror
 SF_PROJECT=http://downloads.sourceforge.net/project
 GNU_SUNSITE=http://sunsite.icm.edu.pl/pub/gnu
 GNU_MIRROR=http://ftp.gnu.org/pub/gnu
@@ -219,7 +218,7 @@ pkg_wget() {
 	then 
 		echo "$PACKAGE_NAME: already downloaded"
 	else
-		for mirror in ${MIRROR_URL} ${PACKAGE_LINK_BACKUP} ${SF_MIRROR} ${SH_MIRROR}
+		for mirror in ${MIRROR_URL} ${PACKAGE_LINK_BACKUP} ${SF_MIRROR}
 		do
 			if [ -n "${mirror}" ]
 			then
@@ -336,7 +335,7 @@ pkg_curl() {
 	then 
 		echo "$PACKAGE_NAME: already downloaded"
 	else		
-		for mirror in ${MIRROR_URL} ${PACKAGE_LINK_BACKUP} ${SF_MIRROR} ${SH_MIRROR}
+		for mirror in ${MIRROR_URL} ${PACKAGE_LINK_BACKUP} ${SF_MIRROR}
 		do
 			if [ -n "${mirror}" ]
 			then
