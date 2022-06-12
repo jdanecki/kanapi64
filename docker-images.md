@@ -2,6 +2,7 @@
 
 * sbs:0.11.1
 * bbs:0.11.1
+* cli:0.11.1
 
 # Docker images versions for KaNaPi 0.10 (development halted)
 
