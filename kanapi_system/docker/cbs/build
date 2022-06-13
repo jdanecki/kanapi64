@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+cd /kanapi_build/kanapi/kanapi_system/dbs/build
+if [ "${TRAVIS}" = "true" ]
+then
+	./install cbs ci
+else
+	./install cbs verbose
+fi
+go clean -cache

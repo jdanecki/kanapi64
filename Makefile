@@ -9,6 +9,9 @@ bbs:
 cli:
 	cd kanapi_system/docker/cli; ./create_cli_docker
 
+cbs:
+	cd kanapi_system/docker/cbs; ./create_cbs_docker
+
 x11:
 	cd kanapi_system/docker/x11; ./create_x11_docker
 

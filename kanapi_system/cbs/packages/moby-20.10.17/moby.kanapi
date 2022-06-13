@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=moby
+VER=20.10.17
+URL="https://github.com/moby/moby/archive/refs/tags"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+	PACKAGE_PATH=v${VER}.${EXT}
+	pkg_curl	
+}
+
+pkg_configure() {
+	go_local_copy
+    pushd src/github.com
+    ln -s ${PACKAGE_NAME} docker
+    pushd docker
+    ln -s ${PACKAGE_NAME} docker
+    popd
+    popd
+}
+
+pkg_build() {
+	export DISABLE_WARN_OUTSIDE_CONTAINER=1 
+    export GOPATH=`pwd`
+    export GO111MODULE=off
+	export GOOS=linux
+	export GOARCH=amd64
+	cd src/github.com/docker/docker
+    export DOCKER_BUILDTAGS="seccomp exclude_graphdriver_devicemapper exclude_graphdriver_aufs exclude_graphdriver_btrfs exclude_graphdriver_zfs"
+#    cgo autogen daemon experimental
+    export DOCKER_GITCOMMIT="a89b842" 
+    export VERSION="${VER}"
+    export GOFLAGS='-buildmode=pie -trimpath -mod=readonly -modcacherw -ldflags=-linkmode=external'
+    hack/make.sh dynbinary
+}
+
+
+pkg_install() {
+	mkdir -p ${PREFIX}/bin
+    cp -a src/github.com/moby/moby/bundles/dynbinary-daemon/dockerd ${PREFIX}/bin
+    cp -a src/github.com/moby/moby/bundles/dynbinary-daemon/dockerd-${VER} ${PREFIX}/bin
+	pkg_install_bin_all
+}
+
+pkg_repo() {
+    URL="https://github.com/moby/moby/releases"
+    DONT_TAIL=1
+    pkg_repo_url ${URL}
+}
+

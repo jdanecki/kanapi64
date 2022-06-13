@@ -63,7 +63,7 @@ pkg_build() {
 	export GOARCH=amd64
 	export GOROOT_FINAL=${PREFIX}/usr/lib/go
 	export GOROOT_BOOTSTRAP=`pwd`/go-${VER}/go
-	export GOCACHE=off
+#	export GOCACHE=off
 	export GOOS=linux
 	cd src
     ./make.bash --no-clean -v
