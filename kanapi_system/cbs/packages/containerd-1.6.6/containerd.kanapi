@@ -43,13 +43,15 @@ pkg_build() {
 	export BUILDTAGS="no_btrfs no_cri"
 	export DOCKER_BUILDTAGS=no_btrfs
 
-	make -C src/github.com/${PACKAGE_NAME}/${PACKAGE_NAME} COMMANDS="containerd containerd-shim"
+	make -C src/github.com/${PACKAGE_NAME}/${PACKAGE_NAME} COMMANDS="containerd containerd-shim containerd-shim-runc-v1 containerd-shim-runc-v2
+"
 }
 
 pkg_install() {
 	mkdir -p ${PREFIX}/bin
 	cp -a src/github.com/containerd/containerd/bin/containerd ${PREFIX}/bin/docker-containerd
-	cp -a src/github.com/containerd/containerd/bin/containerd-shim ${PREFIX}/bin/docker-containerd-shim
+	cp -a src/github.com/containerd/containerd/bin/containerd-shim-runc-v1 ${PREFIX}/bin
+	cp -a src/github.com/containerd/containerd/bin/containerd-shim-runc-v2 ${PREFIX}/bin
 	pkg_install_bin_all
 }
 
