@@ -11,7 +11,10 @@ sound: alsa-utils jack2 pulseaudio alsa-plugins alsa-oss
 rplay:
 	@$(RUN_TARGET)
 
-alsa-lib:
+alsa-ucm-conf:
+	@$(RUN_TARGET)
+
+alsa-lib: alsa-ucm-conf
 	@$(RUN_TARGET)
 
 alsa-utils: alsa-lib

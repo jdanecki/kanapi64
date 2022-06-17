@@ -115,6 +115,7 @@ dtc_ver=1.4.2
 qemu_ver=2.8.0
 alsa_lib_ver=1.2.7.1
 alsa_utils_ver=1.2.7
+alsa_ucm_conf_ver=1.2.7.1
 esound_ver=0.2.41
 audiofile_ver=0.3.6
 vtwm_ver=5.5.0-rc8
