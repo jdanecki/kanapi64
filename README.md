@@ -16,7 +16,8 @@ License: GPL v.3
 * Sbs - small build system: kanapi\_system/sbs
 * Bbs - base build system, built on top of Sbs: kanapi\_system/kanapi-bbs
 * Cli - command line tools built on top of Bbs: kanapi\_system/kanapi-cli
-* Cbs - container build system, built on top of cli: kanapi\_system/kanapi-cbs
+* Cbs - container build system, built on top of Cli: kanapi\_system/kanapi-cbs
+* Sound - sound support for cli built on top of Cli: kanapi\_system/kanapi-sound
 * X11 - X11 support, libs, apps, built on top of Cli: kanapi\_system/kanapi-x11
 * Gui - Gtk2/3 and Qt support, libs built on top of X11: kanapi\_system/kanapi-gui
 * Apps - Applications and libs built on top Gui: kanapi\_system/kanapi-apps
