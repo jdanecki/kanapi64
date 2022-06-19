@@ -6,7 +6,8 @@ SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-sound: alsa-utils jack2 pulseaudio alsa-plugins alsa-oss
+sound: alsa-utils  pulseaudio
+#	jack2 pulseaudio alsa-plugins alsa-oss
 
 rplay:
 	@$(RUN_TARGET)
@@ -44,8 +45,9 @@ expat:
 intltool: xml
 	@$(RUN_TARGET)
 
-pulseaudio: speexdsp intltool speex
+pulseaudio: 
 	@$(RUN_TARGET)
+#speexdsp intltool speex
 
 libvorbis: libogg
 	@$(RUN_TARGET)
