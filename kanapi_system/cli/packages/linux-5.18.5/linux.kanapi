@@ -25,7 +25,7 @@ EXT=tar.xz
 
 . ../settings
 
-#MAKE_JOBS=1
+MAKE_JOBS=1
 
 pkg_prepare() {
 	pkg_tar_xz
@@ -51,10 +51,14 @@ pkg_build() {
 #	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  modules_prepare
 #	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  help
 #	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j 1  V=1 HOST_LOADLIBES="-ldl" all  
-	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  all V=1
+	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  all
 #	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  versatile-pb.dtb
 #	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  bzImage
 #	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  modules
+}
+
+pkg_perf() {
+	${MAKE} -C ${PACKAGE_SRCDIR}/tools O=`pwd` V=1 -j ${MAKE_JOBS} perf
 }
 
 pkg_install() {
