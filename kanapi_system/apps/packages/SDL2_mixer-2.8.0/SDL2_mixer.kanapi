@@ -17,10 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=@NAME@
-VER=@VER@
-URL="http://"
-EXT=tar.bz2
+PACKAGE_NAME=SDL2_mixer
+VER=2.8.0
+URL="https://www.libsdl.org/projects/SDL_mixer/release"
+EXT=tar.gz
 #build depends on
 #LIB_DEPENDS=""
 
@@ -29,7 +29,15 @@ EXT=tar.bz2
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
+pkg_configure() {
+	 ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+#	--enable-music-ogg --enable-music-mod --enable-music-mp3 \
+#	--enable-music-mp3-mad-gpl
+}
+
+
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
+        pkg_install_pc_all
+        pkg_install_libs
 }
 
