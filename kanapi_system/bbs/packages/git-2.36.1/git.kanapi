@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
+# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2024 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -36,7 +36,7 @@ pkg_configure() {
 	PERL=${KANAPI_BASE}/perl-${perl_ver}/bin/perl
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX ac_cv_fread_reads_directories=no \
 	ac_cv_snprintf_returns_bogus=no --with-curl --without-expat ac_cv_lib_expat_XML_ParserCreate=no \
-	--with-perl=${PERL}
+	--with-perl=${PERL} --without-tcltk
 }
 
 pkg_build() {
