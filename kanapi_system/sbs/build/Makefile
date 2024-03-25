@@ -73,6 +73,10 @@ libgcrypt: libgpg-error
 libssh2: libgcrypt
 	@$(RUN_TARGET)
 
-curl: libssh2
+libpsl:
 	@$(RUN_TARGET)
+
+curl: libssh2 libpsl
+	@$(RUN_TARGET)
+
 

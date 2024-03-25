@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2024 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=pkg-config
+VER=2.1.1
+URL="https://gitea.treehouse.systems/ariadne/pkgconf/archive"
+EXT=tar.gz
+
+. ../settings
+
+pkg_download() {
+	PACKAGE_VER=pkgconf-${VER}
+	PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+        PACKAGE_PATH=${PACKAGE_FILENAME}
+        pkg_curl
+}
+
+pkg_prepare() {
+        if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ]
+        then
+                echo "$PACKAGE_NAME: already prepared"
+        else
+                PACKAGE_VER=pkgconf-${VER}
+                PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+                tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -C ${KANAPI_BUILD_SRC}
+                #echo mv -v ${KANAPI_BUILD_SRC}/pkgconf ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}
+                #mv -v ${KANAPI_BUILD_SRC}/pkgconf ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}            
+                ln -svf ${KANAPI_BUILD_SRC}/pkgconf ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}
+                /bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+        fi
+}
+
+pkg_install() {
+	pkg_install_make
+	mkdir ${PREFIX}/share/pkgconfig
+	export PKG_CONFIG_DIR=${PREFIX}/share/pkgconfig
+	for p in glib libffi zlib gmp mpfr
+	do
+		PKG_VER=${p}_ver
+		for f in ${KANAPI_BASE}/$p-${!PKG_VER}/lib/pkgconfig/*.pc 
+		do
+			ln -svf $f ${PKG_CONFIG_DIR}/`basename $f`
+		done
+	done
+	ln -sf ${PREFIX}/bin/pkgconf ${PREFIX}/bin/pkg-config 
+	pkg_install_bin_all
+}
+
+pkg_configure() {
+    ${PACKAGE_SRCDIR}/autogen.sh
+    ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+}
+
+pkg_check() {
+	${PREFIX}/bin/pkg-config --list-all
+	echo "PKG_CONFIG=${PKG_CONFIG}"
+	pkg-config --exists --print-errors "glib-2.0 >= 2.16"; echo $?
+	echo "GLIB_CFLAGS=${GLIB_CFLAGS}"
+	for p in glib libffi zlib gmp mpfr
+	do
+		PKG_VER=${p}_ver
+		for f in ${KANAPI_BASE}/$p-${!PKG_VER}/lib/pkgconfig/*.pc 
+		do
+			echo "ln -svf $f ${PKG_CONFIG_DIR}/`basename $f`"
+		done
+	done
+
+}
