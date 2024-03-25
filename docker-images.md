@@ -1,6 +1,6 @@
 # Docker images versions for KaNaPi 0.11 (work in progress)
 
-* sbs:0.11.1
+* sbs:0.11.2
 * bbs:0.11.1
 * cli:0.11.1
 
