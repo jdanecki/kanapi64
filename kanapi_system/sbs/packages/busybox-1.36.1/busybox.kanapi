@@ -45,3 +45,8 @@ pkg_check() {
 	echo "CXX=${CXX}"
 	echo $REPO_BASE
 }
+
+pkg_update() {
+	pkg_install_bin_all && pkg_install_sbin_all && pkg_install_usr_bin_all && pkg_install_usr_sbin_all
+	rm ${KANAPI_BIN}/init
+}
