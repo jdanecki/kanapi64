@@ -88,3 +88,7 @@ pkg_check() {
 	gcc --version
 	echo "CPP=${CPP}"
 }
+
+pkg_update() {
+	pkg_install_bin_all
+}

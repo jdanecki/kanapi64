@@ -81,5 +81,7 @@ pkg_check() {
 			echo "ln -svf $f ${PKG_CONFIG_DIR}/`basename $f`"
 		done
 	done
+	autoconf --version
+	automake --version
 
 }

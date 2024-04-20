@@ -49,3 +49,8 @@ pkg_install() {
 	ln -sfv ${PREFIX}/bin/ld $GCC_LD
 	ln -sfv ${PREFIX}/bin/as $GCC_AS
 }
+
+pkg_update() {
+    pkg_install_bin_all
+}
+
