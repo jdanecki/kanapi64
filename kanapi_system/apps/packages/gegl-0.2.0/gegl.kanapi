@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gegl
+VER=0.2.0
+URL="https://download.gimp.org/pub/gegl/0.2"
+EXT=tar.bz2
+#build depends on
+
+LIB_DEPENDS="gmodule-2.0 libffi sdl xext x11 xcb xau zlib"
+
+. ../settings
+
+if [ "${KANAPI_TARGET}" = "arm" ]
+then
+	if [ -d "${KANAPI_HOST_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}" ]
+	then
+		export PERL5LIB="${KANAPI_HOST_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+		export PATH=${KANAPI_HOST_BASE}/perl-${perl_ver}/bin:${PATH}
+	fi
+else
+	export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+fi
+
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -lm -lresolv"
+export CPP="gcc -E -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+	--disable-docs
+}
+
+pkg_install() {
+	pkg_install_pc_all
+	pkg_install_bin_all
+	pkg_install_libs
+}
+
+pkg_check() {
+	echo "LDFLAGS=${LDFLAGS}"
+	${PKG_CONFIG} --libs sdl
+}
+

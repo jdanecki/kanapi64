@@ -1,4 +1,4 @@
-# KaNaPi project
+# KaNaPi project for x86_64 architecture
 
 Main goal of this project is to create educational operating system based on Linux kernel
 and free software for use at home.
@@ -6,25 +6,25 @@ and free software for use at home.
 Current phase: Beta
 
 Versions: 
-* planning - v0.10
-* released - v0.9
+
+* development - v0.11
 
 License: GPL v.3
 
-Look into doc directory to learn how to build KaNaPi.
-More details on https://jdanecki.github.io/kanapi
+## KaNaPi components
 
-Author: jacek.m.danecki@gmail.com
+* Sbs - small build system: kanapi\_system/sbs
+* Bbs - base build system, built on top of Sbs: kanapi\_system/kanapi-bbs
+* Cli - command line tools built on top of Bbs: kanapi\_system/kanapi-cli
+* Cbs - container build system, built on top of Cli: kanapi\_system/kanapi-cbs
+* Sound - sound support for cli built on top of Cli: kanapi\_system/kanapi-sound
+* X11 - X11 support, libs, apps, built on top of Cli: kanapi\_system/kanapi-x11
+* Gui - Gtk2/3 and Qt support, libs built on top of X11: kanapi\_system/kanapi-gui
+* Apps - Applications and libs built on top Gui: kanapi\_system/kanapi-apps
 
-## Development workflow
+## Docker images
 
-## SBS images
-
-SBS images on SourceForge https://sourceforge.net/projects/kanapi/files/images/v0.9/
-* sbs-x86_64.tar.xz - base for build in chroot (local and CI)
-* sbs-docker-x86.tar.xz - base for BBS docker image
-
-## Main docker images
+The simplest way to try KaNaPi is to use docker images from docker hub.
 
 * SBS image  - https://hub.docker.com/r/kanapi/kanapi-sbs
 * BBS image  - https://hub.docker.com/r/kanapi/kanapi-bbs
@@ -33,60 +33,78 @@ SBS images on SourceForge https://sourceforge.net/projects/kanapi/files/images/v
 * GUI image  - https://hub.docker.com/r/kanapi/kanapi-gui
 * APPS image - https://hub.docker.com/r/kanapi/kanapi-apps
 
-## Additional docker images
+Docker images versions are described [here](docker-images.md)
 
-* cli-lib  - https://hub.docker.com/r/kanapi/kanapi-cli-lib 
-* x11-lib  - https://hub.docker.com/r/kanapi/kanapi-x11-lib 
-* gtk      - https://hub.docker.com/r/kanapi/kanapi-gtk
-* qt       - https://hub.docker.com/r/kanapi/kanapi-qt
-* gui      - https://hub.docker.com/r/kanapi/kanapi-gui
-* apps-x11 - https://hub.docker.com/r/kanapi/kanapi-apps-x11
-* apps-gtk - https://hub.docker.com/r/kanapi/kanapi-apps-gtk
-* apps-qt  - https://hub.docker.com/r/kanapi/kanapi-apps-qt
-* apps-gui - https://hub.docker.com/r/kanapi/kanapi-apps-gui
+# Authors 
 
-## System build workflow
+- Jacek Danecki
+- Kamil Danecki
+- Piotr Danecki
 
-* Sbs - small build system: kanapi_system/kanapi-sbs
-* Bbs - base build system, built on top of Sbs: kanapi_system/kanapi-bbs
-* Cli - command line tools built on top of Bbs: kanapi_system/kanapi-cli
-* X11 - X11 support, libs, apps, built on top of Cli: kanapi_system/kanapi-x11
-* Gui - Gtk2/3 and Qt support, libs built on top of X11: kanapi_system/kanapi-gui
-* Apps - Applications and libs built on top Gui: kanapi_system/kanapi-apps
+More details about KaNaPi on https://jdanecki.github.io/kanapi
 
-## CI systems
+[Changelog](doc/changelog)
 
-## Builds executed in chroot with SBS image
-* SemaphoreCI - build BBS and CLI packages, https://semaphoreci.com/jdanecki/kanapi
-* Shippable - build BBS and part of CLI packages, https://app.shippable.com/github/jdanecki/kanapi/dashboard
-  (deprecated by docker build)
+## Adding new package to KaNaPi (for example to apps component)
 
-## Builds using native (Ubuntu 14.0 compilers) without SBS (BBS only)
+* In git repository goto kanapi\_system/apps/packages
+* Create directory for new package by running command
 
-* CircleCI - https://circleci.com/gh/jdanecki/kanapi
-* CodeShip - https://app.codeship.com/projects/191185
+```
+./create_directory <package_name> <package_version>
+```
 
-## Builds in docker container
+* Add URL to package repository by modifying <package_name>.kanapi file in
+kanapi\_system/apps/packages/<package\_name>-<package\_version> directory
 
-* Shippable 
-  - build cli docker image from BBS docker image from https://hub.docker.com/r/kanapi/kanapi-bbs
-  - docker builds: https://app.shippable.com/github/jdanecki/kanapi-dockers/dashboard
-* Travis 
-  - build SBS from sbs-docker tarball and BBS from SBS docker image, https://travis-ci.org/jdanecki/kanapi
-  - docker builds: https://travis-ci.org/jdanecki/kanapi-dockers/builds/355665885
-* SemaphoreCI
-  - docker builds: https://semaphoreci.com/jdanecki/kanapi-dockers/
-* Gitlab
-  - docker builds: http://kanapi-project.blogspot.com/2018/05/kanapi-ci-builds-started-on-gitlab.html
+* Update EXT variable if needed in <package_name>.kanapi file. 
 
-## Repositories
+* Download package by calling command
+```
+cd kanapi_system/apps/build
+./download <package_name>
+```
 
-* Main KaNaPi - https://github.com/jdanecki/kanapi
-* KaNaPi Gui - https://github.com/jdanecki/kanapi-gui
-* KaNaPi Apps - https://github.com/jdanecki/kanapi-apps
-* KaNaPi CI tests: https://github.com/jdanecki/kanapi-ci
-* CI tests: https://github.com/jdanecki/ci-tests
-* KaNaPi CI tests on shippable only: https://github.com/jdanecki/kanapi-shippable
-* KaNaPi docker tests: https://github.com/jdanecki/kanapi-dockers
-* KaNaPi on gitlab: http://kanapi-project.blogspot.com/2018/04/kanapi-on-gitlab.html
+* Prepare package sources by calling command
+
+```
+cd kanapi_system/apps/build
+./prepare <package_name>
+```
+
+* Configure package  by calling command
+
+```
+cd kanapi_system/apps/build
+./configure <package_name>
+```
+
+* Build package  by calling command
+
+```
+cd kanapi_system/apps/build
+./build <package_name>
+```
+
+* Install package  by calling command
+
+```
+cd kanapi_system/apps/build
+./install <package_name>
+```
+
+* Verify package installation by calling command
+
+```
+cd kanapi_system/apps/build
+./verify <package_name>
+```
+
+* To get more info about others commands run
+
+```
+cd kanapi_system/apps/build
+./help
+```
+
 

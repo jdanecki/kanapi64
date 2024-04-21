@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gpm
+VER=1.20.7
+#URL="http://www.nico.schottelius.org/software/gpm/archives"
+#use SF mirror
+URL="https://downloads.sourceforge.net/project/kanapi/sources/Packages/mirror"
+EXT=tar.bz2
+#build depends on
+. ../settings
+
+pkg_configure() {
+	local_copy
+	[ -d config ] || mkdir config
+
+	version=$(git describe 2>/dev/null)
+	# No git? use changelog information
+	if [ -z "$version" ]; then
+		version=$(grep '^[[:digit:]]' doc/changelog | head -n1 | cut -d: -f1)
+		date=$(grep '^[[:digit:]]' doc/changelog | head -n1 | cut -d: -f2)
+	else
+		date=$(git log -1 --pretty="format:%ai" "$version")
+	fi
+	cat << eof > configure.ac
+	AC_INIT([gpm],[$version],[http://www.nico.schottelius.org/software/gpm/])
+	releasedate="$date"
+	release="$version"
+	AM_INIT_AUTOMAKE
+eof
+	cat configure.ac.footer >> configure.ac
+
+	KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
+	 -I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
+	 -I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
+
+	# -I ${KANAPI_BASE}/util-macros-${util_macros_ver}/share/aclocal \
+
+	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
+
+	export CFLAGS="${NCURSES_CFLAGS}"
+	export LDFLAGS="${NCURSES_LDFLAGS}"
+
+	./configure	--prefix=$PREFIX  
+}
+
+pkg_build() {
+	pkg_build_local
+}
+
+pkg_install() {
+	cd build
+	touch doc/gpm.info
+	pkg_install_make && pkg_install_bin_all && pkg_install_sbin_all && pkg_install_libs
+}

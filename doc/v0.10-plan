@@ -1,9 +1,0 @@
-WIP 
-===
-
-* select the fastest compiler for builds: gcc, clang
-* update kernel to the latest 4.14/4.16
-* check whether glibc can be replaced by uClibc-ng
-* CI integration tuning
-* switch to Codehip pro
-* switch to CircleCI 2.0

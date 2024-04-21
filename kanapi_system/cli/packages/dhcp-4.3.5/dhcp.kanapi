@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=dhcp
+VER=4.3.5
+URL="http://ftp.isc.org/isc/dhcp/4.3.5"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+export BUILD_CC=gcc
+
+pkg_configure() {
+	local_copy
+	sed -i "s/^BINDCONFIG=/BINDCONFIG=--enable-linux-caps=no/" configure
+#	chmod +x configure
+	./configure --prefix=${PREFIX} --localstatedir=${PREFIX}/var \
+	--with-randomdev=/dev/random
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j 1 MAKEINFO=true
+}
+
+pkg_install() {
+	cd build
+	pkg_install_make &&  pkg_install_bin_all &&	pkg_install_sbin_all
+	mkdir -p ${PREFIX}/var/db
+	mkdir -p ${PREFIX}/var/run
+	echo "script \"${PREFIX}/etc/dhclient.script\";" > ${PREFIX}/etc/dhclient.conf
+	cp -v ${PACKAGE_SRCDIR}/client/scripts/linux ${PREFIX}/etc/dhclient.script
+	chmod + ${PREFIX}/etc/dhclient.script
+}
+
+pkg_check() {
+	echo "BUILD_CC=${BUILD_CC} -> `which ${BUILD_CC}`"
+	echo "gcc -> `which gcc`"
+	echo "PATH=$PATH"
+	
+}
+

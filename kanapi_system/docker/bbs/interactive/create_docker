@@ -4,15 +4,17 @@
 
 USE_LOCAL=1
 DIR=`pwd`
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
+
 if [ ! -d ${HOME}/src ] ; then mkdir ${HOME}/src ; fi
 if [ ! -d kanapi ] 
 then 
 	if [ "${USE_LOCAL}" = "1" ] 
 	then
-	   REPO_BASE=`pwd | sed "s@/kanapi_system/docker/.*/interactive@@"`
 		git clone ${REPO_BASE} kanapi
 	else
-		git clone https://github.com/jdanecki/kanapi.git kanapi
+		git clone https://github.com/jdanecki/kanapi64.git kanapi
 	fi
 else
 	pushd kanapi
@@ -20,5 +22,10 @@ else
 	popd
 fi
 
-docker create -i -t --name kanapi-${NAME}-${VER} -v ${DIR}/kanapi:/kanapi_build/kanapi -v ${HOME}/src:/kanapi_0.9/x86_64/home/src -v ${HOME}/.ccache:/kanapi_0.9/x86_64/home/.ccache -e HOME=/kanapi_0.9/x86_64/home kanapi/kanapi-${BASE_IMAGE}
+docker create -i -t --name kanapi-${NAME}-${VER} \
+	--cap-add=ALL \
+    -v ${DIR}/kanapi:/kanapi_build/kanapi \
+    -v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src \
+    -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
+    -e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /bin/bash
 

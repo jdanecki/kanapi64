@@ -10,14 +10,12 @@ then
 	then 
 		git clone ../../../../kanapi kanapi
 	else
-		git clone https://github.com/jdanecki/kanapi.git kanapi
+		git clone https://github.com/jdanecki/kanapi64.git kanapi
 	fi
 else
 	pushd kanapi
 	git pull
 	popd
 fi
-
-docker build -t kanapi-${NAME}:${VER} .
-rm -rf kanapi
-
+cat Dockerfile.template | sed "s/BASE_IMAGE/${BASE_IMAGE}/" > Dockerfile
+docker build -t kanapi-${NAME}:${VER} . && rm -rf kanapi

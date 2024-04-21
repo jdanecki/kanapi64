@@ -1,4 +1,0 @@
-ARCH=`uname -m`
-
-qemu-system-i386 -enable-kvm -hda kanapi_image.i686 -m 512
-

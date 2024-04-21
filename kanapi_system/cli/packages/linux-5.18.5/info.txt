@@ -1,0 +1,2 @@
+echo 1 > /sys/kernel/mm/ksm/run 
+ mount -t pstore pstore /dev/pstore

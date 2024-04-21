@@ -1,0 +1,34 @@
+linux-headers-4.16.12 -> 5.4.1 ok -> 5.18 ok
+glibc-2.25 -> 2.28 ok
+2.29 - needs newer python 3.4
+the latest 2.35
+
+gmp-6.1.2 -> 6.2.1 ok
+mpfr-4.0.1 -> 4.0.2 ok -> 4.1.0 ok
+mpc-1.1.0 -> 1.2.1 ok
+binutils-2.30 -> 2.31 ok -> 2.38 ok
+
+gcc-7.2.0 -> 12.1.0 ok
+
+libffi-3.2.1 -> 3.3 ok -> 3.4.2 ok
+zlib-1.2.11 -> 1.2.12  
+glib-2.51.0 ->  2.56.4 ok
+2.57 >=  needs meson
+
+pkg-config-0.29.1 -> 0.29.2 ok
+rootfs-0.7 ok
+xz 5.2.2 -> 5.2.4 ok -> 5.2.5 ok
+file-5.29 -> 5.38 ok -> 5.41 ok
+
+busybox-1.24.1 -> 1.24.2 ok -> 1.34.1 ok
+bash-4.4 -> 5.0 ok -> 5.1 ok
+make-4.2  > 4.3 ok 
+
+openssl-1.0.2j -> 1.1.1d fail -> 1.1.1.o ok
+
+libgpg-error-1.24 -> 1.36 -> 1.45 ok
+libgcrypt-1.7.3 -> 1.8.5  -> 1.10.1 ok
+libssh2-1.8.0 -> 1.9.0 -> 1.10.0 ok
+curl-7.53.1 -> 7.67  -> 7.83.1 ok
+
+

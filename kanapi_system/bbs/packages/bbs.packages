@@ -1,0 +1,37 @@
+acl-2.2.52 -> 2.3.1 ok
+attr-2.4.47 -> 2.5.1 ok
+autoconf-2.69 -> 2.71 ok
+automake-1.15 -> 1.16 ok
+bash-completion-2.11 -> 2.4 ok
+bison-3.8.2 ok
+bzip2-1.0.6 -> 1.0.8 ok
+ccache-3.3.3 -> 3.6 ok
+cmake-3.7.0 -> 3.10.2 ok -> 3.23.2 ok
+coreutils-8.25 -> 9.1 ok
+diffutils-3.5 -> diffutils-3.6 ok
+e2fsprogs-1.43.3 -> 1.46.5 ok
+findutils-4.6.0 -> 4.9.0 ok
+flex flex-2.6.0 -> flex-2.6.2 -> flex-2.6.4 ok
+gawk-4.1.4 -> 5.1.1 ok
+gettext 0.19.8 -> 0.21 ok
+git-2.10.2->git-2.16.1 ->git-2.17.0-> 2.36.1 ok
+grep-2.27 -> 3.7 ok
+less-481 -> 590 ok
+libarchive-3.2.2 -> 3.6.1 ok
+libtool-2.4.6 -> 2.4.7 ok
+m4-1.4.17 -> 1.4.19 ok
+mtools-4.0.18 -> 4.0.39 ok
+ncurses5-5.9 -> 6.3 ok
+ncurses -> 6.1 ok -> 6.0 20160220 ok -> 6.0 20161029 ok -> 6.0 20170715 ok -> 6.0 20170121 ok -> 6.3 20220604 ok
+ninja-1.7.2->ninja-1.8.2-> 1.11.0 ok
+openssh-7.3p1 -> 9.0 ok
+patch-2.7 -> 2.7.6 ok
+perl-5.24.0 -> 5.36.0 ok
+Python-2.7.13 -> 2.7.18 ok
+re2c-0.16 -> 3.0 ok
+readline-6.3 ok -> 8.1 ok
+sed-4.8 ok
+slang-2.3.1 -> 2.3.2 ok
+sqlite-autoconf-3150200 -> 3170000 ok -> 3380500 ok
+tar-1.29 -> 1.34 ok
+util-linux-2.29 -> 2.38 ok

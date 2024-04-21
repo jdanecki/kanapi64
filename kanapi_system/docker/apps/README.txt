@@ -10,7 +10,6 @@ How to use BBS docker to build APPS image manually
 ./create_docker
 ./run_docker
 2. In running container:
-/kanapi_build/kanapi/kanapi_system/docker/configure
 cd /kanapi_build/kanapi/kanapi_system/kanapi-apps
 ./install apps verbose
 

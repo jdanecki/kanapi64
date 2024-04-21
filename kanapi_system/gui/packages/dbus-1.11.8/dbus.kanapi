@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=dbus
+VER=1.11.8
+URL="https://dbus.freedesktop.org/releases/dbus"
+EXT=tar.gz
+#build depends on
+
+LIB_DEPENDS="expat gobject-2.0 x11 libffi xcb xau gmodule-2.0 zlib"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lrt -lpthread -lresolv -lm"
+export LIBS="${LDFLAGS}"
+if [ -n "${PKG_CONFIG}" ]
+then 
+	export CPP="gcc -E `${PKG_CONFIG} --cflags x11`"
+fi
+
+pkg_configure() {	
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+	--disable-selinux --disable-systemd --with-session-socket-dir=${PREFIX}/var \
+	--with-test-socket-dir=${PREFIX}/var --with-system-pid-file=${PREFIX}/var/pid \
+	--with-console-auth-dir=${PREFIX}/var --with-dbus-user=kanapi \
+	--with-dbus-daemondir=${PREFIX}/bin --with-x 
+}
+
+pkg_install() {
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs && dbus-uuidgen --ensure
+}
+
+pkg_check() {
+	echo $CFLAGS
+}

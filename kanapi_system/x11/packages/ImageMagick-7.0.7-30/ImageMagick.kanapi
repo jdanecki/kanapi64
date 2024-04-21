@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=ImageMagick
+VER=7.0.7-30
+URL="https://www.imagemagick.org/download/releases"
+EXT=tar.xz
+#build depends on
+
+LIB_DEPENDS="x11 xcb xau libtiff-4"
+
+. ../settings
+
+export CPP="gcc -E ${CFLAGS}"
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/bzip2-${bzip2_ver}/lib -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -lm"
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/bzip2-${bzip2_ver}/include -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include"
+
+pkg_configure() {	
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+	--disable-openmp --with-dejavu-font-dir=${KANAPI_BASE}/dejavu-fonts-ttf-${dejavu_fonts_ttf_ver}/ttf \
+  	--with-gs-font-dir=${KANAPI_BASE}/font-util-${font_util_ver}/share/fonts/X11/Type1 \
+	--with-jpeg=yes --with-perl=yes --with-bzip2=yes
+}
+
+pkg_install() {
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+}
+

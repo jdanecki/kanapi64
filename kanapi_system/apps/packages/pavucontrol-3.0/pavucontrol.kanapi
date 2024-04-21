@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=pavucontrol
+VER=3.0
+URL="http://freedesktop.org/software/pulseaudio/pavucontrol"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS="x11"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lrt -lpthread -lresolv"
+export CXXFLAGS="${CFLAGS} -std=c++11"
+export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+
+pkg_install() {
+	pkg_install_make && pkg_install_bin_all
+}
+

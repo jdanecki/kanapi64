@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+. version
+
+pushd ../sbs-docker/interactive/
+./create_sbs_docker
+popd
+
+cp ../sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-${VER}.tar.xz .
+./make_image
+
+ID=`docker ps -a --filter "name=kanapi-cli-test" -q`
+docker rm ${ID}
+
+#	docker push kanapi/kanapi-${NAME}:${VER}
+

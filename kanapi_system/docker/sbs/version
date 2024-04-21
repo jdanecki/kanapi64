@@ -1,3 +1,7 @@
-VER=4
-NAME=sbs
+. ../sbs-docker/version
 
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
+
+VER=${KANAPI_VER}.${SBS_BUILD}
+NAME=sbs

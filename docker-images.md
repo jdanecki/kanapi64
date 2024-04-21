@@ -1,19 +1,27 @@
-# Docker images versions (full)
+# Docker images versions for KaNaPi 0.11 (work in progress)
 
-* sbs:4
-* bbs:8
-* cli:12
-* x11:5
-* gui:5
-* apps:6
+* sbs:0.11.2
+* bbs:0.11.1
+* cli:0.11.1
 
-# Docker images versions (for CI testing)
+# Docker images versions for KaNaPi 0.10 (development halted)
 
-* cli-lib:6
-* x11-lib:7
-* gtk:5
-* qt:5
-* apps-gtk:3
-* apps-qt:3
-* apps-gui:4
-* apps-x11:2
+* sbs:0.10.9-master
+* bbs:0.10.6-master
+* cli:0.10.4-master
+* x11:0.10.3-master
+* gui:0.10.3-master
+* apps:0.10.3-master
+
+## Special docker images
+
+* ocl:0.10.2-master
+
+## Docker dependencies
+
+* sbs:0.10:9-master - based on cli:12
+* bbs:0.10.6-master - based on sbs:0.10.8-master
+* cli:0.10.4-master - based on bbs:0.10.6-master
+* x11:0.10.3-master - based on cli:0.10.4-master
+* gui:0.10.3-master - based on x11:0.10.3-master
+* apps:0.10.3-master - based on gui:0.10.3-master

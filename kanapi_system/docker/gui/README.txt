@@ -10,7 +10,6 @@ How to use X11 docker to build GUI image manually
 ./create_docker
 ./run_docker
 2. In running container:
-/kanapi_build/kanapi/kanapi_system/docker/configure
-cd /kanapi_build/kanapi/kanapi_system/kanapi-gui
+cd /kanapi_build/kanapi/kanapi_system/gui/build
 ./install gui verbose
 

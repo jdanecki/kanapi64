@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=bzip2
+VER=1.0.8
+URL="https://sourceware.org/pub/bzip2"
+EXT=tar.gz
+#build depends on
+. ../settings
+
+pkg_configure() {
+	local_copy
+}
+
+pkg_build() {
+	cd build
+	CC="${KANAPI_C_COMPILER} -fPIC"
+	${MAKE} -j ${MAKE_JOBS} CC="${CC}"
+	${MAKE} -j ${MAKE_JOBS} -f Makefile-libbz2_so CC="${CC}"
+}
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true PREFIX=${PREFIX}
+	cp -a libbz2.so.* ${PREFIX}/lib
+	pkg_install_bin_all && pkg_install_libs
+}
+

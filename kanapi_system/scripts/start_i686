@@ -1,7 +1,0 @@
-#!/bin/bash
-
-export PATH=/kanapi_@KANAPI_VER@/i686/bin:$PATH
-
-sh
-
-

@@ -1,0 +1,126 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=firefox
+VER=52.0
+URL="http://ftp.mozilla.org/pub/firefox/releases/52.0/source"
+EXT=tar.xz
+#build depends on
+LIB_DEPENDS="x11 xt ice fontconfig xext x11-xcb zlib xrender alsa xcb xcb-shm xcomposite xdamage sqlite3 gtk+-2.0 gdk-2.0 gdk-x11-2.0 gtk+-x11-2.0"
+
+. ../settings
+
+unset CFLAGS
+export LDFLAGS="${LDFLAGS} -lstdc++ -L${KANAPI_BASE}/bzip2-${bzip2_ver}/lib"
+#export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/bzip2-${bzip2_ver}/include"
+export AUTOCONF=${KANAPI_BASE}/autoconf-2.13/bin/autoconf
+export SHELL=/bin/bash
+export MAKE_JOBS=1
+#export EXTRA_LIBS="-lm -lpthread -ldl -lrt -lstdc++ -lresolv"
+
+pkg_download() {
+	PACKAGE_PATH=${PACKAGE_VER}.source.${EXT}
+	pkg_curl
+}
+
+pkg_configure() {
+	if [ ! -d /usr/local/include ]
+	then 
+		mkdir -p /usr/local/include
+		for dir in `${PKG_CONFIG} --cflags ${LIB_DEPENDS} | sed "s/-I//g" | sed "s/-pthread//g"`
+		do
+			cp -arv ${dir}/* /usr/local/include
+		done
+	fi
+	for dir in `${PKG_CONFIG} --libs ${LIB_DEPENDS} | sed "s/-L//g" | sed "s/ -l.*//"`
+	do
+		cp -arv ${dir}/lib* /lib
+	done
+
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+	--prefix=$PREFIX --enable-application=browser \
+	--disable-pulseaudio --enable-alsa --enable-safe-browsing \
+	--with-distribution-id=KaNaPi \
+	--enable-default-toolkit=cairo-gtk2-x11 \
+	--with-x --disable-startupcache \
+	--without-system-icu --without-system-bz2 \
+	--with-system-zlib=`${PKG_CONFIG} --variable=prefix zlib` \
+	--disable-system-cairo --disable-gconf
+
+	#--enable-debug
+
+	#--disable-necko-wifi 
+	#--enable-alsa --enable-install-strip --enable-safe-browsing \
+	#--disable-updater --disable-profiling --disable-crashreporter \
+	#--disable-elf-hack --disable-dbus --disable-gnomeui \
+	#--disable-tests
+	#--with-system-icu \
+	#--with-system-bz2=${KANAPI_BASE}/bzip2-${bzip2_ver} \
+	#--enable-system-cairo \
+
+#	--with-system-jpeg 
+#	--with-system-jpeg=${KANAPI_BASE}/jpegsrc-${jpegsrc_ver} \
+#--with-system-libevent
+#--enable-release
+#--enable-gold
+#--enable-pie
+#--enable-rust
+#--with-system-nspr
+#--with-system-nss
+#--with-system-libvpx
+#--enable-system-hunspell
+#--enable-system-sqlite
+#--enable-system-ffi
+#--enable-system-pixman
+#--enable-startup-notification
+}
+
+pkg_build() {
+	${MAKE}
+}
+
+pkg_install() {
+	pkg_install_make && pkg_install_bin_all
+}
+
+pkg_check() {
+	echo "LDFLAGS=${LDFLAGS}"
+	echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
+	for dir in `${PKG_CONFIG} --cflags ${LIB_DEPENDS} | sed "s/-I//g" | sed "s/-pthread//g"`
+	do
+		if [ -d $dir ] 
+		then 
+			echo "$dir ok"
+		else
+			echo "$dir is not a directory"
+			exit 2
+		fi
+	done
+	for dir in `${PKG_CONFIG} --libs ${LIB_DEPENDS} | sed "s/-L//g" | sed "s/ -l.*//"`
+	do
+		if [ -d $dir ] 
+		then 
+			echo "$dir ok"
+		else
+			echo "$dir is not a directory"
+			exit 2
+		fi
+	done
+}
+

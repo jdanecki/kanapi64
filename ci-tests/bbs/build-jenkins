@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if [ -d kanapi ]; then rm -rf kanapi; fi
-git clone ../../../kanapi kanapi
-docker rmi -f kanapi-bbs:ci
-docker build -f Dockerfile-jenkins -t kanapi-bbs:ci --no-cache .
-rm -rf kanapi
-

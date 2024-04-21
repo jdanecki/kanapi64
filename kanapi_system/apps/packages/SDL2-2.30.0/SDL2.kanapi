@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=SDL2
+VER=2.30.0
+URL="https://www.libsdl.org/release"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS="x11 gl xext alsa xrandr ice x11-xcb xcursor libunwind SDL2_ttf"
+
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lstdc++"
+export CPP="gcc -E ${CFLAGS}"
+export CFLAGS="${CFLAGS}  -std=gnu11"
+export LIBS="`${PKG_CONFIG} --libs libunwind` -lunwind-x86_64 ${LDFLAGS}"
+
+which sdl2-config
+if [ "$?" = "0" ]
+then
+	BUILD_TESTS=1
+else
+	BUILD_TESTS=0
+fi
+
+BUILD_TESTS=0
+
+pkg_prepare() {
+	pkg_tar_gz
+}
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --disable-video-opengles
+	if [ "${BUILD_TESTS}" = "1" ]
+	then
+		mkdir tests; cd tests
+		${PACKAGE_SRCDIR}/test/configure --prefix=$PREFIX 
+		sed -i -e '/testgles\$(EXE) /,+1d' Makefile
+	fi
+}
+
+pkg_build() {
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+	if [ "${BUILD_TESTS}" = "1" ]
+	then
+		cd tests; ${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+	fi
+}
+
+pkg_install_tests() {
+	cd tests
+	cp test* ${PREFIX}/bin
+	cp *.bmp ${PREFIX}/bin
+	cp *.wav ${PREFIX}/bin
+	cp loop* ${PREFIX}/bin
+}
+
+pkg_install() {
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+	if [ "${BUILD_TESTS}" = "1" ]
+	then
+		pkg_install_tests
+	fi
+}
+
+pkg_check() {
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+}
+

@@ -1,6 +1,23 @@
 Beta - current phase
 ====================
 
+v0.11 - wip
+====
+
+- Simplify building dependencies
+- Update supported packages
+
+v0.10 - on hold
+=====
+
+* Removed cross-compilation. Build only on x86_64 architecture
+* Tests with CI systems: Travis, Shippable, CircleCI, Codeship, Gitlab, Semaphore
+* Kernel 4.16.12
+* Integration with docker hub
+* Builds in docker containers
+* Tests with different gcc versions
+* Updated certificates
+
 v0.9
 ====
 

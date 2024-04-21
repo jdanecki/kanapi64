@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=p11-kit
+VER=0.24.1
+URL="https://github.com/p11-glue/p11-kit/releases/download/${VER}"
+EXT=tar.xz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#echo "PKG_CONFIG=${PKG_CONFIG}"
+#echo "KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
+	--with-trust-paths=/etc/ca-certificates/trust-source
+}
+
+install_certificates() {
+	mkdir -p ${PREFIX}/etc/ca-certificates/trust-source/{anchors,blacklist}
+	mkdir -p ${PREFIX}/etc/{ssl/certs/java,ca-certificates/extracted}
+	${LN_SF} ${PREFIX}/etc/ca-certificates/extracted/tls-ca-bundle.pem ${PREFIX}/etc/ssl/cert.pem
+	${LN_SF} ${PREFIX}/etc/ca-certificates/extracted/tls-ca-bundle.pem ${PREFIX}/etc/ssl/certs/ca-certificates.crt
+	${LN_SF} ${KANAPI_BASE}/cacert-${cacert_ver}/class3.crt ${PREFIX}/etc/ca-certificates/trust-source/anchors
+	${LN_SF} ${KANAPI_BASE}/cacert-${cacert_ver}/root.crt ${PREFIX}/etc/ca-certificates/trust-source/anchors
+	cp ca-bundle.trust.p11-kit ${PREFIX}/etc/ca-certificates/trust-source
+	if [ ! -L /etc/ca-certificates ]
+	then 
+		${LN_SF} ${PREFIX}/etc/ca-certificates /etc/ca-certificates
+	fi
+	if [ ! -L /etc/ssl ]
+	then 
+		${LN_SF} ${PREFIX}/etc/ssl /etc/ssl
+	fi
+# based on https://src.fedoraproject.org/rpms/ca-certificates	
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+	DEST=/etc/ca-certificates/extracted
+	export P11_KIT_NO_USER_CONFIG=1
+	trust extract --overwrite --format=pem-directory-hash   --filter=ca-anchors --purpose=server-auth  $DEST/cadir
+	trust extract --overwrite --comment --format=pem-bundle --filter=ca-anchors --purpose=server-auth  $DEST/tls-ca-bundle.pem
+	trust extract --overwrite --comment --format=pem-bundle --filter=ca-anchors --purpose=email        $DEST/email-ca-bundle.pem
+	trust extract --overwrite --comment --format=pem-bundle --filter=ca-anchors --purpose=code-signing $DEST/objsign-ca-bundle.pem
+	trust extract --overwrite --comment --format=openssl-bundle --filter=certificates $DEST/ca-bundle.trust.crt
+	for f in $DEST/cadir/*; do
+	  ln -fsr -t /etc/ssl/certs "$f"
+	done
+	find -L /etc/ssl/certs -maxdepth 1 -type l -delete
+	trust extract --overwrite --format=java-cacerts --filter=ca-anchors --purpose=server-auth /etc/ssl/certs/java/cacerts
+}
+
+prepare_certificates() {
+	export NSS_VERSION=3.79
+	rm -rf nss; mkdir -p nss
+	echo curl -o nss/nss-${NSS_VERSION}.tar.gz https://ftp.mozilla.org/pub/security/nss/releases/NSS_${NSS_VERSION//./_}_RTM/src/nss-${NSS_VERSION}.tar.gz
+	curl -o nss/nss-${NSS_VERSION}.tar.gz https://ftp.mozilla.org/pub/security/nss/releases/NSS_${NSS_VERSION//./_}_RTM/src/nss-${NSS_VERSION}.tar.gz
+	pushd nss; tar -xzf nss-${NSS_VERSION}.tar.gz ; popd
+	rm -rf certs; mkdir certs
+	${LN_SF} `pwd`/nss/nss-${NSS_VERSION}/nss/lib/ckfw/builtins/certdata.txt certs
+	${LN_SF} `pwd`/nss/nss-${NSS_VERSION}/nss/lib/ckfw/builtins/nssckbi.h certs
+	pushd certs; python ../../../packages/p11-kit-${VER}/certdata2pem.py ; popd
+	bash ../../packages/p11-kit-${VER}/bundle.sh
+}
+
+pkg_install() {
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs && prepare_certificates && install_certificates
+}
+

@@ -33,7 +33,7 @@ pkg_prepare() {
 }
 
 pkg_configure() {
-	${KANAPI_BUILD_SRC}/gcc-${gcc_ver}/libstdc++-v3/configure  --disable-multilib --host=${KANAPI_TARGET_NAME} \
+	${KANAPI_BUILD_SRC}/gcc-${gcc_ver}/libstdc++-v3/configure  --disable-multilib  \
 	--prefix=${KANAPI_BASE}/gcc-${gcc_ver}  --disable-shared --enable-static --disable-nls  
 	#--with-gxx-include-dir= 
 }
@@ -56,5 +56,5 @@ pkg_install() {
 
 pkg_test() {
 	echo "tests for ${PACKAGE_NAME}"
-	${MAKE} -C ../../tests test_libstdcpp KANAPI_TARGET_NAME=${KANAPI_TARGET_NAME} KANAPI_BASE=${KANAPI_BASE}
+	${MAKE} -C ../../tests test_libstdcpp KANAPI_BASE=${KANAPI_BASE}
 }

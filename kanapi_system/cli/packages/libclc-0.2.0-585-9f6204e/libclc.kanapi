@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2019 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=libclc
+VER=9f6204e
+URL="https://llvm.org/git"
+EXT=
+#build depends on
+#LIB_DEPENDS=""
+. ../settings
+MAKE_JOBS=1
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+	pkg_git_clone
+}
+
+pkg_prepare() {
+	local_clone
+}
+
+pkg_configure() {
+    cd build
+    ./configure.py --prefix=${PREFIX} \
+        --with-cxx-compiler="clang++ -I${KANAPI_BASE}/gcc-${gcc_ver}/include/c++/${gcc_ver} -I${KANAPI_BASE}/gcc-${gcc_ver}/include/c++/${gcc_ver}/x86_64-pc-linux-gnu -I${KANAPI_BASE}/gcc-${gcc_ver}/x86_64-pc-linux-gnu/include -B${KANAPI_BASE}/gcc-${gcc_ver}/x86_64-pc-linux-gnu/lib -B${KANAPI_BASE}/gcc-${gcc_ver}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver} -L${KANAPI_BASE}/gcc-${gcc_ver}/lib64 -L${KANAPI_BASE}/gcc-${gcc_ver}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver} "
+}
+
+pkg_build() {
+    #pkg_build_local
+	cd build
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true VERBOSE=1 V=1
+}
+
+pkg_install() {
+	pkg_install_local && pkg_install_pc_share_all_only && pkg_update_include
+}
+

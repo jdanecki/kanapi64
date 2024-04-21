@@ -1,0 +1,90 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2019 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gcc
+VER=9.2.0
+#URL="ftp://ftp.gnu.org/pub/gnu/gcc/gcc-${VER}"
+URL="http://ftp.gnu.org/pub/gnu/gcc/gcc-${VER}"
+EXT=tar.xz
+#build depends on
+. ../settings
+
+pkg_prepare() {
+	pkg_tar_xz
+	mkdir -p ${PREFIX}/x86_64-pc-linux-gnu/lib
+	mkdir -p ${PREFIX}/x86_64-pc-linux-gnu/include
+	mkdir -p ${PREFIX}/x86_64-pc-linux-gnu/sys-include
+	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/lib/*     ${PREFIX}/x86_64-pc-linux-gnu/lib
+	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/include/* ${PREFIX}/x86_64-pc-linux-gnu/include
+	${LN_SF} ${KANAPI_BASE}/glibc-${glibc_ver}/include/* ${PREFIX}/x86_64-pc-linux-gnu/sys-include
+}
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --disable-bootstrap --disable-multilib \
+	--disable-libada  --enable-languages="c c++" \
+	--with-mpc=${KANAPI_BASE}/mpc-${mpc_ver} --with-mpfr=${KANAPI_BASE}/mpfr-${mpfr_ver} --with-gmp=${KANAPI_BASE}/gmp-${gmp_ver} \
+	--prefix=${PREFIX} --disable-nls --enable-decimal-float \
+	--disable-libmudflap --disable-libquadmath --disable-target-libiberty \
+	--disable-target-zlib --without-ppl --disable-cloog --without-cloog --disable-libssp \
+	--with-native-system-header-dir=${KANAPI_BASE}/glibc-${glibc_ver}/include \
+	--disable-static --enable-__cxa_atexit --enable-threads=posix --enable-libstdcxx-time
+}
+
+pkg_build() {
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true 
+}
+
+pkg_install() {
+	${MAKE} -j ${MAKE_JOBS}  MAKEINFO=true install
+
+	${LN_SF} ${KANAPI_BASE}/binutils-${binutils_ver}/bin/as ${PREFIX}/libexec/gcc/x86_64-pc-linux-gnu/${gcc_ver}/as
+	${LN_SF} ${KANAPI_BASE}/binutils-${binutils_ver}/bin/ld ${PREFIX}/libexec/gcc/x86_64-pc-linux-gnu/${gcc_ver}/ld
+
+	${LN_SF} ${PREFIX}/bin/gcc ${PREFIX}/bin/cc
+
+	LINKER_NAME=ld-linux-x86-64.so.2
+	echo "updating spec to ${LINKER_NAME} in ${PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}/specs"
+	${PREFIX}/bin/gcc -dumpspecs | sed "s@/lib64/ld-linux-x86-64.so.2@${LIBC_PREFIX}/lib/ld-linux-x86-64.so.2@g" \
+		> ${PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}/specs
+	
+	pkg_install_bin_all
+
+	echo "${PREFIX}/lib64" >> ${LIBC_PREFIX}/etc/ld.so.conf
+	if [ "`id -u`" = "0" ]
+	then
+		export LD_LIBRARY_PATH=
+		ldconfig
+	fi
+	for i in ${PREFIX}/bin/*
+	do
+		patchelf --set-interpreter ${LIBC_PREFIX}/lib/ld-linux-x86-64.so.2 $i
+	done
+
+	for i in cc1 cc1plus collect2 lto-wrapper lto1
+	do
+		patchelf --set-interpreter ${LIBC_PREFIX}/lib/ld-linux-x86-64.so.2 ${PREFIX}/libexec/gcc/x86_64-pc-linux-gnu/${VER}/$i
+	done
+}
+
+pkg_check() {
+	echo "HOST=`uname -m`"
+	echo "PATH=$PATH"
+	gcc --version
+	echo "CPP=${CPP}"
+}

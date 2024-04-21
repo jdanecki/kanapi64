@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=st
+VER=0.7
+URL="http://git.suckless.org/st/snapshot"
+EXT=tar.bz2
+#build depends on
+
+LIB_DEPENDS="x11 fontconfig freetype2 xft xproto xcb xau libpng zlib expat xrender"
+. ../settings
+
+export LDFLAGS="${LDFLAGS} -lm -lpthread -lutil"
+
+pkg_configure() {
+	local_copy
+}
+
+pkg_build() {
+	cd build
+	${MAKE} config.h
+	gcc ${CFLAGS} ${LDFLAGS} -o st -DVERSION=\"${VER}\" -D_XOPEN_SOURCE=600 -std=c99 st.c
+}
+
+pkg_install() {
+	cd build
+        mkdir -p ${PREFIX}/bin
+        cp -v st ${PREFIX}/bin
+	pkg_install_bin_all
+	${KANAPI_BASE}/ncurses5-${ncurses5_ver}/bin/tic -sx st.info
+}
+
+pkg_check() {
+	echo "${CFLAGS}"
+}
+

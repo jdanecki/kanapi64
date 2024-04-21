@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=curl
+VER=7.83.1
+URL="https://curl.haxx.se/download"
+EXT=tar.bz2
+#build depends on
+
+LIB_DEPENDS="libssh2 zlib openssl"
+
+. ../settings
+USE_WGET=1
+
+if [ -n "${PKG_CONFIG}" ]
+then
+	export LDFLAGS="`${PKG_CONFIG} --libs-only-L ${LIB_DEPENDS}` -L`${LIBGCRYPT_CONFIG} --prefix`/lib \
+		-L`${GPG_ERROR_CONFIG} --prefix`/lib"
+	export LIBS="`${PKG_CONFIG} --libs-only-l ${LIB_DEPENDS}` -lgpg-error -ldl"
+fi
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		pkg_tar_bz2
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+}
+
+pkg_configure() {
+	if [ ! -d ${PREFIX}/etc ] ; then mkdir -p ${PREFIX}/etc ; fi
+	which perl > /dev/null
+	if [ "$?" = "0" ] 
+	then 
+		perl ${PACKAGE_SRCDIR}/scripts/mk-ca-bundle.pl -i 
+		cp ca-bundle.crt ${PREFIX}/etc
+	else
+		cp -v ../../packages/${PACKAGE_NAME}-${curl_ver}/ca-bundle.crt ${PREFIX}/etc
+	fi
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-ca-bundle=${PREFIX}/etc/ca-bundle.crt --with-openssl
+}
+
+pkg_install() {
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+}
+
+pkg_check() {
+	echo "LDFLAGS=${LDFLAGS}"
+	echo "LIBS=${LIBS}"
+	echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
+	echo $PATH
+	${LIBGCRYPT_CONFIG} --cflags
+	${GPG_ERROR_CONFIG} --prefix
+}

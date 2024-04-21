@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=containerd
+VER=1.6.6
+URL="https://github.com/containerd/containerd/archive"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+	PACKAGE_PATH=v${VER}.${EXT}
+	pkg_curl	
+}
+
+pkg_configure() {
+	go_local_copy
+}
+
+pkg_build() {
+	export GOPATH=`pwd`
+	export BUILDTAGS="no_btrfs no_cri"
+	export DOCKER_BUILDTAGS=no_btrfs
+
+	make -C src/github.com/${PACKAGE_NAME}/${PACKAGE_NAME} COMMANDS="containerd containerd-shim"
+}
+
+pkg_install() {
+	mkdir -p ${PREFIX}/bin
+	cp -a src/github.com/containerd/containerd/bin/containerd ${PREFIX}/bin/docker-containerd
+	cp -a src/github.com/containerd/containerd/bin/containerd-shim ${PREFIX}/bin/docker-containerd-shim
+	pkg_install_bin_all
+}
+
+pkg_repo() {
+    URL="https://github.com/containerd/containerd/releases"
+    DONT_TAIL=1
+    pkg_repo_url ${URL}
+}
+    

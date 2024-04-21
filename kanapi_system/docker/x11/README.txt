@@ -10,7 +10,6 @@ How to use CLI docker to build X11 image manually
 ./create_docker
 ./run_docker
 2. In running container:
-/kanapi_build/kanapi/kanapi_system/docker/configure
-cd /kanapi_build/kanapi/kanapi_system/kanapi-x11
+cd /kanapi_build/kanapi/kanapi_system/x11/build
 ./install x11 verbose
 

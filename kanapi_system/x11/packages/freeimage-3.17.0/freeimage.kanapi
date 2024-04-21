@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=freeimage
+VER=3.17.0
+URL="https://kent.dl.sourceforge.net/project/${PACKAGE_NAME}/Source%20Distribution/${VER}"
+EXT=zip
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+export CC="clang"
+export CXX="clang++"
+export GCC_PREFIX=${KANAPI_BASE}/gcc-${gcc_ver}
+export LDFLAGS="${LDFLAGS} -L${LIBC_PREFIX}/lib -L${GCC_PREFIX}/lib64 -L${GCC_PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}"
+export C_INCLUDE_PATH=${LIBC_PREFIX}/include
+export COMPILER_PATH="${GCC_PREFIX}/x86_64-pc-linux-gnu/lib:${GCC_PREFIX}/lib/gcc/x86_64-pc-linux-gnu/${gcc_ver}"
+export CPLUS_INCLUDE_PATH="${GCC_PREFIX}/include/c++/${gcc_ver}:${GCC_PREFIX}/include/c++/${gcc_ver}/x86_64-pc-linux-gnu:${LIBC_PREFIX}/include"
+  
+pkg_download() {
+	PACKAGE_FILENAME=${PACKAGE_NAME}-${VER}.${EXT}
+	PACKAGE_PATH=FreeImage3170.zip
+	pkg_curl
+}
+
+pkg_configure() {
+	PACKAGE_SRCDIR=${KANAPI_BUILD_SRC}/FreeImage
+	local_copy
+}
+
+pkg_build() {
+	pkg_build_local
+}
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true DESTDIR=${PREFIX} && pkg_install_libs
+}
+

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -e
+. version
+
+USE_LOCAL=1
+DIR=`pwd`
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
+
+if [ ! -d ${HOME}/src ] ; then mkdir ${HOME}/src ; fi
+if [ ! -d kanapi ] 
+then 
+	if [ "${USE_LOCAL}" = "1" ] 
+	then
+		git clone ${REPO_BASE} kanapi
+	else
+		git clone https://github.com/jdanecki/kanapi64.git kanapi
+	fi
+else
+	pushd kanapi
+	git pull
+	popd
+fi
+
+if [ "${CI}" = "true" ]
+then
+	docker run -i -t --name kanapi-${NAME}-${VER} -v ${DIR}/kanapi:/kanapi_build/kanapi \
+		-v `pwd`/build:/build -e CI="true" \
+		-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
+else
+	docker run -i -t --name kanapi-${NAME}-${VER} -v ${DIR}/kanapi:/kanapi_build/kanapi \
+	   --cap-add=ALL \
+		-v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
+		-v `pwd`/build:/build \
+		-e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /build
+	ID=`docker ps -a --filter "name=kanapi-${NAME}-${VER}" -q`
+	docker commit -a "Jacek Danecki <jacek.m.danecki@gmail.com>" -m "kanapi-${NAME} ${VER}" ${ID} kanapi/kanapi-${NAME}:${VER}
+	docker rm ${ID}
+fi
+
+

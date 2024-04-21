@@ -1,0 +1,1 @@
+../../tests/test_gcc1.c

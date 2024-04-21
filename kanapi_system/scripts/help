@@ -17,7 +17,8 @@ else
 		;;
         xci) make $1 ACTION=`basename $0` VERBOSE=3
 		;;
-	*) make -s $1 ACTION=`basename $0` VERBOSE=0
+	*) make $1 ACTION=`basename $0` VERBOSE=1
+#	*) make -s $1 ACTION=`basename $0` VERBOSE=0
 		;;
 	esac
 fi

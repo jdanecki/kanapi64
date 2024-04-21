@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=glib
+VER=2.73
+URL="http://ftp.gnome.org/pub/gnome/sources/glib/2.73"
+EXT=tar.xz
+
+. ../settings
+
+export CFLAGS="-I${KANAPI_BASE}/libffi-${libffi_ver}/lib/libffi-${libffi_ver}/include -I${KANAPI_BASE}/zlib-${zlib_ver}/include"
+export LIBFFI_CFLAGS="-I${KANAPI_BASE}/libffi-${libffi_ver}/lib/libffi-${libffi_ver}/include"
+export LIBS="-L${KANAPI_BASE}/libffi-${libffi_ver}/lib -lffi -L${KANAPI_BASE}/zlib-${zlib_ver}/lib "
+export LIBFFI_LIBS="-L${KANAPI_BASE}/libffi-${libffi_ver}/lib -lffi "
+
+pkg_download() {
+    PACKAGE_PATH=${PACKAGE_VER}.0.${EXT}
+	pkg_curl	
+}
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX glib_cv_stack_grows=yes glib_cv_uscore=no --disable-libmount \
+		--with-pcre=internal --disable-libelf
+}
+
+pkg_install() {
+	pkg_install_make && pkg_install_libs && pkg_install_bin_all
+}
+
+pkg_check() {
+	echo "KANAPI_BASE=${KANAPI_BASE}"
+}

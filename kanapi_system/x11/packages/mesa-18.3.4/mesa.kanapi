@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2019 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=mesa
+VER=18.3.4
+URL="ftp://ftp.freedesktop.org/pub/mesa"
+EXT=tar.xz
+#build depends on
+LIB_DEPENDS="xshmfence expat libudev zlib"
+. ../settings
+
+#export LLVM_CONFIG=${KANAPI_BASE}/llvm-${llvm_ver}/bin/llvm-config
+export LDFLAGS="-lpthread"
+#export CFLAGS="-I`${LLVM_CONFIG} --includedir`"
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+	 --with-dri-drivers="i915,i965,swrast" \
+	--with-platforms=x11,drm --disable-egl --enable-glx --enable-libunwind \
+	--enable-dri --enable-llvm --enable-shared-glapi --disable-va --enable-glx-tls \
+	--with-gallium-drivers="i915,swrast" \
+	--enable-gles1 --disable-gles2 --enable-opencl --enable-opencl-icd
+
+#	--without-gallium-drivers
+#--with-vulkan-drivers=intel 
+#--enable-gles1 --enable-gles2 
+#--with-platforms=wayland
+#	 --with-gallium-drivers="i915,i965,svga,swrast" 
+# 	--disable-llvm-shared-libs
+}
+
+pkg_install() {
+	pkg_install_pc_all
+	pkg_install_libs
+}

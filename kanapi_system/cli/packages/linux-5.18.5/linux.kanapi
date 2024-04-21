@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=linux
+VER=5.18.5
+URL="https://cdn.kernel.org/pub/linux/kernel/v5.x"
+EXT=tar.xz
+#build depends on
+
+. ../settings
+
+MAKE_JOBS=1
+
+pkg_prepare() {
+	pkg_tar_xz
+}
+
+configure_menu() {
+    export NCURSES_HDR="-I${KANAPI_BASE}/ncurses-${ncurses_ver}/include"
+    export NCURSES_LIB="-L${KANAPI_BASE}/ncurses-${ncurses_ver}/lib"
+	${MAKE} V=1 -C ${PACKAGE_SRCDIR} O=`pwd` \
+    HOST_EXTRACFLAGS='${NCURSES_HDR}/ncurses ${NCURSES_HDR} -DCURSES_LOC="<ncurses.h>"' \
+    HOST_LOADLIBES='${NCURSES_LIB} -lncurses -ldl -lrt -lm -lpthread' menuconfig
+}
+
+pkg_configure() {
+#	cp -v ../../packages/${PACKAGE_VER}/config-x86_64 .config
+	configure_menu
+#	${MAKE}  V=1 -C ${PACKAGE_SRCDIR} O=`pwd` olddefconfig
+#	${MAKE}  V=1 -C ${PACKAGE_SRCDIR} O=`pwd` versatile_defconfig
+}
+
+pkg_build() {
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  headers
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  modules_prepare
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  help
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j 1  V=1 HOST_LOADLIBES="-ldl" all  
+	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  all
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  versatile-pb.dtb
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  bzImage
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  modules
+}
+
+pkg_perf() {
+	${MAKE} -C ${PACKAGE_SRCDIR}/tools O=`pwd` V=1 -j ${MAKE_JOBS} perf
+}
+
+pkg_install() {
+	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  INSTALL_MOD_PATH=${PREFIX} modules_install
+#	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  INSTALL_FW_PATH=${PREFIX}/firmware firmware_install
+	${MAKE} -C ${PACKAGE_SRCDIR} O=`pwd` -j ${MAKE_JOBS}  INSTALL_HDR_PATH=${PREFIX} headers_install
+	cp arch/x86_64/boot/bzImage ${PREFIX}
+}
+
+pkg_check() {
+	ls -l `which depmod`
+	ls -l `which sort`
+	ls -l `which grep`
+	which gcc
+	gcc --version
+}

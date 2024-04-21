@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=xf86-video-tseng
+VER=d034569
+URL="git://anongit.freedesktop.org/xorg/driver"
+EXT=
+
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+	pkg_git_clone
+}
+
+pkg_prepare() {
+	echo "nothing to do"
+}
+
+pkg_configure() {
+	if [ "${KANAPI_TARGET}" != "arm" ]
+	then
+		local_clone
+		KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
+		 -I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
+		 -I ${KANAPI_BASE}/util-macros-${util_macros_ver}/share/aclocal \
+		 -I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal \
+		 -I ${KANAPI_BASE}/xorg-server-${xorg_server_ver}/share/aclocal"
+		autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
+		
+		./configure --prefix=$PREFIX 
+	fi
+}
+
+pkg_build() {
+	if [ "${KANAPI_TARGET}" != "arm" ]
+	then
+		cd build
+		${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+	fi
+}
+
+pkg_install() {
+	if [ "${KANAPI_TARGET}" != "arm" ]
+	then
+		cd build
+		pkg_install_make
+		ln -svf ${PREFIX}/lib/xorg/modules/drivers/* ${KANAPI_BASE}/xorg-server-${xorg_server_ver}/lib/xorg/modules/drivers
+	fi
+}
+
+
