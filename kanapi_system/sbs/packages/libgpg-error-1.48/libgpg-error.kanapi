@@ -39,4 +39,5 @@ pkg_install() {
 	cd build
 	pkg_install_pc && pkg_install_libs && pkg_install_bin_all
 	ln -svf ${PREFIX}/bin/gpgrt-config ${PREFIX}/bin/gpg-error-config
+    # create /usr/lib/pkgconfig and link *.pc files from pkg-config 
 }

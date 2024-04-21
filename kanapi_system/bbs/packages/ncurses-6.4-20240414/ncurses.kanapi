@@ -18,19 +18,24 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=@NAME@
-VER=@VER@
-URL="https://"
-EXT=tar.bz2
+PACKAGE_NAME=ncurses
+VER=6.4-20240414
+URL="http://invisible-mirror.net/archives/ncurses/current"
+EXT=tgz
 #build depends on
-#LIB_DEPENDS=""
-
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
-#export CFLAGS="${CFLAGS} "
+pkg_configure() {
+	export CFLAGS="${CFLAGS} -fPIC"
+	export LDFLAGS="${LDFLAGS} -fPIC"
+	if [ ! -d ${PKG_CONFIG} ] ; then  mkdir -p ${PREFIX}/lib/pkgconfig ; fi
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-pc-files=yes --with-pkg-config-libdir=${PREFIX}/lib/pkgconfig \
+  	--with-shared --enable-termcap --with-termpath=${PREFIX}/etc/termcap --without-{debug,ada,tests}
+}
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
+	${MAKE} -j 1 install && pkg_install_bin_all && pkg_install_pc_all_only && pkg_install_libs && \
+	rm -rf ${PREFIX}/share/man
 }
+
 
