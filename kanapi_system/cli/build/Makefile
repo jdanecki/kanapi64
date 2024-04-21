@@ -2,7 +2,7 @@
 #BBS is required to compile below targets
 
 REPO_BASE=$(shell git rev-parse --show-toplevel)
-SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
+SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
@@ -60,7 +60,7 @@ xz:
 
 t_system: mc kmod procps-ng pciutils screen sdparm strace \
 	 network pci_ids usbutils7 eudev usbutils libev libevdev cacert cpio hdparm \
-	 p11-kit iptables dmidecode
+	 p11-kit iptables dmidecode tmux
 
 mc: 
 	@$(RUN_TARGET)
@@ -485,3 +485,7 @@ lzip:
 
 ed:
 	@$(RUN_TARGET)
+
+tmux: libevent
+	@$(RUN_TARGET)
+

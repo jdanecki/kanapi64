@@ -34,6 +34,7 @@ export CXXFLAG="${CFLAGS}"
 #export MAKE_JOBS=1
 
 pkg_configure() {
+#	export CC="gcc"
 	${PACKAGE_SRCDIR}/bootstrap --prefix=$PREFIX --parallel=${MAKE_JOBS} -- \
 	-DCURSES_INCLUDE_PATH=`ncurses6-config --prefix`/include \
 	-DCURSES_LIBRARY=`ncurses6-config --libdir`/libncurses.a  -DCURSES_EXTRA_LIBRARY=""

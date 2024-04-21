@@ -17,6 +17,7 @@ then
 else
 	KANAPI_ROOT="/kanapi_${KANAPI_VER}"
 fi
+
 KANAPI_BASE=${KANAPI_ROOT}/packages
 KANAPI_HOME=${KANAPI_ROOT}/home
 KANAPI_BIN=${KANAPI_ROOT}/bin

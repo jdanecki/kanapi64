@@ -31,7 +31,7 @@ export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/readline-${readline_ver}/include \
 	-I${KANAPI_BASE}/bzip2-${bzip2_ver}/include"
 export LDFLAGS="-L${KANAPI_BASE}/readline-${readline_ver}/lib \
 	-L${KANAPI_BASE}/bzip2-${bzip2_ver}/lib -lbz2 -lreadline -lpthread ${LDFLAGS} -lcrypt"
-#export LIBS="${LDFLAGS}"
+export LIBS="${LDFLAGS}"
 export CPPFLAGS="${CFLAGS}"
 
 
@@ -41,7 +41,7 @@ pkg_configure() {
 }
 
 pkg_check() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --help
+#	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --help
     echo "LIBS=${LIBS}"
 }
 
