@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=perl
+VER=5.39.9
+REPO_URL="http://www.cpan.org/src"
+URL="${REPO_URL}/5.0"
+EXT=tar.gz
+#build depends on
+. ../settings
+
+pkg_configure() {
+	local_copy
+	cat ../../../packages/${PACKAGE_NAME}-${VER}/perl_config.sh | sed "s-@KANAPI_ROOT@-${KANAPI_ROOT}-g" > config.sh
+	./Configure -de -Dprefix=${PREFIX} -Dcf_email="jacek.m.danecki@gmail.com" -Dlocincpth="${LIBC_PREFIX}/include ${KANAPI_BASE}/zlib-${zlib_ver}/include" \
+		-Dloclibpth="${LIBC_PREFIX}/lib ${KANAPI_BASE}/zlib-${zlib_ver}/lib" -Dlibswanted="pthread rt m dl nsl crypt util c z" -Dusethreads \
+		-Dcc=gcc -Duseshrplib
+}
+
+pkg_build() {
+	cd build
+	MAKE_JOBS=1
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+pkg_install() {
+	cd build
+	MAKE_JOBS=1
+	pkg_install_make && pkg_install_bin_all
+	if [ "$?" != "0" ] ; then exit 1; fi
+	if [ -d ${PREFIX}/man ] ; then rm -rf ${PREFIX}/man ; fi
+}
+
+pkg_check() {
+	which ar
+}
+
+pkg_repo() {
+    DONT_TAIL=1
+    pkg_repo_url ${REPO_URL}
+}

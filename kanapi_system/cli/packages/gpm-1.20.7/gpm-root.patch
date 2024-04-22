@@ -1,0 +1,11 @@
+--- gpm-1.20.7/src/prog/gpm-root.y
++++ build/src/prog/gpm-root.y
+@@ -1197,7 +1197,7 @@
+    /* reap your zombies */
+    childaction.sa_handler=reap_children;
+ #if defined(__GLIBC__)
+-   __sigemptyset(&childaction.sa_mask);
++   sigemptyset(&childaction.sa_mask);
+ #else /* __GLIBC__ */
+    childaction.sa_mask=0;
+ #endif /* __GLIBC__ */

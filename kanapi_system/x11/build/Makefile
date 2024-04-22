@@ -2,7 +2,7 @@
 # CLI image is required to compile these packages
 
 REPO_BASE=$(shell git rev-parse --show-toplevel)
-SCRIPTS_DIR=$(REPO_BASE)/kanapi_system/scripts
+SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 

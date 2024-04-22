@@ -489,3 +489,8 @@ ed:
 tmux: libevent
 	@$(RUN_TARGET)
 
+links: 
+	@$(RUN_TARGET)
+
+svgalib:
+	@$(RUN_TARGET)
