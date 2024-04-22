@@ -1,0 +1,10 @@
+--- gpm-1.20.7/src/daemon/open_console.c
++++ build/src/daemon/open_console.c
+@@ -22,6 +22,7 @@
+ #include <fcntl.h>                  /* open and co.      */
+ #include <sys/stat.h>               /* stat()            */
+ #include <sys/ioctl.h>              /* ioctl             */
++#include <sys/sysmacros.h>
+ 
+ /* Linux specific (to be outsourced in gpm2 */
+ #include <linux/serial.h>           /* for serial console check */

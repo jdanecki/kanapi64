@@ -546,6 +546,10 @@ pkg_install_make_bin_all() {
 	pkg_install_make && pkg_install_bin_all
 }
 
+pkg_install_local_make_bin_all() {
+	pkg_install_local && pkg_install_bin_all
+}
+
 pkg_install_make_sbin_all() {
 	pkg_install_make && pkg_install_sbin_all
 }

@@ -14,6 +14,7 @@ test_gcc: test_gcc0.c test_gcc1.c test_gcc3.c test_libstdcpp.cpp test_threads.cp
 	. ./set_variables; g++ test_chrono.cpp -Wall -std=c++11 -o $(RESULTS)/test_chrono ; $(RESULTS)/test_chrono
 	. ./set_variables; gcc test_lm.c -Wall -lm -o $(RESULTS)/test_lm ; $(RESULTS)/test_lm
 	. ./set_variables; gcc test_backtrace.c -Wall -o $(RESULTS)/test_backtrace ; $(RESULTS)/test_backtrace
+	. ./set_variables; gcc test_headers.c -Wall -o $(RESULTS)/test_headers ; $(RESULTS)/test_headers
 	. ./set_variables; gcc test_long.c -Wall -o $(RESULTS)/test_long ; $(RESULTS)/test_long
 	. ./set_variables; g++ test_shared_future.cpp -Wall -std=c++11 -o $(RESULTS)/test_shared_future ; ldd $(RESULTS)/test_shared_future
 
@@ -28,4 +29,11 @@ test_mpc:
 
 test_mpfr:
 	./test_lib mpfr
+
+check:
+	. ./set_variables ; echo "PATH=${PATH}"; echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
+
+headers:
+#	. ./set_variables; gcc -E test_headers.c -Wall -o $(RESULTS)/test_headers.i ; cat $(RESULTS)/test_headers.i
+	. ./set_variables; gcc test_headers.c -Wall -o $(RESULTS)/test_headers ; $(RESULTS)/test_headers
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2022 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,19 +17,35 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=nettle
-VER=3.8
-URL="http://www.lysator.liu.se/~nisse/archive"
-EXT=tar.gz
+PACKAGE_NAME=gnutls
+VER=3.8.5
+URL="https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8"
+EXT=tar.xz
 #build depends on
-LIB_DEPENDS="openssl"
-DONT_TAIL=1
+LIB_DEPENDS="nettle hogweed"
+
 . ../settings
 
-export CFLAGS="-I${KANAPI_BASE}/gmp-${gmp_ver}/include"
-export LDFLAGS="-L${KANAPI_BASE}/gmp-${gmp_ver}/lib"
+#USE_WGET=1
+
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/gmp-${gmp_ver}/include"
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/gmp-${gmp_ver}/lib -lgmp"
+
+pkg_configure() {
+	local_copy
+	./configure --prefix=$PREFIX \
+	--with-included-libtasn1  --with-included-unistring  --without-p11-kit
+}
+
+pkg_build() {
+	pkg_build_local
+}
 
 pkg_install() {
+	cd build
 	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 }
 
+pkg_check() {
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+}
