@@ -83,3 +83,6 @@ pkg_check() {
 	${PKG_CONFIG} --libs ${LIB_DEPENDS}
 }
 
+pkg_help() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --disable-video-opengles --help
+}
