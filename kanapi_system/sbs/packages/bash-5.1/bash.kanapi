@@ -36,5 +36,6 @@ pkg_install() {
 
 pkg_check() {
 	echo "KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
+	echo "USE_CCACHE=${CCACHE}"
 }
 

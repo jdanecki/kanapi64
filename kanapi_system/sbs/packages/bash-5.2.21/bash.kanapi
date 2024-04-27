@@ -26,8 +26,10 @@ EXT=tar.gz
 . ../settings
 
 pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX \
-	--without-curses bash_cv_termcap_lib=gnutermcap
+# with sbs
+#    ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --without-curses bash_cv_termcap_lib=gnutermcap
+# with ncurses from bbs
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
 }
 
 pkg_install() {
@@ -37,5 +39,6 @@ pkg_install() {
 
 pkg_check() {
 	echo "KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
+	echo "USE_CCACHE=${CCACHE}"
 }
 
