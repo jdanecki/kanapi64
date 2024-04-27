@@ -52,6 +52,7 @@ pkg_install() {
 
 pkg_check() {
 	echo "CFLAGS=${CFLAGS}"
+	echo "LDFLAGS=${LDFLAGS}"
 	${PKG_CONFIG} --cflags ${LIB_DEPENDS}
 	ls -l `which perl`
 }
