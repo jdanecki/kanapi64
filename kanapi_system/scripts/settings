@@ -100,15 +100,20 @@ export PKG_CONFIG=${KANAPI_PKGCONFIG}
 
 if [ -n "${PKG_CONFIG}" ]
 then
+    echo "PKG_CONFIG=$PKG_CONFIG"
 	export PKG_CONFIG_DIR=${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/pkgconfig
+    echo "PKG_CONFIG_DIR=$PKG_CONFIG_DIR"
 	if [ -n "${LIB_DEPENDS}" ]
 	then
+        echo "LIB_DEPENDS=$LIB_DEPENDS"
 		${PKG_CONFIG} --exists ${LIB_DEPENDS}
 		if [ "$?" = "0" ]
 		then
 			export LDFLAGS="`${PKG_CONFIG} --libs ${LIB_DEPENDS}` -ldl"
 			export LD_LIBRARY_PATH=`${PKG_CONFIG} --variable=libdir ${LIB_DEPENDS} | sed "s/ /:/g"`:${LD_LIBRARY_PATH}
 			export CFLAGS=`${PKG_CONFIG} --cflags ${LIB_DEPENDS}`
+        else
+            echo "pkg-config failed"
 		fi
 	fi
 else
