@@ -494,3 +494,6 @@ links:
 
 svgalib:
 	@$(RUN_TARGET)
+
+zstd:
+	@$(RUN_TARGET)
