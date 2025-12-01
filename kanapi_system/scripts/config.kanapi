@@ -1,4 +1,4 @@
-glibc_ver=2.28
+glibc_ver=2.39
 cross_gcc_ver=4.9.4
 gcc_ver=13.2.0
 rootfs_ver=0.7
