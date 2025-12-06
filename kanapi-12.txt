@@ -1,0 +1,26 @@
+Preparation:
+
+base cli 0.11.1
+
+cd /kanapi_build/kanapi64/kanapi_system/docker/sbs-docker/interactive
+./create_docker
+./run_docker
+
+install rsync in cli
+install linux-headers
+
+install python in bbs
+
+install in sbs
+- glibc, gcc, pkg-config
+- xz, file - together
+- busybox - restore bash after installation
+- make, openssl
+
+install git from bbs (ignore errors for perl)
+
+continue in sbs
+- curl
+ 
+
+
