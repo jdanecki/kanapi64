@@ -1,4 +1,4 @@
-Preparation:
+* Preparation 
 
 base cli 0.11.1
 
@@ -14,13 +14,44 @@ install python in bbs
 install in sbs
 - glibc, gcc, pkg-config
 - xz, file - together
+    patchelf --set-interpreter /kanapi_0.11/packages/glibc-2.39/lib/ld-linux-x86-64.so.2 file
 - busybox - restore bash after installation
+- bash
 - make, openssl
 
 install git from bbs (ignore errors for perl)
 
 continue in sbs
 - curl
- 
+
+* for mc patch linker 
+patchelf --set-interpreter /kanapi_0.11/packages/glibc-2.39/lib/ld-linux-x86-64.so.2 mc
+
+* change /kanapi_build/kanapi/kanapi_system/scripts/KANAPI_VER to 0.12
+* new packages in sbs
+
+linux-headers 6.18
+glibc 2.42
+gmp 6.3.0
+mpfr 4.2.2
+mpc 1.3.1
+binutils 2.45
+gcc 15.2.0
+libffi 3.5.2
+zlib 1.3.1
+glib 2.87
+pkg-config 
+rootfs 
+xz 5.8.1
+file  5.46
+busybox 1.37.0
+bash 5.3
+make 4.4.1
+openssl 3.6.0
+libgpg-error 1.56
+libgcrypt 1.11.2
+libssh2 1.11.1
+libpsl 0.25.1
+curl 8.17.0
 
 
