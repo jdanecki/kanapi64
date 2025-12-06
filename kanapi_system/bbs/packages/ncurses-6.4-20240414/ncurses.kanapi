@@ -20,7 +20,7 @@
 
 PACKAGE_NAME=ncurses
 VER=6.4-20240414
-URL="http://invisible-mirror.net/archives/ncurses/current"
+URL="http://invisible-mirror.net/archives/ncurses/6.4"
 EXT=tgz
 #build depends on
 . ../settings

@@ -65,6 +65,7 @@ pkg_install() {
 
 pkg_configure() {
     ${PACKAGE_SRCDIR}/autogen.sh
+    ${PACKAGE_SRCDIR}/autogen.sh
     ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
 }
 

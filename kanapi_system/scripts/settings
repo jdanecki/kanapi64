@@ -32,9 +32,9 @@ CHECK_CERT=1
 ##############################################################
 . ${REPO_BASE}/kanapi_system/scripts/config.kanapi
 
-if [ -f ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config ]
+if [ -f ${KANAPI_BIN}/pkg-config ]
 then
-	export KANAPI_PKGCONFIG=${KANAPI_BASE}/pkg-config-${pkg_config_ver}/bin/pkg-config
+	export KANAPI_PKGCONFIG=${KANAPI_BIN}/pkg-config
 fi
 
 #echo "settings: KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
@@ -42,17 +42,16 @@ fi
 if [ -x ${KANAPI_BIN}/ccache -a -z "${CI}" ]
 then
 	export USE_CCACHE=1
+	CCACHE_PKG_LINK=$(readlink ${KANAPI_BIN}/ccache)
+	CCACHE_PKG_DIR=$(dirname ${CCACHE_PKG_LINK})
 fi
 
 if [ "${USE_CCACHE}" = "1" ]
 then
-	export CC="${KANAPI_BASE}/ccache-${ccache_ver}/links/gcc"
+	export CC="${CCACHE_PKG_DIR}/../links/gcc"
 	export KANAPI_C_COMPILER=${CC}
-	if [ -f ${KANAPI_BASE}/glibc-${glibc_ver}/lib/libstdc++.so ]
-	then
-		export CXX="${KANAPI_BASE}/ccache-${ccache_ver}/links/g++"
-		export KANAPI_CXX_COMPILER=${CXX}
-	fi
+	export CXX="${CCACHE_PKG_DIR}/../links/g++"
+	export KANAPI_CXX_COMPILER=${CXX}
 fi
 
 export PATH=${KANAPI_BIN}:${PATH}
@@ -288,7 +287,9 @@ check_file_type() {
 			false
 		fi
 	else
-		echo "Error in getting file type: ${FILE}"
+		echo "check_file_type: Error in getting file type: FILE=${FILE}"
+		file -iL  ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+		echo "file: ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}"
 		false
 	fi
 }
@@ -875,7 +876,9 @@ verify_file() {
 			false
 		fi
 	else
-		echo "Error in getting file type: ${FILE}"
+		echo "verify_file: Error in getting file type: FILE=${FILE}"
+		file -iL $1
+		echo "file: $1"
 		false
 	fi
 }

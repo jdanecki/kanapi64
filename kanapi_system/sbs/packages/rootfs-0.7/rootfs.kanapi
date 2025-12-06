@@ -62,3 +62,6 @@ pkg_verify() {
 	echo "nothing to be done here"
 }
 
+pkg_check() {
+    echo "KANAPI_ROOT=${KANAPI_ROOT}"
+}

@@ -25,11 +25,26 @@ EXT=tar.gz
 #LIB_DEPENDS=""
 
 . ../settings
+#ccache_ver=4.9.1
 
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
+	
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --disable-xxhash --disable-zstd --disable-lz4
+}
 
 pkg_install() {
 	pkg_install_make_bin_all
+}
+
+pkg_check()
+{
+	echo "CC=${CC}"
+	echo "CXX=${CXX}"
+	echo "USE_CCACHE=${USE_CCACHE}"
+	echo "KANAPI_BIN=${KANAPI_BIN}"
+	echo "KANAPI_BASE=${KANAPI_BASE}"
+	echo "CCACHE_PKG_DIR=${CCACHE_PKG_DIR}"
 }
 

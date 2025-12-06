@@ -43,7 +43,8 @@ pkg_configure() {
 	--disable-libmudflap --disable-libquadmath --disable-target-libiberty \
 	--disable-target-zlib --without-ppl --disable-cloog --without-cloog --disable-libssp \
 	--with-native-system-header-dir=${KANAPI_BASE}/glibc-${glibc_ver}/include \
-	--disable-static --enable-__cxa_atexit --enable-threads=posix --enable-libstdcxx-time
+	--disable-static --enable-__cxa_atexit --enable-threads=posix --enable-libstdcxx-time \
+	--disable-libsanitizer
 }
 
 pkg_build() {
@@ -87,6 +88,9 @@ pkg_check() {
 	echo "PATH=$PATH"
 	gcc --version
 	echo "CPP=${CPP}"
+	echo "CXX=${CXX}"
+	echo "CC=${CC}"
+	echo "CFLAGS=${CFLAGS}"
 }
 
 pkg_update() {

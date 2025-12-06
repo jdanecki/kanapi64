@@ -42,7 +42,12 @@ pkg_configure() {
 
 pkg_check() {
 #	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --help
-    echo "LIBS=${LIBS}"
+	echo "CFLAGS=${CFLAGS}"
+	echo "LDFLAGS=${LDFLAGS}"
+	echo "CPPFLAGS=${CPPFLAGS}"
+	echo "LIBS=${LIBS}"
+	${PKG_CONFIG} --libs ncurses
+
 }
 
 pkg_install() {
