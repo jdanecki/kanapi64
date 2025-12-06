@@ -27,7 +27,7 @@ EXT=tar.bz2
 LIB_DEPENDS="libssh2 zlib openssl libpsl"
 
 . ../settings
-USE_WGET=1
+#USE_WGET=1
 
 if [ -n "${PKG_CONFIG}" ]
 then

@@ -20,12 +20,12 @@
 
 PACKAGE_NAME=libgcrypt
 VER=1.10.3
-URL="ftp://ftp.gnupg.org/gcrypt/libgcrypt"
+URL="https://gnupg.org/ftp/gcrypt/libgcrypt"
 EXT=tar.bz2
 #build depends on
 . ../settings
 
-USE_WGET=1
+#USE_WGET=1
 
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX ac_cv_sys_symbol_underscore=no \
