@@ -20,7 +20,7 @@
 
 PACKAGE_NAME=libgpg-error
 VER=1.48
-URL="ftp://ftp.gnupg.org/gcrypt/libgpg-error"
+URL="https://gnupg.org/ftp/gcrypt/libgpg-error"
 EXT=tar.bz2
 #build depends on
 . ../settings

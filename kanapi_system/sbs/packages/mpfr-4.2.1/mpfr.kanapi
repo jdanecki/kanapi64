@@ -20,7 +20,7 @@
 
 PACKAGE_NAME=mpfr
 VER=4.2.1
-URL="http://mpfr.loria.fr/mpfr-current"
+URL="http://mpfr.loria.fr/mpfr-${VER}"
 EXT=tar.xz
 
 . ../settings
