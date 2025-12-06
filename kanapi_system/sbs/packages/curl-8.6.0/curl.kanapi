@@ -48,14 +48,9 @@ pkg_prepare() {
 
 pkg_configure() {
 	if [ ! -d ${PREFIX}/etc ] ; then mkdir -p ${PREFIX}/etc ; fi
-	which perl > /dev/null
-	if [ "$?" = "0" ] 
-	then 
-		perl ${PACKAGE_SRCDIR}/scripts/mk-ca-bundle.pl -i 
-		cp ca-bundle.crt ${PREFIX}/etc
-	else
-		cp -v ../../packages/${PACKAGE_NAME}-${curl_ver}/ca-bundle.crt ${PREFIX}/etc
-	fi
+	curl -k -o certdata.txt https://curl.se/ca/certdata.txt
+	perl ${PACKAGE_SRCDIR}/scripts/mk-ca-bundle.pl -i -n
+	cp ca-bundle.crt ${PREFIX}/etc
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-ca-bundle=${PREFIX}/etc/ca-bundle.crt --with-openssl
 }
 
@@ -70,4 +65,6 @@ pkg_check() {
 	echo $PATH
 	${LIBGCRYPT_CONFIG} --cflags
 	${GPG_ERROR_CONFIG} --prefix
+	curl -k -o certdata.txt https://curl.se/ca/certdata.txt
+	perl ${PACKAGE_SRCDIR}/scripts/mk-ca-bundle.pl -i -n
 }
