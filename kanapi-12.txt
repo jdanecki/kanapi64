@@ -41,11 +41,12 @@ fix: patchelf --set-interpreter /kanapi_0.11/packages/glibc-2.39/lib/ld-linux-x8
 - python3 -m pip install meson
 - glib 2.87, pkg-config 2.5.1, rootfs 
 - xz 5.8.1, file  5.46, busybox 1.37.0
-- bash 5.3, make 4.4.1, openssl 3.6.0
+- bash 5.3 - for sbs without ncurses
+- make 4.4.1, openssl 3.6.0
 - libgpg-error 1.56, libgcrypt 1.11.2, libssh2 1.11.1, libpsl 0.21.5, curl 8.17.0
 
 cd /kanapi_build/kanapi/kanapi_system/sbs
-cat prepare_sbs_docker.template | sed "s/@SBS_BUILD@/3/" > prepare_sbs_docker
+cat prepare_sbs_docker.template | sed "s/@SBS_BUILD@/1/" > prepare_sbs_docker
 chmod +x prepare_sbs_docker
 ./prepare_sbs_docker  
 
@@ -55,7 +56,7 @@ cd /kanapi_build/kanapi/kanapi_system/docker/sbs
 cp /kanapi_build/kanapi64/kanapi_system/docker/sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker-0.12.3.tar.xz .
 rm -rf /kanapi_build/kanapi64/kanapi_system/docker/sbs-docker/interactive/kanapi/kanapi_system/sbs/sbs-docker
 * change version in /kanapi_build/kanapi64/kanapi_system/scripts/KANAPI_VER to 0.12
-* change version in /kanapi_build/kanapi64/kan~/docker/sbs-docker/version SBS_BUILD=3
+* change version in /kanapi_build/kanapi64/kanapi_system/docker/sbs-docker/version SBS_BUILD=1
 ./make_image
 docker images
 

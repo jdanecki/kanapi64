@@ -27,9 +27,9 @@ EXT=tar.gz
 
 pkg_configure() {	
 # with sbs
-#    ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --without-curses bash_cv_termcap_lib=gnutermcap
+    ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --without-curses bash_cv_termcap_lib=gnutermcap
 # with ncurses from bbs
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+#	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
 }
 
 pkg_install() {
