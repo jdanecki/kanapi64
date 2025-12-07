@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2024 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=glib
+VER=2.87
+URL="http://ftp.gnome.org/pub/gnome/sources/glib/${VER}"
+EXT=tar.xz
+
+. ../settings
+
+#export CFLAGS="-I${KANAPI_BASE}/libffi-${libffi_ver}/lib/libffi-${libffi_ver}/include -I${KANAPI_BASE}/zlib-${zlib_ver}/include "
+#export LIBFFI_CFLAGS="-I${KANAPI_BASE}/libffi-${libffi_ver}/lib/libffi-${libffi_ver}/include"
+#export LIBS="-L${KANAPI_BASE}/libffi-${libffi_ver}/lib -lffi -L${KANAPI_BASE}/zlib-${zlib_ver}/lib "
+#export LIBFFI_LIBS="-L${KANAPI_BASE}/libffi-${libffi_ver}/lib -lffi "
+
+MESON=/kanapi_0.11/packages/Python-${Python_ver}/bin/meson
+
+pkg_download() {
+    PACKAGE_PATH=${PACKAGE_VER}.0.${EXT}
+	pkg_curl	
+}
+
+pkg_configure() {
+	echo -n "meson: /kanapi_0.11/packages/Python-${Python_ver}/bin/meson: "
+	if [ -x $MESON ] 
+	then
+	    mkdir build 
+	    export SSL_CERT_FILE="/kanapi_0.11/packages/curl-${curl_ver}/etc/ca-bundle.crt"
+	    CFLAGS="-lm" LDFLAGS="-lm" $MESON setup --prefix $PREFIX build ${PACKAGE_SRCDIR}.0
+	else 
+		echo "meson missing"
+		false
+	fi
+}
+pkg_build() {
+	$MESON compile -C build
+}
+pkg_install() {
+	$MESON install -C build     
+#	pkg_install_make && pkg_install_libs && pkg_install_bin_all
+}
+
+pkg_check() {
+	echo "KANAPI_BASE=${KANAPI_BASE}"
+	echo -n "ca-bundle: /kanapi_0.11/packages/curl-${curl_ver}/etc/ca-bundle.crt "
+	if [ -e /kanapi_0.11/packages/curl-${curl_ver}/etc/ca-bundle.crt ]
+	then
+	    echo "ok"
+	else 
+	    echo "missing"
+	fi
+}

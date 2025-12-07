@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+# Copyright (c) 2022-2024 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,19 +18,39 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=@NAME@
-VER=@VER@
-URL="https://"
+PACKAGE_NAME=binutils
+VER=2.45
+URL="GNU"
 EXT=tar.bz2
-#build depends on
-#LIB_DEPENDS=""
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
-#export CFLAGS="${CFLAGS} "
+export CFLAGS="${CFLAGS} -specs=${KANAPI_BASE}/glibc-${glibc_ver}/gcc-specs"
+
+pkg_configure() {
+	ORIG_FLEX=`which flex`
+	if [ -n "${ORIG_FLEX}" ]
+	then
+		mv ${ORIG_FLEX} /bin/flex.tmp
+	fi
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --without-docdir \
+	--disable-multilib \
+	--enable-threads 
+	if [ -n "${ORIG_FLEX}" ]
+	then
+		mv /bin/flex.tmp ${ORIG_FLEX}
+	fi
+}
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
+	pkg_install_make && pkg_install_bin_all && pkg_install_libs
+	GCC_LD=`gcc -print-prog-name=ld`
+	GCC_AS=`gcc -print-prog-name=as`
+	ln -sfv ${PREFIX}/bin/ld $GCC_LD
+	ln -sfv ${PREFIX}/bin/as $GCC_AS
+}
+
+pkg_update() {
+    pkg_install_bin_all
 }
 

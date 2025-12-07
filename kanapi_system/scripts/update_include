@@ -1,6 +1,6 @@
 #!/bin/bash
 
-KANAPI_VER=0.11
+KANAPI_VER=0.12
 
 if [ "`id -u`" != "0" ]
 then
