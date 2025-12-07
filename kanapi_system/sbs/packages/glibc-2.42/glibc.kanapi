@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=glibc
+VER=2.42
+URL="http://ftp.gnu.org/gnu/glibc"
+EXT=tar.xz
+#build depends on
+export DONT_INSTALL_INCLUDE=1
+. ../settings
+	
+export LDFLAGS="${LDFLAGS} -fno-stack-protector -O2"
+export CFLAGS="${CFLAGS} -fno-stack-protector -O2"
+
+pkg_prepare() {
+	pkg_tar_xz
+}
+
+pkg_configure() {
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
+	libc_cv_ssp=no  libc_cv_ssp_strong=no --without-selinux --disable-stackguard-randomization \
+	--with-headers=${KANAPI_BASE}/linux-headers-${linux_headers_ver}/include \
+	--enable-obsolete-rpc
+}
+
+pkg_build() {
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+}
+
+pkg_install() {
+	date > manual/libc.info
+	MAKE_JOBS=1
+	pkg_install_make && pkg_install_bin_all && pkg_install_sbin_all
+
+	mkdir -p ${PREFIX}/lib/locale
+	${PREFIX}/bin/localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
+	${LN_SF} ${PREFIX}/lib/ld-linux-x86-64.so.2 ${PREFIX}/lib/ld-linux.so.2
+
+	gcc -dumpspecs | sed "s@/lib64/ld-linux-x86-64.so.2@${PREFIX}/lib/ld-linux-x86-64.so.2@g" > ${PREFIX}/gcc-specs
+	${LN_SF} ${KANAPI_BASE}/linux-headers-${linux_headers_ver}/include/* ${PREFIX}/include
+	echo "${KANAPI_BASE}/libs" > ${PREFIX}/etc/ld.so.conf
+	if [ "`id -u`" = "0" ]
+	then
+		export LD_LIBRARY_PATH=
+		ldconfig
+	fi
+	ln -sf ${PREFIX}/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 
+}
+
