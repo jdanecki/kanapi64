@@ -1,0 +1,6 @@
+* set version in /kanapi_build/kanapi64/kanapi_system/docker/bbs/version
+VER=0.12.1
+BASE_IMAGE=sbs:0.12.3
+
+/kanapi_build/kanapi64/kanapi_system/docker/bbs/README.txt
+
