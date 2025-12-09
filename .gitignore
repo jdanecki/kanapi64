@@ -8,4 +8,4 @@ kanapi_system/apps/build
 kanapi_system/ocl/build
 kanapi_system/docker/sbs-docker/interactive/kanapi
 kanapi_system/sbs/sbs-docker
-
+kanapi_system/cbs/build

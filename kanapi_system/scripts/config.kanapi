@@ -529,3 +529,4 @@ libevent_ver=2.1.12-stable
 links_ver=2.29
 svgalib_ver=1.4.3
 busybox_ver=1.37.0
+zstd=1.5.7
