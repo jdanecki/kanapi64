@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=cmake
+VER=4.2.0
+URL="https://cmake.org/files/v4.2"
+EXT=tar.gz
+#build depends on
+LIB_DEPENDS="ncurses"
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+export CFLAGS="${CFLAGS} -pthread"
+export CXXFLAG="${CFLAGS}"
+
+#export MAKE_JOBS=1
+
+pkg_configure() {
+#	export CC="gcc"
+	${PACKAGE_SRCDIR}/bootstrap --prefix=$PREFIX --parallel=${MAKE_JOBS} -- \
+	-DCURSES_INCLUDE_PATH=`ncurses6-config --prefix`/include \
+	-DCURSES_LIBRARY=`ncurses6-config --libdir`/libncurses.a  -DCURSES_EXTRA_LIBRARY=""
+}
+
+pkg_build() {
+	if [ "${CI}" = "true" ]
+	then
+		${MAKE} -j 8 MAKEINFO=true
+	else
+		${MAKE} -j ${MAKE_JOBS} MAKEINFO=true VERBOSE=1
+	fi
+}
+
+pkg_install() {
+	pkg_install_make && pkg_install_bin_all && \
+	rm -rf ${PREFIX}/doc
+}
+
+pkg_check() {
+	echo "${PATH}"
+	echo "CC=$CC"
+	echo "CXX=${CXX}"
+	echo "PKG_VERBOSE=${PKG_VERBOSE}"
+}
+
