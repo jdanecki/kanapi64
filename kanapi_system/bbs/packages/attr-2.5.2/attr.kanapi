@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=attr
+VER=2.5.2
+URL="http://download.savannah.gnu.org/releases/attr"
+EXT=tar.xz
+#build depends on
+. ../settings
+
+pkg_configure() {
+	pkg_configure_local
+}
+
+pkg_build() {
+	pkg_build_local
+}
+
+pkg_install() {
+	cd build
+	pkg_install_make &&	pkg_install_all && \
+	rm -rf ${PREFIX}/share/{man,doc}
+}
+
