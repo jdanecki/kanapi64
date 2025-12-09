@@ -54,22 +54,17 @@ mkdir -p var/log
 mkdir -p var/run
 
 for pkg in bash binutils busybox curl xz file gcc glib glibc gmp libffi libgcrypt \
-	libssh2 make mpc mpfr openssl zlib
+	libssh2 libpsl make mpc mpfr openssl zlib
 do
 	pkg_v=${pkg}_ver
 	cp -ar ${KANAPI_BASE_PACKAGES}/${pkg}-${!pkg_v} packages
 done
 
-mkdir -p packages/pkg-config-${pkg_config_ver}/share/pkgconfig
-cp -ar ${KANAPI_BASE_PACKAGES}/pkg-config-${pkg_config_ver}/bin packages/pkg-config-${pkg_config_ver}
-for i in aclocal
-do
-	cp -ar ${KANAPI_BASE_PACKAGES}/pkg-config-${pkg_config_ver}/share/$i packages/pkg-config-${pkg_config_ver}/share
-done
+cp -ar ${KANAPI_BASE_PACKAGES}/pkg-config-${pkg_config_ver} packages
 
 for i in `find packages -name pkgconfig | grep lib`
 do
-	ln -s ${KANAPI_BASE}/$i/*.pc packages/pkg-config-${pkg_config_ver}/share/pkgconfig
+	ln -sf ${KANAPI_BASE}/$i/*.pc packages/pkg-config-${pkg_config_ver}/share/pkgconfig
 done
 
 cp -ar ${KANAPI_BASE_PACKAGES}/linux-headers-${linux_headers_ver} packages
@@ -123,6 +118,7 @@ do
 	if [ "$?" = "0" ] ; then strip ${i} ; fi
 done
 set -e
+ln -svf /packages/bash-${bash_ver}/bin/bash bin/bash
 ln -svf bash bin/sh
 echo "${IMAGE_VER} `date -R`" > sbs.version
 mkdir kanapi_build
