@@ -21,7 +21,7 @@ cli-lib: pci_ids libusb udev libdrm libev libevdev cacert libsigcpp sound popt l
 	itstool gnutls lua yasm
 
 disabled: ntfs-3g_ntfsprogs nfs llvm iotop ltrace wget enet Hermes libdrm rplay esound gstreamer \
-	sndio portaudio fluidsynth libmodplug sox rsync udev vala Hermes makefile2graph
+	sndio portaudio fluidsynth libmodplug sox rsync udev vala makefile2graph
 
 linux:
 	@$(RUN_TARGET)
