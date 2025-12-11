@@ -12,4 +12,6 @@ How to use SBS docker to build BBS manually
 2. In running container:
 cd /kanapi_build/kanapi/kanapi_system/bbs/build
 ./install bbs verbose
+3. From host:
+    commit_docker kanapi-bbs-0.12.1
 
