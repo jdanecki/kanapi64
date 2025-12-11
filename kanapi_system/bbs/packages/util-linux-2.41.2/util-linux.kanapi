@@ -24,19 +24,18 @@ URL="http://www.kernel.org/pub/linux/utils/util-linux/v2.41"
 EXT=tar.xz
 #build depends on
 
-LIB_DEPENDS="slang zlib ncurses"
+LIB_DEPENDS="zlib ncursesw readline"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt -L${KANAPI_BASE}/readline-${readline_ver}/lib"
-export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/readline-${readline_ver}/include"
+export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt "
 
 pkg_configure() {	
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \
-	--without-python  --without-systemd --with-slang  --without-selinux \
-	 --enable-fs-paths-default=${KANAPI_BIN} --without-ncursesw  --disable-use-tty-group \
+	--without-python  --without-systemd --without-selinux \
+	 --enable-fs-paths-default=${KANAPI_BIN} --disable-use-tty-group \
 	 --without-udev --disable-nls --disable-{login,sulogin,nologin,runuser} --disable-chfn-chsh
-}
+ }
 
  pkg_install() {
 	pkg_install_pc_all && pkg_install_bin_all && pkg_install_sbin_all && pkg_install_libs && \

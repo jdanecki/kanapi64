@@ -20,7 +20,7 @@
 
 PACKAGE_NAME=libarchive
 VER=3.8.4
-URL="https://github.com/libarchive/libarchive/releases/download/v3.8.4/libarchive-3.8.4.tar.xz"
+URL="https://github.com/libarchive/libarchive/releases/download/v${VER}"
 EXT=tar.xz
 #build depends on
 LIB_DEPENDS="openssl"

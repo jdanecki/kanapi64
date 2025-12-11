@@ -23,7 +23,7 @@ VER=3.14.0
 URL="https://www.python.org/ftp/python/${VER}"
 EXT=tar.xz
 #build depends on
-LIB_DEPENDS="ncurses zlib sqlite3 openssl"
+LIB_DEPENDS="ncursesw zlib sqlite3 openssl"
 . ../settings
 
 #export MAKE_JOBS=1
@@ -46,7 +46,7 @@ pkg_check() {
 	echo "LDFLAGS=${LDFLAGS}"
 	echo "CPPFLAGS=${CPPFLAGS}"
 	echo "LIBS=${LIBS}"
-	${PKG_CONFIG} --libs ncurses
+	${PKG_CONFIG} --libs ncursesw
 
 }
 

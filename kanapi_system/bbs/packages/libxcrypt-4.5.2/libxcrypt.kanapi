@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2022 Piotr Danecki <piotr.a.danecki@gmail.com>
+# Copyright (c) 2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,28 +17,20 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=gawk
-VER=5.3.2
-URL="GNU"
+PACKAGE_NAME=libxcrypt
+VER=4.5.2
+URL="https://github.com/besser82/libxcrypt/releases/download/v${VER}"
 EXT=tar.xz
 #build depends on
-
-LIB_DEPENDS="ncursesw"
+#LIB_DEPENDS=""
 
 . ../settings
 
-export LDFLAGS="-L${KANAPI_BASE}/readline-${readline_ver}/lib -lreadline ${LDFLAGS}"
-
-pkg_configure() {	
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-readline=${KANAPI_BASE}/readline-${readline_ver} \
-		--disable-nls
-}
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all && \
-	rm -rf ${PREFIX}/share/{man,info}
+	pkg_install_pc && pkg_install_libs && \
+	rm -rf ${PREFIX}/share/man
 }
 
-pkg_check() {
-	echo "LDFLAGS=${LDFLAGS}"
-}

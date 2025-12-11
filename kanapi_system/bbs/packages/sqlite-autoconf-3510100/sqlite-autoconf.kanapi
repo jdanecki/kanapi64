@@ -24,7 +24,7 @@ URL="https://www.sqlite.org/2025"
 EXT=tar.gz
 #build depends on
 
-LIB_DEPENDS="ncurses"
+LIB_DEPENDS="ncursesw"
 
 . ../settings
 

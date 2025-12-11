@@ -19,7 +19,7 @@
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
 PACKAGE_NAME=git
-VER=2.52
+VER=2.52.0
 URL="https://www.kernel.org/pub/software/scm/git"
 EXT=tar.xz
 

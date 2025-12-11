@@ -23,7 +23,7 @@ VER=4.2.0
 URL="https://cmake.org/files/v4.2"
 EXT=tar.gz
 #build depends on
-LIB_DEPENDS="ncurses"
+LIB_DEPENDS="ncursesw"
 
 . ../settings
 
@@ -36,8 +36,8 @@ export CXXFLAG="${CFLAGS}"
 pkg_configure() {
 #	export CC="gcc"
 	${PACKAGE_SRCDIR}/bootstrap --prefix=$PREFIX --parallel=${MAKE_JOBS} -- \
-	-DCURSES_INCLUDE_PATH=`ncurses6-config --prefix`/include \
-	-DCURSES_LIBRARY=`ncurses6-config --libdir`/libncurses.a  -DCURSES_EXTRA_LIBRARY=""
+	-DCURSES_INCLUDE_PATH=`ncursesw6-config --prefix`/include \
+	-DCURSES_LIBRARY=`ncursesw6-config --libdir`/libncursesw.a  -DCURSES_EXTRA_LIBRARY=""
 }
 
 pkg_build() {

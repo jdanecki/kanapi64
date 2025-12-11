@@ -81,7 +81,7 @@ sqlite-autoconf:
 bzip2:
 	@$(RUN_TARGET)
 
-Python: sqlite-autoconf bzip2
+Python: sqlite-autoconf bzip2 libxcrypt
 	@$(RUN_TARGET)
 
 re2c:
@@ -99,10 +99,10 @@ findutils:
 patch:
 	@$(RUN_TARGET)
 
-ncurses5:
-	@$(RUN_TARGET)
+#ncurses5:
+#	@$(RUN_TARGET)
 
-slang: ncurses5
+slang:
 	@$(RUN_TARGET)
 
 util-linux:
@@ -117,4 +117,5 @@ openssh:
 mtools:
 	@$(RUN_TARGET)
 
-
+libxcrypt:
+	@$(RUN_TARGET)

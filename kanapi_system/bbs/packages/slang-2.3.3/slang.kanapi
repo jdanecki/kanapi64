@@ -22,17 +22,18 @@ PACKAGE_NAME=slang
 VER=2.3.3
 URL="http://www.jedsoft.org/releases/slang"
 EXT=tar.bz2
-LIB_DEPENDS=zlib
+LIB_DEPENDS="zlib ncursesw"
 
 . ../settings
 
 pkg_configure() {
 	local_copy
-	./configure --prefix=$PREFIX --without-pcre --without-png --with-z=`${PKG_CONFIG} --variable=prefix zlib`
+	./configure --prefix=$PREFIX --without-pcre --without-png --with-z=`${PKG_CONFIG} --variable=prefix zlib` 
 }
 
 pkg_build() {
 	cd build
+    sed -i "s/-ltermcap//g" slsh/Makefile
 	${MAKE}  MAKEINFO=true
 }
 
