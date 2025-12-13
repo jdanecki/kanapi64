@@ -497,3 +497,6 @@ svgalib:
 
 zstd:
 	@$(RUN_TARGET)
+
+zsh:
+	@$(RUN_TARGET)
