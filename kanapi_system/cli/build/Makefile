@@ -16,12 +16,11 @@ docker: docker-ce
 
 boot: syslinux mbr linux
 
-
 cli-lib: pci_ids libusb udev libdrm libev libevdev cacert libsigcpp sound popt llvm babl \
 	itstool gnutls lua yasm
 
-disabled: ntfs-3g_ntfsprogs nfs llvm iotop ltrace wget enet Hermes libdrm rplay esound gstreamer \
-	sndio portaudio fluidsynth libmodplug sox rsync udev vala makefile2graph
+disabled: ntfs-3g_ntfsprogs nfs llvm iotop wget enet Hermes libdrm rplay esound gstreamer \
+	sndio portaudio fluidsynth libmodplug sox  udev vala makefile2graph ctags
 
 linux:
 	@$(RUN_TARGET)
@@ -44,7 +43,8 @@ bc: ed
 rplay:
 	@$(RUN_TARGET)
 
-t_compression: gzip unrar zip lzip
+t_compression: gzip unrar lzip
+#zip
 
 gzip:
 	@$(RUN_TARGET)
@@ -58,20 +58,25 @@ zip:
 xz:
 	@$(RUN_TARGET)
 
-t_system: mc kmod procps-ng pciutils screen sdparm strace \
-	 network pci_ids usbutils7 eudev usbutils libev libevdev cacert cpio hdparm \
-	 p11-kit iptables dmidecode tmux
+t_system: mc procps-ng pciutils screen sdparm strace \
+	 network pci_ids eudev usbutils cpio hdparm \
+	 iptables dmidecode tmux lm-sensors
+#	libev libevdev cacert  p11-kit
 
 mc: 
 	@$(RUN_TARGET)
 
-kmod:
+meson:
+	pip3 install meson
+	ln -sfv $(KANAPI_BASE)/Python-$(Python_ver)/bin/$@ /bin/$@
+
+kmod: meson zstd
 	@$(RUN_TARGET)
 
 procps-ng:
 	@$(RUN_TARGET)
 
-pciutils:
+pciutils: kmod
 	@$(RUN_TARGET)
 
 screen:
@@ -89,8 +94,8 @@ ntfs-3g_ntfsprogs:
 strace:
 	@$(RUN_TARGET)
 
-libelf:
-	@$(RUN_TARGET)
+#libelf:
+#	@$(RUN_TARGET)
 
 ltrace: elfutils
 	@$(RUN_TARGET)
@@ -145,7 +150,8 @@ nettle:
 wget: gnutls
 	@$(RUN_TARGET)
 
-network: wireless_tools wpa_supplicant dhcp iproute2 lynx bridge-utils ethtool
+network: wireless_tools wpa_supplicant dhcp iproute2 lynx ethtool rsync
+	#bridge-utils
 
 iproute2:
 	@$(RUN_TARGET)
@@ -156,7 +162,7 @@ enet:
 Hermes:
 	@$(RUN_TARGET)
 
-devel1: patchelf cgdb strace ltrace ctags chrpath
+devel1: patchelf cgdb strace ltrace universal-ctags chrpath
 
 devel2: scons lua tcl swig yajl ruby database xml expect babl itstool \
 	libsigcpp yasm popt go
@@ -170,6 +176,9 @@ cgdb: gdb
 ctags:
 	@$(RUN_TARGET)
 
+universal-ctags:
+	@$(RUN_TARGET)
+	
 chrpath:
 	@$(RUN_TARGET)
 
@@ -274,10 +283,10 @@ pci_ids:
 libusb:
 	@$(RUN_TARGET)
 
-usbutils7: libusb
-	@$(RUN_TARGET)
+#usbutils7: libusb
+#	@$(RUN_TARGET)
 
-usbutils:
+usbutils: libusb
 	@$(RUN_TARGET)
 
 udev: pci_ids
@@ -496,4 +505,7 @@ svgalib:
 	@$(RUN_TARGET)
 
 zstd:
+	@$(RUN_TARGET)
+
+xxHash:
 	@$(RUN_TARGET)

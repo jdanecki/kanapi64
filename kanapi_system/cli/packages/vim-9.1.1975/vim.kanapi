@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 # Copyright (c) 2022-2024 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
@@ -19,13 +19,12 @@
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
 PACKAGE_NAME=vim
-VER=9.1.0357
-#URL="ftp://ftp.vim.org/pub/vim/unix"
+VER=9.1.1975
 URL="https://github.com/vim/vim/archive/refs/tags"
 
 EXT=tar.gz
 #build depends on
-LIB_DEPENDS="ncurses"
+LIB_DEPENDS="ncursesw"
 . ../settings
 
 export CFLAGS="${NCURSES_CFLAGS} -O2"
@@ -34,26 +33,16 @@ export CPPFLAGS=${CFLAGS}
 
 pkg_download() {
     PACKAGE_PATH=v${VER}.${EXT}
-    pkg_curl    
+    pkg_curl
 } 
-
-pkg_prepare() {
-	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
-	then 
-		echo "$PACKAGE_NAME: already prepared"
-	else
-		pkg_tar_gz
-		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
-	fi
-	${LN_SNF} vim80 ${PACKAGE_SRCDIR}
-}
 
 pkg_configure() {
 	local_copy
-	./configure --prefix=$PREFIX vim_cv_toupper_broken=no \
-	--with-tlib=ncurses vim_cv_terminfo=yes vim_cv_tty_group=world vim_cv_tty_mode=0620 \
-	vim_cv_getcwd_broken=no vim_cv_stat_ignores_slash=no vim_cv_memmove_handles_overlap=yes \
-	--without-x --enable-gui=no ac_cv_header_elf_h=no --disable-selinux
+	./configure --prefix=$PREFIX --without-x --enable-gui=no --disable-selinux
+#	 vim_cv_toupper_broken=no \
+#	--with-tlib=ncurses vim_cv_terminfo=yes vim_cv_tty_group=world vim_cv_tty_mode=0620 \
+#	vim_cv_getcwd_broken=no vim_cv_stat_ignores_slash=no vim_cv_memmove_handles_overlap=yes \
+#	 ac_cv_header_elf_h=no 
 
 }
 

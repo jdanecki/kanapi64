@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,7 +18,7 @@
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
 PACKAGE_NAME=tmux
-VER=3.4
+VER=3.6a
 URL="https://github.com/tmux/tmux/releases/download/${VER}"
 EXT=tar.gz
 #build depends on
@@ -33,7 +33,6 @@ pkg_install() {
 	pkg_install_make && pkg_install_bin_all
     localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
 }
-
 pkg_check() {
 	echo "check"
 }

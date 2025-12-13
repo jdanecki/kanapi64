@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,23 +17,30 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=tmux
-VER=3.4
-URL="https://github.com/tmux/tmux/releases/download/${VER}"
-EXT=tar.gz
+PACKAGE_NAME=iproute2
+VER=6.18.0
+URL="https://www.kernel.org/pub/linux/utils/net/iproute2"
+EXT=tar.xz
 #build depends on
-LIB_DEPENDS="libevent"
-
+#LIB_DEPENDS=""
+DONT_TAIL=1
 . ../settings
 
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
-pkg_install() {
-	pkg_install_make && pkg_install_bin_all
-    localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
+pkg_configure() {
+	pkg_configure_local
 }
 
-pkg_check() {
-	echo "check"
+
+pkg_build() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true PREFIX=${PREFIX} SBINDIR=${PREFIX}/bin CONFDIR=${PREFIX}/etc KERNEL_INCLUDE=${PREFIX}/usr/include
+}
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true PREFIX=${PREFIX} SBINDIR=${PREFIX}/bin CONFDIR=${PREFIX}/etc KERNEL_INCLUDE=${PREFIX}/usr/include \
+		&&	pkg_install_bin_all
 }

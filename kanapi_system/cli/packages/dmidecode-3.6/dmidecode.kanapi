@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,23 +17,28 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=tmux
-VER=3.4
-URL="https://github.com/tmux/tmux/releases/download/${VER}"
-EXT=tar.gz
+PACKAGE_NAME=dmidecode
+VER=3.6
+URL="https://quantum-mirror.hu/mirrors/pub/gnusavannah/dmidecode"
+EXT=tar.xz
 #build depends on
-LIB_DEPENDS="libevent"
+#LIB_DEPENDS=""
 
 . ../settings
 
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
-pkg_install() {
-	pkg_install_make && pkg_install_bin_all
-    localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
+pkg_configure() {
+	local_copy
 }
 
-pkg_check() {
-	echo "check"
+pkg_build() {
+	pkg_build_local
 }
+
+pkg_install() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true prefix=${PREFIX} && pkg_install_sbin_all
+}
+

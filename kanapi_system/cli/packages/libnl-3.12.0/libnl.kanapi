@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,12 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=tmux
-VER=3.4
-URL="https://github.com/tmux/tmux/releases/download/${VER}"
+PACKAGE_NAME=libnl
+VER=3.12.0
+URL="https://github.com/thom311/libnl/releases/download/libnl3_12_0"
 EXT=tar.gz
 #build depends on
-LIB_DEPENDS="libevent"
+#LIB_DEPENDS=""
+DONT_TAIL=1
 
 . ../settings
 
@@ -30,10 +31,10 @@ LIB_DEPENDS="libevent"
 #export CFLAGS="${CFLAGS} "
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
-    localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
+	pkg_install_all
+}
+pkg_repo() {
+    URL="https://github.com/thom311/libnl/releases"
+    pkg_repo_url ${URL}
 }
 
-pkg_check() {
-	echo "check"
-}

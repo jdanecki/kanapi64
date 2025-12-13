@@ -133,9 +133,9 @@ then
 	fi
 fi
 
-if [ -f ${KANAPI_BASE}/ncurses-${ncurses_ver}/bin/ncurses6-config ]
+if [ -f ${KANAPI_BASE}/ncurses-${ncurses_ver}/bin/ncursesw6-config ]
 then
-	NCURSES_CONFIG=${KANAPI_BASE}/ncurses-${ncurses_ver}/bin/ncurses6-config
+	NCURSES_CONFIG=${KANAPI_BASE}/ncurses-${ncurses_ver}/bin/ncursesw6-config
 	NCURSES_CFLAGS=`${NCURSES_CONFIG} --cflags`
 	NCURSES_LDFLAGS=`${NCURSES_CONFIG} --libs`
 fi
@@ -582,6 +582,16 @@ pkg_install_pc_share_all() {
 
 pkg_install_pc_share_all_only() {
 	for i in ${PREFIX}/share/pkgconfig/*
+	do
+		if [ -f $i ]
+		then
+			${LN_SF} $i ${PKG_CONFIG_DIR}/`basename $i`
+		fi
+	done
+}
+
+pkg_install_pc_lib_all_only() {
+	for i in ${PREFIX}/lib/pkgconfig/*
 	do
 		if [ -f $i ]
 		then

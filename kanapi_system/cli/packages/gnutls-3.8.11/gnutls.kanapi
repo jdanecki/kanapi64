@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2024 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,23 +17,35 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=tmux
-VER=3.4
-URL="https://github.com/tmux/tmux/releases/download/${VER}"
-EXT=tar.gz
+PACKAGE_NAME=gnutls
+VER=3.8.11
+URL="https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8"
+EXT=tar.xz
 #build depends on
-LIB_DEPENDS="libevent"
+LIB_DEPENDS="nettle hogweed"
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
-#export CFLAGS="${CFLAGS} "
+#USE_WGET=1
+
+export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/gmp-${gmp_ver}/include"
+export LDFLAGS="${LDFLAGS} -L${KANAPI_BASE}/gmp-${gmp_ver}/lib -lgmp"
+
+pkg_configure() {
+	local_copy
+	./configure --prefix=$PREFIX \
+	--with-included-libtasn1  --with-included-unistring  --without-p11-kit
+}
+
+pkg_build() {
+	pkg_build_local
+}
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
-    localedef -c -i pl_PL -f UTF-8 pl_PL.UTF-8
+	cd build
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 }
 
 pkg_check() {
-	echo "check"
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
 }
