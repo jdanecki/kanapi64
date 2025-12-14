@@ -8,7 +8,7 @@ include $(SCRIPTS_DIR)/Makefile.common
 
 cli: cli-base cli-devel 
 	
-cli-base: t_compression t_system vim bc
+cli-base: t_compression t_system vim bc neovim
 
 cli-devel: devel1
 
@@ -20,7 +20,7 @@ cli-lib: pci_ids libusb udev libdrm libev libevdev cacert libsigcpp sound popt l
 	itstool gnutls lua yasm
 
 disabled: ntfs-3g_ntfsprogs nfs llvm iotop wget enet Hermes libdrm rplay esound gstreamer \
-	sndio portaudio fluidsynth libmodplug sox  udev vala makefile2graph ctags
+	sndio portaudio fluidsynth libmodplug sox  udev vala ctags
 
 linux:
 	@$(RUN_TARGET)
@@ -162,9 +162,9 @@ enet:
 Hermes:
 	@$(RUN_TARGET)
 
-devel1: patchelf cgdb strace ltrace universal-ctags chrpath
+devel1: patchelf cgdb strace ltrace universal-ctags chrpath lua makefile2graph 
 
-devel2: scons lua tcl swig yajl ruby database xml expect babl itstool \
+devel2: scons tcl swig yajl ruby database xml expect babl itstool \
 	libsigcpp yasm popt go
 
 gdb:
@@ -514,4 +514,23 @@ lz4:
 	@$(RUN_TARGET)
 
 zsh:
+	@$(RUN_TARGET)
+
+neovim: 
+#	libiconv luv
+	@$(RUN_TARGET)
+
+libiconv:
+	@$(RUN_TARGET)
+
+libuv:
+	@$(RUN_TARGET)
+
+luv: libuv LuaJIT
+	@$(RUN_TARGET)
+
+LuaJIT:
+	@$(RUN_TARGET)
+
+luarocks:
 	@$(RUN_TARGET)
