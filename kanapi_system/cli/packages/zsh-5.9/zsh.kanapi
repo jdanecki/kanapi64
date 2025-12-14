@@ -30,7 +30,20 @@ EXT=tar.xz
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
+pkg_configure() {
+        local_copy
+        patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/0005-52383-avoid-incompatible-pointer-types.patch
+	./configure --prefix=$PREFIX
+
+}
+
+
+pkg_build() {
+        pkg_build_local
+}
+
 pkg_install() {
+	cd build
 	pkg_install_make && pkg_install_bin_all
 }
 
