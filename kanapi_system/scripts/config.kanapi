@@ -532,3 +532,4 @@ zstd_ver=1.5.7
 libxcrypt_ver=4.5.2
 xxHash_ver=0.8.3
 lz4_ver=1.10.0
+zsh_ver=5.9

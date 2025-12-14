@@ -60,7 +60,7 @@ xz:
 
 t_system: mc procps-ng pciutils screen sdparm strace \
 	 network pci_ids eudev usbutils cpio hdparm \
-	 iptables dmidecode tmux lm-sensors
+	 iptables dmidecode tmux lm-sensors zsh
 #	libev libevdev cacert  p11-kit
 
 mc: 
@@ -511,4 +511,7 @@ xxHash:
 	@$(RUN_TARGET)
 
 lz4:
+	@$(RUN_TARGET)
+
+zsh:
 	@$(RUN_TARGET)
