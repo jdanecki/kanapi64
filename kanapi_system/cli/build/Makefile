@@ -383,7 +383,7 @@ alsa-oss:
 cpio:
 	@$(RUN_TARGET)
 
-rsync:
+rsync: xxHash lz4 zstd
 	@$(RUN_TARGET)
 
 lynx: gnutls
@@ -508,4 +508,7 @@ zstd:
 	@$(RUN_TARGET)
 
 xxHash:
+	@$(RUN_TARGET)
+
+lz4:
 	@$(RUN_TARGET)

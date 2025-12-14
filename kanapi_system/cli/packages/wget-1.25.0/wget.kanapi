@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+# Copyright (c) 2012-2015 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,10 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=xxHash
-VER=0.8.3
-URL="https://github.com/Cyan4973/${PACKAGE_NAME}/archive/refs/tags"
-EXT=tar.gz
+PACKAGE_NAME=wget
+VER=1.25.0
+URL="GNU"
+EXT=tar.lz
 #build depends on
 #LIB_DEPENDS=""
 
@@ -30,22 +29,7 @@ EXT=tar.gz
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
-pkg_download() {
-     PACKAGE_PATH=v${VER}.${EXT}
-     PACKAGE_FILENAME=${PACKAGE_NAME}-${VER}.${EXT}
-     pkg_curl
-}
-
-pkg_configure() {
-	local_copy
-}
-
-pkg_build() {
-	${MAKE} -C build -j ${MAKE_JOBS} PREFIX=${PREFIX} MAKEINFO=true
-}
-
 pkg_install() {
-	mkdir -p ${PREFIX}
-	${MAKE} -C build -j ${MAKE_JOBS} PREFIX=${PREFIX} install MAKEINFO=true && \
-		pkg_install_bin_all && pkg_install_libs	&& pkg_install_pc_lib_all_only
+	pkg_install_make_bin_all
 }
+

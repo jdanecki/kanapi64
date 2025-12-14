@@ -30,7 +30,7 @@ EXT=tar.gz
 #export CFLAGS="${CFLAGS} "
 	
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --disable-xxhash --disable-zstd --disable-lz4
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
 }
 
 pkg_install() {
