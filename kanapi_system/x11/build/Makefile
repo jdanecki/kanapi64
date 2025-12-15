@@ -6,19 +6,17 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-x11: x11-lib wm xapp
+x11: libXext libXdamage libxkbfile freetype xterm
+
+x11-all: x11-lib wm xapp
 
 x11-lib: graphics x-support imlib2
 
 x11-manual: wayland-protocols vtwm ratpoison oclock xcalc xclock xconsole xedit oneko xeyes xload \
 	xmag xman xlunch st x11perf xf86-video-s3 xf86-video-tseng
 
-x-support: kbproto util-macros xproto xextproto libxcb xtrans inputproto \
-	libX11 libXext fixesproto libXfixes libXdamage xf86driproto xcmiscproto \
-	bigreqsproto randrproto renderproto fontsproto videoproto compositeproto \
-	recordproto scrnsaverproto resourceproto xineramaproto xf86dgaproto \
-	xf86vidmodeproto dri2proto dri3proto glproto presentproto libxkbfile \
-	freetype libfontenc libXfont xkeyboard-config xkbcomp mkfontscale \
+x-support:  \
+	 libfontenc libXfont xkeyboard-config xkbcomp mkfontscale \
 	mkfontdir bdftopcf font-cursor-misc libxshmfence \
 	mesa xcb-util-keysyms xinit libICE libSM \
 	libXt libXmu mtdev xorg-server xf86-input-keyboard \
@@ -27,6 +25,10 @@ x-support: kbproto util-macros xproto xextproto libxcb xtrans inputproto \
 	libXpm libXcomposite libXaw
 
 graphics: jpegsrc tiff freeimage libpng pixman libpng14 exif 
+
+xapp: xfd xterm bitmap showfont xbacklight xdriinfo \
+   xdpyinfo xev xhost xkill xfontsel xmodmap xrandr xset xsetroot \
+   xsetpointer xvinfo xauth tk graphviz groff netpbm xwd xwininfo
 
 tiff:
 	@$(RUN_TARGET)
@@ -43,19 +45,11 @@ libpng:
 pixman:
 	@$(RUN_TARGET)
 
-kbproto:
-	@$(RUN_TARGET)
 
 util-macros:	
 	@$(RUN_TARGET)
 
-xproto:
-	@$(RUN_TARGET)
-
-xextproto:
-	@$(RUN_TARGET)
-
-libXau:
+libXau: xorgproto
 	@$(RUN_TARGET)
 
 xcb-proto:
@@ -64,85 +58,22 @@ xcb-proto:
 libpthread-stubs:
 	@$(RUN_TARGET)
 
-libxcb: xcb-proto libpthread-stubs libXau
+libxcb: util-macros xcb-proto libXau
 	@$(RUN_TARGET)
 
 xtrans:
 	@$(RUN_TARGET)
 
-inputproto:
+libX11: libxcb xtrans
 	@$(RUN_TARGET)
 
-libX11:
+libXext: libX11
 	@$(RUN_TARGET)
 
-libXext:	
+libXfixes: libX11
 	@$(RUN_TARGET)
 
-fixesproto:
-	@$(RUN_TARGET)
-
-libXfixes:
-	@$(RUN_TARGET)
-
-damageproto:
-	@$(RUN_TARGET)
-
-libXdamage: damageproto
-	@$(RUN_TARGET)
-
-xf86driproto:
-	@$(RUN_TARGET)
-
-xcmiscproto:
-	@$(RUN_TARGET)
-
-bigreqsproto:
-	@$(RUN_TARGET)
-
-randrproto:
-	@$(RUN_TARGET)
-
-renderproto:
-	@$(RUN_TARGET)
-
-fontsproto:
-	@$(RUN_TARGET)
-
-videoproto:
-	@$(RUN_TARGET)
-
-compositeproto:
-	@$(RUN_TARGET)
-
-recordproto:
-	@$(RUN_TARGET)
-
-scrnsaverproto:
-	@$(RUN_TARGET)
-
-resourceproto:
-	@$(RUN_TARGET)
-
-xineramaproto:
-	@$(RUN_TARGET)
-
-xf86dgaproto:
-	@$(RUN_TARGET)
-
-xf86vidmodeproto:
-	@$(RUN_TARGET)
-
-dri2proto:
-	@$(RUN_TARGET)
-
-dri3proto:
-	@$(RUN_TARGET)
-
-glproto:
-	@$(RUN_TARGET)
-
-presentproto:
+libXdamage: libXfixes
 	@$(RUN_TARGET)
 
 libxkbfile:
@@ -202,13 +133,13 @@ xinit:
 libICE:
 	@$(RUN_TARGET)
 
-libSM:
+libSM: libICE
 	@$(RUN_TARGET)
 
-libXt:
+libXt: libSM
 	@$(RUN_TARGET)
 
-libXmu:
+libXmu: libXt
 	@$(RUN_TARGET)
 
 mtdev:
@@ -481,11 +412,8 @@ i3: startup-notification xcb-util xcb-util-cursor xcb-util-wm xcb-util-xrm libxk
 i3blocks: dmenu i3 
 	@$(RUN_TARGET)
 
-xapp: xfd xterm bitmap showfont xbacklight xdriinfo \
-   xdpyinfo xev xhost xkill xfontsel xmodmap xrandr xset xsetroot \
-   xsetpointer xvinfo xauth tk graphviz groff netpbm xwd xwininfo
 
-libXaw:
+libXaw: libXmu libXpm
 	@$(RUN_TARGET)
 
 xfd:
@@ -494,7 +422,7 @@ xfd:
 st:
 	@$(RUN_TARGET)
 
-xterm: libXrender
+xterm: libXaw
 	@$(RUN_TARGET)
 
 xbitmaps:
@@ -636,6 +564,8 @@ gperf:
 	@$(RUN_TARGET)
 
 
-
 xf86-video-amdgpu:
+	@$(RUN_TARGET)
+
+xorgproto:
 	@$(RUN_TARGET)
