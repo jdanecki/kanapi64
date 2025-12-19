@@ -1,0 +1,47 @@
+#!/bin/bash
+
+KANAPI_VER=0.12
+
+if [ "`id -u`" != "0" ]
+then
+	KANAPI_ROOT="${HOME}/kanapi_${KANAPI_VER}"
+else
+	KANAPI_ROOT="/kanapi_${KANAPI_VER}"
+fi
+KANAPI_BASE=${KANAPI_ROOT}/packages
+
+search_in_dir() {
+	echo " -> $fd"
+	for f in $fd/*
+	do
+		dir=$(basename $fd)
+		file=$(basename $f)
+		echo " --- dir: $dir file: $file full: ${KANAPI_BASE}/$f"
+		if [ -f ${KANAPI_BASE}/$f ]
+		then
+			mkdir -p /usr/local/man/$dir
+			ln -svf ${KANAPI_BASE}/$f /usr/local/man/$dir
+		fi
+	done
+}
+
+pushd ${KANAPI_BASE}
+for package in *
+do
+	for subdir in $package/man $package/share/man
+	do
+		if [ -d $subdir ]
+		then
+	#		echo "subdir: $subdir"
+
+			for fd in $subdir/*
+			do
+				if [ -d $fd ]
+				then
+					search_in_dir $fd
+				fi
+			done
+		fi
+	done
+done
+

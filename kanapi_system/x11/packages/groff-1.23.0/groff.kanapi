@@ -1,7 +1,6 @@
 #!/bin/bash
 #
 # Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2022-2024 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,39 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=ccache
-VER=4.12.2
-URL="https://github.com/ccache/ccache/releases/download/v${VER}"
-EXT=tar.xz
+PACKAGE_NAME=groff
+VER=1.23.0
+URL="GNU"
+EXT=tar.gz
 #build depends on
+
+#LIB_DEPENDS="x11 ice xaw7 xmu sm xcb uuid xau xext xpm"
+
 . ../settings
 
-pkg_configure() {
-    local_copy
-    cmake -DCMAKE_TLS_CAINFO=${KANAPI_BASE}/openssl-${openssl_ver}/ssl/cert.pem .
-    #-DCMAKE_TLS_VERIFY=0 
-}
-
-pkg_build() {
-   pkg_local_build
+pkg_configure() {	
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  
+#	\--with-x --with-appresdir=${PREFIX}/app-defaults --with-doc="examples"
 }
 
 pkg_install() {
-    cd build
-    cmake --install . --prefix ${PREFIX}
-	if [ "$?" = "0" ]
-	then
-		mkdir ${PREFIX}/links
-		${LN_SF} ${PREFIX}/bin/ccache ${PREFIX}/links/gcc 
-		${LN_SF} ${PREFIX}/bin/ccache ${PREFIX}/links/g++
-        pkg_install_bin_all 
-	else
-		exit 1
-	fi
+	pkg_install_make && pkg_install_bin_all
 }
 
+
 pkg_check() {
-    env
-    cmake --version
-    ldd `which cmake`
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
 }
+

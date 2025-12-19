@@ -6,29 +6,49 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-x11: libXext libXdamage libxkbfile freetype xterm
+x11: x11-client x11-server git ImageMagick groff
+
+x11-client: libXext libXdamage libxkbfile xterm xfd
+
+x11-server:
+
+# server side:
+# font-util prepares fonts
+# xterm → Xlib → X server → libxfont → PCF/BDF
+#
+# client side:
+# xterm → libXft → Fontconfig → FreeType → bitmap → X server
 
 x11-all: x11-lib wm xapp
 
 x11-lib: graphics x-support imlib2
 
-x11-manual: wayland-protocols vtwm ratpoison oclock xcalc xclock xconsole xedit oneko xeyes xload \
-	xmag xman xlunch st x11perf xf86-video-s3 xf86-video-tseng
+x11-manual: wayland-protocols vtwm ratpoison oclock xcalc xclock xconsole xedit oneko xeyes \
+	xload xmag xman xlunch st x11perf xf86-video-s3 xf86-video-tseng
 
 x-support:  \
-	 libfontenc libXfont xkeyboard-config xkbcomp mkfontscale \
-	mkfontdir bdftopcf font-cursor-misc libxshmfence \
-	mesa xcb-util-keysyms xinit libICE libSM \
-	libXt libXmu mtdev xorg-server xf86-input-keyboard \
-	xf86-input-mouse xf86-input-evdev xf86-video-intel xf86-video-vesa xf86-video-fbdev \
-	xf86-video-modesetting fonts setxkbmap xinput libXft icons libXxf86vm libXScrnSaver ois \
-	libXpm libXcomposite libXaw
+	libfontenc libXfont xkeyboard-config xkbcomp mkfontscale \
+	mkfontdir bdftopcf font-cursor-misc libxshmfence mesa xcb-util-keysyms xinit \
+       	mtdev xorg-server xf86-input-keyboard xf86-input-mouse xf86-input-evdev \
+	xf86-video-intel xf86-video-vesa xf86-video-fbdev xf86-video-modesetting fonts \
+	setxkbmap xinput libXft icons libXxf86vm libXScrnSaver ois  libXcomposite 
 
-graphics: jpegsrc tiff freeimage libpng pixman libpng14 exif 
+graphics: jpegsrc tiff  pango
 
 xapp: xfd xterm bitmap showfont xbacklight xdriinfo \
    xdpyinfo xev xhost xkill xfontsel xmodmap xrandr xset xsetroot \
    xsetpointer xvinfo xauth tk graphviz groff netpbm xwd xwininfo
+
+deprecated: freeimage exif
+
+tcl:
+	@$(RUN_TARGET)
+
+tk: tcl
+	@$(RUN_TARGET)
+
+git:	tk
+	@$(RUN_TARGET)
 
 tiff:
 	@$(RUN_TARGET)
@@ -44,7 +64,6 @@ libpng:
 
 pixman:
 	@$(RUN_TARGET)
-
 
 util-macros:	
 	@$(RUN_TARGET)
@@ -169,126 +188,10 @@ xf86-video-fbdev:
 xf86-video-modesetting:
 	@$(RUN_TARGET)
 
-fonts: fonts-bitmap fonts-type1 fonts-misc fonts-ttf
-#	for i in 100dpi 75dpi Speedo Type1 cyrillic misc; do ln -svf $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/$$i $(KANAPI_BASE)/fontconfig-$(fontconfig_ver)/share/fonts ; done
-	if [ "$(ACTION)" = "install" ] ; then \
-	if [ ! -d $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF ] ; then mkdir -p $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF; fi ;\
-	for i in $(KANAPI_BASE)/freefont-ttf-$(freefont_ttf_ver)/*.ttf $(KANAPI_BASE)/dejavu-fonts-ttf-$(dejavu_fonts_ttf_ver)/ttf/*.ttf ; do \
-		if [ -f $$i ] ; then ln -sf $$i $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF ; fi; done; \
-	echo -n > $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts;\
-	for i in $(KANAPI_BASE)/freefont-ttf-$(freefont_ttf_ver)/fonts.scale $(KANAPI_BASE)/dejavu-fonts-ttf-$(dejavu_fonts_ttf_ver)/ttf/fonts.scale ; do \
-		if [ -f $$i ] ; then cat $$i | grep ttf >> $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts ; fi; done; \
-	if [ -f $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts ] ; then \
-		cat $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts	| wc -l >  $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts.scale ; \
-		cat $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts	>>  $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts.scale ; \
-		rm $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts ; \
-		cd $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF ; \
-		if [ -x "`which mkfontdir`" ]; then mkfontdir ; fi ; \
-	fi ; fi
-
-fonts-ttf: freefont-ttf dejavu-fonts-ttf font-bh-ttf
-
-fontconfig: gperf
+expat:
 	@$(RUN_TARGET)
 
-freefont-ttf: fontconfig
-	@$(RUN_TARGET)
-
-dejavu-fonts-ttf: fontconfig
-	@$(RUN_TARGET)
-
-font-bh-ttf:
-	@$(RUN_TARGET)
-
-fonts-bitmap: fonts-utopia fonts-bh fonts-bitstream
-	
-fonts-utopia: font-adobe-75dpi font-adobe-100dpi font-adobe-utopia-75dpi font-adobe-utopia-100dpi 
-	
-fonts-bh: font-bh-75dpi font-bh-100dpi font-bh-lucidatypewriter-75dpi font-bh-lucidatypewriter-100dpi
-
-fonts-bitstream: font-bitstream-75dpi font-bitstream-100dpi font-bitstream-speedo 
-
-fonts-type1: font-adobe-utopia-type1 font-bh-type1 font-ibm-type1 font-xfree86-type1 
-
-fonts-misc: font-daewoo-misc font-dec-misc font-isas-misc font-jis-misc font-micro-misc font-misc-misc \
-	font-mutt-misc font-schumacher-misc font-sony-misc font-sun-misc font-alias
-
-font-alias:
-	@$(RUN_TARGET)
-
-font-adobe-75dpi:
-	@$(RUN_TARGET)
-
-font-adobe-100dpi:
-	@$(RUN_TARGET)
-
-font-adobe-utopia-75dpi:
-	@$(RUN_TARGET)
-
-font-adobe-utopia-100dpi:
-	@$(RUN_TARGET)
-
-font-adobe-utopia-type1:
-	@$(RUN_TARGET)
-
-font-bh-75dpi:
-	@$(RUN_TARGET)
-
-font-bh-100dpi:
-	@$(RUN_TARGET)
-
-font-bh-lucidatypewriter-75dpi:
-	@$(RUN_TARGET)
-
-font-bh-lucidatypewriter-100dpi:
-	@$(RUN_TARGET)
-
-font-bh-type1:
-	@$(RUN_TARGET)
-
-font-bitstream-75dpi:
-	@$(RUN_TARGET)
-
-font-bitstream-100dpi:
-	@$(RUN_TARGET)
-
-font-bitstream-speedo:
-	@$(RUN_TARGET)
-
-font-daewoo-misc:
-	@$(RUN_TARGET)
-
-font-dec-misc:
-	@$(RUN_TARGET)
-
-font-ibm-type1:
-	@$(RUN_TARGET)
-
-font-isas-misc:
-	@$(RUN_TARGET)
-
-font-jis-misc:
-	@$(RUN_TARGET)
-
-font-micro-misc:
-	@$(RUN_TARGET)
-
-font-misc-misc:
-	@$(RUN_TARGET)
-
-font-mutt-misc:
-	@$(RUN_TARGET)
-
-font-schumacher-misc:
-	@$(RUN_TARGET)
-
-font-sony-misc:
-	@$(RUN_TARGET)
-
-font-sun-misc:
-	@$(RUN_TARGET)
-
-font-xfree86-type1:
+fontconfig: expat freetype
 	@$(RUN_TARGET)
 
 setxkbmap: 
@@ -309,7 +212,7 @@ libXinerama:
 xinput: libXi libXrandr libXinerama
 	@$(RUN_TARGET)
 
-libXft: 
+libXft:  libXrender fontconfig
 	@$(RUN_TARGET)
 
 icons:  xcursor-themes default-icon-theme hicolor-icon-theme tango-icon-theme 
@@ -341,10 +244,10 @@ icu4c:
 harfbuzz: cairo icu4c
 	@$(RUN_TARGET)
 
-pango: harfbuzz
+pango: 
 	@$(RUN_TARGET)
 
-ImageMagick: pango 
+ImageMagick: graphics 
 	@$(RUN_TARGET)
 
 tango-icon-theme: icon-naming-utils ImageMagick
@@ -422,7 +325,13 @@ xfd:
 st:
 	@$(RUN_TARGET)
 
-xterm: libXaw
+freefont-otf: 
+	@$(RUN_TARGET)
+
+dejavu-fonts-ttf:
+	@$(RUN_TARGET)
+
+xterm: libXaw libXft freefont-otf dejavu-fonts-ttf
 	@$(RUN_TARGET)
 
 xbitmaps:
@@ -524,9 +433,6 @@ xvinfo: libXv
 xauth:
 	@$(RUN_TARGET)
 
-tk:
-	@$(RUN_TARGET)
-
 graphviz: 
 	@$(RUN_TARGET)
 
@@ -560,12 +466,128 @@ exif: libexif
 libXcomposite:
 	@$(RUN_TARGET)
 
-gperf:
-	@$(RUN_TARGET)
-
-
 xf86-video-amdgpu:
 	@$(RUN_TARGET)
 
 xorgproto:
 	@$(RUN_TARGET)
+
+# old fonts
+fonts: fonts-bitmap fonts-type1 fonts-misc fonts-ttf
+#	for i in 100dpi 75dpi Speedo Type1 cyrillic misc; do ln -svf $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/$$i $(KANAPI_BASE)/fontconfig-$(fontconfig_ver)/share/fonts ; done
+	if [ "$(ACTION)" = "install" ] ; then \
+	if [ ! -d $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF ] ; then mkdir -p $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF; fi ;\
+	for i in $(KANAPI_BASE)/freefont-ttf-$(freefont_ttf_ver)/*.ttf $(KANAPI_BASE)/dejavu-fonts-ttf-$(dejavu_fonts_ttf_ver)/ttf/*.ttf ; do \
+		if [ -f $$i ] ; then ln -sf $$i $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF ; fi; done; \
+	echo -n > $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts;\
+	for i in $(KANAPI_BASE)/freefont-ttf-$(freefont_ttf_ver)/fonts.scale $(KANAPI_BASE)/dejavu-fonts-ttf-$(dejavu_fonts_ttf_ver)/ttf/fonts.scale ; do \
+		if [ -f $$i ] ; then cat $$i | grep ttf >> $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts ; fi; done; \
+	if [ -f $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts ] ; then \
+		cat $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts	| wc -l >  $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts.scale ; \
+		cat $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts	>>  $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts.scale ; \
+		rm $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF/fonts ; \
+		cd $(KANAPI_BASE)/font-util-$(font_util_ver)/share/fonts/X11/TTF ; \
+		if [ -x "`which mkfontdir`" ]; then mkfontdir ; fi ; \
+	fi ; fi
+
+fonts-ttf: freefont-ttf dejavu-fonts-ttf font-bh-ttf
+
+freefont-ttf: fontconfig
+	@$(RUN_TARGET)
+
+
+font-bh-ttf:
+	@$(RUN_TARGET)
+
+fonts-bitmap: fonts-utopia fonts-bh fonts-bitstream
+	
+fonts-utopia: font-adobe-75dpi font-adobe-100dpi font-adobe-utopia-75dpi font-adobe-utopia-100dpi 
+	
+fonts-bh: font-bh-75dpi font-bh-100dpi font-bh-lucidatypewriter-75dpi font-bh-lucidatypewriter-100dpi
+
+fonts-bitstream: font-bitstream-75dpi font-bitstream-100dpi font-bitstream-speedo 
+
+fonts-type1: font-adobe-utopia-type1 font-bh-type1 font-ibm-type1 font-xfree86-type1 
+
+fonts-misc: font-daewoo-misc font-dec-misc font-isas-misc font-jis-misc font-micro-misc font-misc-misc \
+	font-mutt-misc font-schumacher-misc font-sony-misc font-sun-misc font-alias
+
+font-alias:
+	@$(RUN_TARGET)
+
+font-adobe-75dpi:
+	@$(RUN_TARGET)
+
+font-adobe-100dpi:
+	@$(RUN_TARGET)
+
+font-adobe-utopia-75dpi:
+	@$(RUN_TARGET)
+
+font-adobe-utopia-100dpi:
+	@$(RUN_TARGET)
+
+font-adobe-utopia-type1:
+	@$(RUN_TARGET)
+
+font-bh-75dpi:
+	@$(RUN_TARGET)
+
+font-bh-100dpi:
+	@$(RUN_TARGET)
+
+font-bh-lucidatypewriter-75dpi:
+	@$(RUN_TARGET)
+
+font-bh-lucidatypewriter-100dpi:
+	@$(RUN_TARGET)
+
+font-bh-type1:
+	@$(RUN_TARGET)
+
+font-bitstream-75dpi:
+	@$(RUN_TARGET)
+
+font-bitstream-100dpi:
+	@$(RUN_TARGET)
+
+font-bitstream-speedo:
+	@$(RUN_TARGET)
+
+font-daewoo-misc:
+	@$(RUN_TARGET)
+
+font-dec-misc:
+	@$(RUN_TARGET)
+
+font-ibm-type1:
+	@$(RUN_TARGET)
+
+font-isas-misc:
+	@$(RUN_TARGET)
+
+font-jis-misc:
+	@$(RUN_TARGET)
+
+font-micro-misc:
+	@$(RUN_TARGET)
+
+font-misc-misc:
+	@$(RUN_TARGET)
+
+font-mutt-misc:
+	@$(RUN_TARGET)
+
+font-schumacher-misc:
+	@$(RUN_TARGET)
+
+font-sony-misc:
+	@$(RUN_TARGET)
+
+font-sun-misc:
+	@$(RUN_TARGET)
+
+font-xfree86-type1:
+	@$(RUN_TARGET)
+
+
