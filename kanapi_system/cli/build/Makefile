@@ -20,7 +20,7 @@ cli-lib: pci_ids libusb udev libdrm libev libevdev cacert libsigcpp sound popt l
 	itstool gnutls lua yasm
 
 disabled: ntfs-3g_ntfsprogs nfs llvm iotop wget enet Hermes libdrm rplay esound gstreamer \
-	sndio portaudio fluidsynth libmodplug sox  udev vala ctags
+	sndio portaudio fluidsynth libmodplug sox  udev vala ctags db
 
 linux:
 	@$(RUN_TARGET)
@@ -266,7 +266,7 @@ flac:
 portaudio:
 	@$(RUN_TARGET)
 
-database: db gdbm
+database: gdbm
 
 db:
 	@$(RUN_TARGET)
@@ -533,4 +533,10 @@ LuaJIT:
 	@$(RUN_TARGET)
 
 luarocks:
+	@$(RUN_TARGET)
+
+man-db: libpipeline gdbm
+	@$(RUN_TARGET)
+
+libpipeline:
 	@$(RUN_TARGET)

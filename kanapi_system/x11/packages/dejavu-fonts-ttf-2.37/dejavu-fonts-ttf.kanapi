@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -26,10 +26,7 @@ SF_URL="dejavu/dejavu/${VER}/${PACKAGE_NAME}-${VER}.${EXT}"
 . ../settings
 
 pkg_configure() {
-	rm -rf build
-	mkdir build
-	cp -arv ${PACKAGE_SRCDIR}/ttf build
-	cp -arv ${PACKAGE_SRCDIR}/fontconfig build
+    echo "nothing to do"
 }
 
 pkg_build() {
@@ -38,20 +35,9 @@ pkg_build() {
 
 pkg_install() {
 	mkdir -p ${PREFIX}
-	cp -arv build/ttf ${PREFIX}
-	cp -arv build/fontconfig ${PREFIX}
-
-	cd ${PREFIX}/ttf
-	mkfontscale
-	mkfontdir
-	ln -svf ${PREFIX}/ttf ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/share/fonts
-	ln -svf ${PREFIX}/fontconfig/* ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/etc/fonts/conf.d
-
-	export XDG_DATA_HOME=${KANAPI_HOME}/.local
+	cp -arv ${PACKAGE_SRCDIR}/* ${PREFIX}
+	ln -svf ${PREFIX}/ttf/*.ttf ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/share/fonts
+	ln -svf ${PREFIX}/fontconfig/*.conf ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/etc/fonts/conf.d
 	fc-cache -v
-}
-
-pkg_check() {
-	echo ${SF_URL}
 }
 

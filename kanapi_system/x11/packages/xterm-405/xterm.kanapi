@@ -22,11 +22,11 @@ VER=405
 URL="https://invisible-island.net/archives/xterm"
 EXT=tgz
 
-LIB_DEPENDS="ncursesw"
+LIB_DEPENDS="ncursesw fontconfig"
 
 . ../settings
 
-export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt"
+#export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt"
 
 pkg_configure() {
 	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  \

@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2022-2024 Piotr Danecki <piotr.a.danecki@gmail.com>
+# Copyright (c) 2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,33 +17,22 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=openssl
-VER=3.6.0
-URL="https://www.openssl.org/source"
-EXT=tar.gz
+PACKAGE_NAME=man-db
+VER=2.13.1
+URL="https://mirror.marwan.ma/savannah/man-db"
+EXT=tar.xz
+#build depends on
+#LIB_DEPENDS=""
 
 . ../settings
 
-unset CC
-
-
 pkg_configure() {
-	local_copy
-	${PACKAGE_SRCDIR}/Configure --prefix=$PREFIX shared linux-generic64
+        ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --enable-cache-owner=kanapi
 }
 
-pkg_build() {
-	pkg_build_local
-}
 
 pkg_install() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} install_sw MAKEINFO=true
-	for i in ${PREFIX}/lib/pkgconfig/*
-	do
-		${LN_SF} $i ${PKG_CONFIG_DIR}/`basename $i`
-	done
-    pkg_install_libs && pkg_install_bin_all
-    mkdir -p ${PREFIX}/ssl
-    curl -o ${PREFIX}/ssl/cert.pem https://curl.se/ca/cacert.pem
+	ln -svf ${REPO_BASE}/kanapi_system/scripts/update_man /bin
+	pkg_install_make && pkg_install_bin_all
 }
+

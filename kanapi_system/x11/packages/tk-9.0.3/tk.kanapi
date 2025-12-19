@@ -17,20 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=zip
-VER=30
-URL="https://downloads.sourceforge.net/infozip"
+PACKAGE_NAME=tk
+VER=9.0.3
+URL="https://downloads.sourceforge.net/project/tcl/Tcl/${VER}"
 EXT=tar.gz
 #build depends on
-#LIB_DEPENDS=""
+
+#LIB_DEPENDS="xt x11 xft xext fontconfig"
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
-#export CFLAGS="${CFLAGS} "
+#export LDFLAGS="${LDFLAGS} -lm -lpthread -lrt"
+#if [ -n "${PKG_CONFIG}" ]
+#then
+#	export CPP="gcc -E `${PKG_CONFIG} --cflags xt`"
+#fi
 
 pkg_download() {
-	PACKAGE_PATH=${PACKAGE_NAME}${VER}.${EXT}
+	PACKAGE_VER="${PACKAGE_NAME}${VER}-src"
+	PACKAGE_FILENAME=${PACKAGE_VER}.${EXT}
+	PACKAGE_PATH=${PACKAGE_FILENAME}
+	
 	pkg_curl
 }
 
@@ -39,31 +46,27 @@ pkg_prepare() {
 	then 
 		echo "$PACKAGE_NAME: already prepared"
 	else
-		pkg_tgz
+		tar -xzf ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}${VER}-src.${EXT} -C ${KANAPI_BUILD_SRC}
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
-	${LN_SNF} zip${VER} ${PACKAGE_SRCDIR}
+	${LN_SNF} ${PACKAGE_NAME}${VER} ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {
-	local_copy
-	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/12-fix-build-with-gcc-14.patch
-	sh ./unix/configure gcc
-	ln -s unix/Makefile Makefile
-}
-
-pkg_build() {
-	cd build
-	${MAKE} generic_gcc
+	${PACKAGE_SRCDIR}/unix/configure --prefix=${PREFIX} \
+	--with-tcl=`${PKG_CONFIG} --variable=libdir tcl` \
+	--disable-zipfs
 }
 
 pkg_install() {
-	cd build
-	mkdir -p ${PREFIX}/bin
-	cp -av zip ${PREFIX}/bin
-	cp -av zipnote ${PREFIX}/bin
-	cp -av zipsplit ${PREFIX}/bin
-	cp -av zipcloak ${PREFIX}/bin
-	pkg_install_bin_all
+    pkg_install_pc_all
+    ${LN_SF} ${PREFIX}/bin/wish9.0 ${PREFIX}/bin/wish
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 }
+
+pkg_check() {
+	${PKG_CONFIG} --variable=libdir tcl
+	echo "CPP=${CPP}"
+}
+
 

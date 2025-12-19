@@ -18,19 +18,22 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=openssl
-VER=3.6.0
-URL="https://www.openssl.org/source"
-EXT=tar.gz
+PACKAGE_NAME=git
+VER=2.52.0
+URL="https://www.kernel.org/pub/software/scm/git"
+EXT=tar.xz
+
+#LIB_DEPENDS="zlib libcurl openssl libssh2"
 
 . ../settings
 
-unset CC
-
+export CFLAGS="${CFLAGS} ${GPG_ERROR_CFLAGS} ${LIBGCRYPT_CFLAGS} -I ${KANAPI_BASE}/gettext-${gettext_ver}/include"
+export LDFLAGS="${LDFLAGS} ${GPG_ERROR_LDFLAGS} ${LIBGCRYPT_LDFLAGS} -L${KANAPI_BASE}/gettext-${gettext_ver}/lib -lgettextlib"
+export NO_INSTALL_HARDLINKS=1
 
 pkg_configure() {
 	local_copy
-	${PACKAGE_SRCDIR}/Configure --prefix=$PREFIX shared linux-generic64
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX 
 }
 
 pkg_build() {
@@ -39,12 +42,12 @@ pkg_build() {
 
 pkg_install() {
 	cd build
-	${MAKE} -j ${MAKE_JOBS} install_sw MAKEINFO=true
-	for i in ${PREFIX}/lib/pkgconfig/*
-	do
-		${LN_SF} $i ${PKG_CONFIG_DIR}/`basename $i`
-	done
-    pkg_install_libs && pkg_install_bin_all
-    mkdir -p ${PREFIX}/ssl
-    curl -o ${PREFIX}/ssl/cert.pem https://curl.se/ca/cacert.pem
+	${MAKE} -j ${MAKE_JOBS} install MAKEINFO=true && pkg_install_bin_all
+}
+
+pkg_check() {
+	echo "CFLAGS=${CFLAGS}"
+	echo "LDFLAGS=${LDFLAGS}"
+	${PKG_CONFIG} --cflags ${LIB_DEPENDS}
+	ls -l `which perl`
 }
