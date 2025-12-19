@@ -27,12 +27,12 @@ EXT=tar.xz
 
 pkg_configure() {
     local_copy
+    cmake -DCMAKE_TLS_CAINFO=${KANAPI_BASE}/openssl-${openssl_ver}/ssl/cert.pem .
+    #-DCMAKE_TLS_VERIFY=0 
 }
 
 pkg_build() {
-   cd build
-   cmake . -DCMAKE_TLS_VERIFY=0 
-	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
+   pkg_local_build
 }
 
 pkg_install() {
@@ -47,4 +47,10 @@ pkg_install() {
 	else
 		exit 1
 	fi
+}
+
+pkg_check() {
+    env
+    cmake --version
+    ldd `which cmake`
 }
