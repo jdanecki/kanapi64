@@ -35,13 +35,15 @@ pkg_configure() {
 
 pkg_build() {
 	cd build
-	${MAKE} -j ${MAKE_JOBS} linux INSTALL_TOP=${PREFIX} 
-#	\
-#        MYCFLAGS="${CFLAGS}" MYLDFLAGS="${LDFLAGS}" MYLIBS="-lncursesw"
+	${MAKE} -j ${MAKE_JOBS} linux INSTALL_TOP=${PREFIX}  MYCFLAGS="-fPIC" 
+	#MYLDFLAGS="${LDFLAGS}" MYLIBS="-lncursesw"
 }
 
 pkg_install() {
+	mkdir -p ${PREFIX}/lib.pkgconfig
+	cp -a -v ../../packages/${PACKAGE_NAME}-${VER}/lua.pc ${PREFIX}/lib/pkgconfig
 	cd build
-	${MAKE} -j ${MAKE_JOBS} install INSTALL_TOP=${PREFIX} && pkg_install_bin_all && pkg_install_libs
+	${MAKE} -j ${MAKE_JOBS} install INSTALL_TOP=${PREFIX} && pkg_install_bin_all \
+	&& pkg_install_libs && pkg_install_pc_lib_all_only
 }
 

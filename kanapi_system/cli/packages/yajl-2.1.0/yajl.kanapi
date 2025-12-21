@@ -19,11 +19,12 @@
 
 PACKAGE_NAME=yajl
 VER=2.1.0
-URL="https://github.com/lloyd/yajl/archive"
+URL="https://github.com/lloyd/yajl/archive/refs/tags"
 EXT=tar.gz
 #build depends on
 . ../settings
-#export LD_LIBRARY_PATH=${KANAPI_BASE}/libs
+
+export CFLAGS="-Wall -fvisibility=hidden -std=c99 -pedantic -Wpointer-arith -Wno-format-y2k -Wstrict-prototypes -Wmissing-declarations -Wnested-externs -Wextra  -Wundef -Wwrite-strings -Wold-style-definition -Wredundant-decls -Wno-unused-parameter -Wno-sign-compare -Wmissing-prototypes -DNDEBUG -O2 -Wuninitialized"
 
 pkg_download() {
 	PACKAGE_PATH=${VER}.${EXT}
@@ -38,22 +39,43 @@ pkg_prepare() {
 		pkg_tar_gz
 		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
 	fi
-	${LN_SNF} lloyd-yajl-66cb08c ${PACKAGE_SRCDIR}
 }
 
 pkg_configure() {
 	local_copy
-	cmake -G Ninja .  -DCMAKE_INSTALL_PREFIX=${PREFIX} 
+	cd  src
+	rm -f yajl
+	ln -svf api yajl
+	cat api/yajl_version.h.cmake | sed "s/\${YAJL_MAJOR}/2/" \
+	| sed "s/\${YAJL_MINOR}/1/" \
+	| sed "s/\${YAJL_MICRO}/0/" > api/yajl_version.h
 }
 
 pkg_build() {
-	cd build
-	ninja
+	cd build/src
+	gcc ${CFLAGS} *.c --shared -o libyajl.so.${VER} -I. -fPIC -Wl,-soname,libyajl.so.2 
+	ln -svf libyajl.so.${VER} libyajl.so
+	cat yajl.pc.cmake | sed "s@\${CMAKE_INSTALL_PREFIX}@${PREFIX}@" \
+	| sed "s/\${dollar}/$/" \
+	| sed "s/\${LIB_SUFFIX}//" \
+	| sed "s/\${YAJL_MAJOR}/2/" \
+	| sed "s/\${YAJL_MINOR}/1/" \
+	| sed "s/\${YAJL_MICRO}/0/" > yajl.pc
+	cd ../reformatter
+	gcc ${CFLAGS} json_reformat.c  -o json_reformat -I../src -lyajl -L../src
+	cd ../verify
+	gcc ${CFLAGS} json_verify.c  -o json_verify -I../src -lyajl -L../src
 }
 
 pkg_install() {
-	cd build
-	ninja install
-	pkg_install_pc_share_all_only && pkg_install_bin_all &&	pkg_install_libs
+	mkdir -p ${PREFIX}/lib/pkgconfig
+	mkdir -p ${PREFIX}/include/yajl
+	mkdir -p ${PREFIX}/bin
+	cp -av build/reformatter/json_reformat ${PREFIX}/bin
+	cp -av build/verify/json_verify ${PREFIX}/bin
+	cp -av build/src/api/*.h ${PREFIX}/include/yajl
+	cp -av build/src/libyajl.* ${PREFIX}/lib
+	cp -av build/src/yajl.pc ${PREFIX}/lib/pkgconfig
+	pkg_install_pc_lib_all_only && pkg_install_bin_all && pkg_install_libs
 }
 

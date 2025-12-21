@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=mesa
+VER=25.3.2
+URL="https://archive.mesa3d.org"
+EXT=tar.xz
+#build depends on
+#LIB_DEPENDS="xshmfence expat libudev zlib"
+. ../settings
+
+#export LLVM_CONFIG=${KANAPI_BASE}/llvm-${llvm_ver}/bin/llvm-config
+#export LDFLAGS="-lpthread"
+#export CFLAGS="-I`${LLVM_CONFIG} --includedir`"
+
+pkg_prepare() {
+    pkg_tar_xz
+    pip3 install mako
+    pip3 install packaging
+    pip3 install PyYAML
+    date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+}
+
+pkg_configure() {
+    if [ -d build ] ; then rm -r build; fi
+    mkdir -p build
+    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR}  \
+    -Dplatforms=x11 -Dgallium-drivers=crocus,i915,iris -Dvulkan-drivers=intel \
+    -Dgallium-rusticl=false -Dcpp_rtti=false -Damd-use-llvm=false \
+    -Dandroid-libbacktrace=disabled -Dandroid-libperfetto=disabled -Dandroid-strict=false \
+    -Dgallium-d3d12-graphics=disabled -Dgallium-d3d12-video=disabled -Dglvnd=disabled \
+    -Dmicrosoft-clc=disabled 
+
+#needs libepoxy
+#    -Dtools=intel,intel-ui 
+
+# -Dprecomp-compiler=auto \
+#    -Degl=disabled \
+#    -Dglx=auto \
+#    -Dlibunwind=enabled \
+#    -Dgles1=disabled \
+#    -Dgles2=disabled
+}
+
+pkg_check() {
+    meson configure build
+}
+
+pkg_build() {
+    meson compile -C build
+}
+
+pkg_install() {
+	meson install -C build && pkg_install_pc_all_only && pkg_install_libs
+}

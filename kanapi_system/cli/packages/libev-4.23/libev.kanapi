@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -19,7 +19,7 @@
 
 PACKAGE_NAME=libev
 VER=4.23
-URL="http://dist.schmorp.de/libev/Attic"
+URL="https://dist.schmorp.de/libev/Attic"
 EXT=tar.gz
 #build depends on
 . ../settings

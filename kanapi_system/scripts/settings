@@ -864,6 +864,10 @@ verify_file() {
 				check_script $1
 				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
 				;;
+		text/x-java) echo "nickle script"
+				check_script $1
+				if [ "$?" = "0" ] ; then VERIFIED=1 ; fi
+				;;
 		image/x-ms-bmp) echo "bmp file"
 				VERIFIED=1
 				;;

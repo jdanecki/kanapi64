@@ -60,8 +60,8 @@ xz:
 
 t_system: mc procps-ng pciutils screen sdparm strace \
 	 network pci_ids eudev usbutils cpio hdparm \
-	 iptables dmidecode tmux lm-sensors zsh
-#	libev libevdev cacert  p11-kit
+	 iptables dmidecode tmux lm-sensors zsh libev
+#	 libevdev cacert  p11-kit
 
 mc: 
 	@$(RUN_TARGET)
@@ -333,7 +333,7 @@ libev:
 libevdev:
 	@$(RUN_TARGET)
 
-llvm:
+llvm: SPIRV-Tools SPIRV-LLVM-Translator
 	@$(RUN_TARGET)
 
 cacert:
@@ -539,4 +539,7 @@ man-db: libpipeline gdbm
 	@$(RUN_TARGET)
 
 libpipeline:
+	@$(RUN_TARGET)
+
+SPIRV-Tools:
 	@$(RUN_TARGET)

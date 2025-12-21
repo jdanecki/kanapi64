@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Copyright (c) 2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=xf86-input-libinput
+VER=1.5.0
+URL="https://www.x.org/releases/individual/driver"
+EXT=tar.xz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_install() {
+	pkg_install_pc_all
+	ln -svf ${PREFIX}/lib/xorg/modules/input/libinput_drv.so ${KANAPI_BASE}/xorg-server-${xorg_server_ver}/lib/xorg/modules/input
+	ln -svf ${PREFIX}/share/X11/xorg.conf.d/40-libinput.conf ${KANAPI_BASE}/xorg-server-${xorg_server_ver}/share/X11/xorg.conf.d
+}
+

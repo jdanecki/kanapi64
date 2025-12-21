@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=dmenu
+VER=5.4
+URL="http://dl.suckless.org/tools"
+EXT=tar.gz
+#build depends on
+. ../settings
+
+pkg_configure() {
+	local_copy
+	cat config.mk | \
+		sed "s@/usr/local@${PREFIX}@" | \
+		sed "s@/usr/X11R6/include@`${PKG_CONFIG} --variable=includedir x11`@" | \
+		sed "s@/usr/X11R6/lib@`${PKG_CONFIG} --variable=libdir x11`@" |
+		sed "s/^XINERAMA/#XINERAMA/" | \
+		sed "s@/usr/include/freetype2@`${PKG_CONFIG} --variable=includedir freetype2`@" | \
+		sed "s@cc@gcc@" \
+			> /tmp/tmp_$$
+	mv /tmp/tmp_$$  config.mk
+}
+
+pkg_build() {
+	cd build
+	${MAKE} -j ${MAKE_JOBS} XINERAMAFLAGS="`${PKG_CONFIG} --cflags xproto xft`" CC="${KANAPI_C_COMPILER}" \
+		XINERAMALIBS="`${PKG_CONFIG} --libs fontconfig xft xcb xau libpng zlib expat xrender`"
+}
+
+pkg_install() {
+	cd build
+	pkg_install_make &&	pkg_install_bin_all
+}
+
+pkg_check() {
+	gcc --version
+	cc --version
+	echo "CC=${CC}"
+}
+

@@ -50,10 +50,10 @@ pkg_configure() {
     -DCMAKE_CXX_COMPILER="${KANAPI_CXX_COMPILER}" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON \
     -DLLVM_TARGETS_TO_BUILD="X86" \
     -DLLVM_ENABLE_ZLIB=OFF -DLLVM_INCLUDE_DOCS=OFF -DLLVM_INCLUDE_EXAMPLES=OFF \
-    -DLLVM_INCLUDE_TESTS=ON -DLLVM_INCLUDE_TOOLS=ON -DLLVM_INCLUDE_UTILS=ON \
+    -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_TOOLS=ON -DLLVM_INCLUDE_UTILS=ON \
+    -DLLVM_TOOL_LIBCLC_BUILD=ON -DLIBCLC_TARGETS_TO_BUILD="spirv-mesa3d-;spirv64-mesa3d-" \
+    -DLLVM_ENABLE_PROJECTS="clang;libclc" \
     -DCMAKE_EXE_LINKER_FLAGS="-ldl -Wl,-rpath-link,${KANAPI_BASE}/gcc-${gcc_ver}/lib64"
-
-  #	LLVM_TARGETS_TO_BUILD="AArch64,ARM,BPF,Hexagon,Mips,MSP430,NVPTX,PowerPC,Sparc,SystemZ,X86,XCore"
 }
 
 pkg_build() {
@@ -65,7 +65,7 @@ pkg_build() {
 }
 
 pkg_install() {
-  ninja install && pkg_install_bin_all && pkg_install_libs
+  ninja install && pkg_install_bin_all && pkg_install_libs && pkg_install_pc_share_all_only
 }
 
 pkg_check() {

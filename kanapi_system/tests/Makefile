@@ -37,3 +37,11 @@ headers:
 #	. ./set_variables; gcc -E test_headers.c -Wall -o $(RESULTS)/test_headers.i ; cat $(RESULTS)/test_headers.i
 	. ./set_variables; gcc test_headers.c -Wall -o $(RESULTS)/test_headers ; $(RESULTS)/test_headers
 
+CFLAGS:=$(shell pkg-config --cflags gl x11)
+LDFLAGS:=$(shell pkg-config --libs gl x11) -lstdc++
+
+test_gl: test_gl.c
+	@echo "CFLAGS=$(CFLAGS)"
+	@echo "LDFLAGS=$(LDFLAGS)"
+	gcc test_gl.c -Wall -o $(RESULTS)/test_gl $(CFLAGS) $(LDFLAGS) ; $(RESULTS)/test_gl
+	
