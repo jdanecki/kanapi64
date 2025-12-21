@@ -1,5 +1,5 @@
-VER=0.12.1
-BASE_FOR_UPDATE=0.12.1
+VER=0.12.2
+BASE_FOR_UPDATE=0.12.2
 NAME=x11
 export KANAPI_BRANCH=`git rev-parse --abbrev-ref HEAD`
 BASE_IMAGE=cli:0.12.1
