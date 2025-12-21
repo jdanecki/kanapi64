@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Copyright (c) 2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=SPIRV-Tools
+VER=2025.5
+URL="https://github.com/KhronosGroup/${PACKAGE_NAME}/archive/refs/tags"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+pkg_download() {
+	PACKAGE_PATH=v${VER}.${EXT}
+	pkg_curl
+        echo "downloading using curl SPIRV-HEADERS"
+	curl --retry 3 -L -o ${KANAPI_BUILD_SRC}/SPIRV-HEADERS-1.4.335.0.tar.gz https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/vulkan-sdk-1.4.335.0.tar.gz
+}
+
+pkg_prepare() {
+    pkg_tar_gz
+    tar -xzf ${KANAPI_BUILD_SRC}/SPIRV-HEADERS-1.4.335.0.tar.gz -C ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}/external
+    ln -svf ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}/external/SPIRV-Headers-vulkan-sdk-1.4.335.0 ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}/external/spirv-headers
+}
+
+pkg_configure() {
+	local_copy
+#	python3 update_glslang_sources.py
+	cmake -G Ninja . -DCMAKE_INSTALL_PREFIX=${PREFIX} -Wno-dev 
+#-DENABLE_OPT=0
+}
+
+pkg_build() {
+	cd build
+	ninja
+}
+
+pkg_install() {
+	cd build	
+	ninja install &&  pkg_install_bin_all &&  pkg_install_libs && pkg_install_pc_all_only
+}

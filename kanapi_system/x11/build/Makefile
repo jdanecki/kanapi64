@@ -10,7 +10,8 @@ x11: x11-client x11-server git ImageMagick groff
 
 x11-client: libXext libXdamage libxkbfile xterm xfd
 
-x11-server:
+x11-server:  xinit xev xhost xmodmap xfontsel xset xauth xkeyboard-config xkbcomp xf86-input-libinput setxkbmap xdpyinfo xdriinfo xinput
+
 
 # server side:
 # font-util prepares fonts
@@ -27,11 +28,10 @@ x11-manual: wayland-protocols vtwm ratpoison oclock xcalc xclock xconsole xedit 
 	xload xmag xman xlunch st x11perf xf86-video-s3 xf86-video-tseng
 
 x-support:  \
-	libfontenc libXfont xkeyboard-config xkbcomp mkfontscale \
-	mkfontdir bdftopcf font-cursor-misc libxshmfence mesa xcb-util-keysyms xinit \
-       	mtdev xorg-server xf86-input-keyboard xf86-input-mouse xf86-input-evdev \
+	mkfontscale mkfontdir bdftopcf font-cursor-misc \
+       	xf86-input-keyboard xf86-input-mouse xf86-input-evdev \
 	xf86-video-intel xf86-video-vesa xf86-video-fbdev xf86-video-modesetting fonts \
-	setxkbmap xinput libXft icons libXxf86vm libXScrnSaver ois  libXcomposite 
+	xinput libXft icons libXxf86vm libXScrnSaver ois  libXcomposite 
 
 graphics: jpegsrc tiff  pango
 
@@ -104,13 +104,18 @@ freetype:
 font-util:
 	@$(RUN_TARGET)
 
-libfontenc: font-util
+libfontenc: 
+#font-util
 	@$(RUN_TARGET)
 
-libXfont: 
+libXfont: libfontenc
+	@$(RUN_TARGET)
+
+libXfont2: libfontenc
 	@$(RUN_TARGET)
 
 libxslt:
+# libxml2(cli)
 	@$(RUN_TARGET)
 
 xkeyboard-config: libxslt
@@ -140,13 +145,17 @@ wayland-protocols: wayland
 wayland:
 	@$(RUN_TARGET)
 
-mesa:
+glslang:
+	@$(RUN_TARGET)
+
+mesa: glslang libXxf86vm libXrandr xcb-util-keysyms libdisplay-info
+#sensors libepoxy(gui)  llvm(cli) libunwind(cli)
 	@$(RUN_TARGET)
 
 xcb-util-keysyms:
 	@$(RUN_TARGET)
 
-xinit: 
+xinit: xorg-server 
 	@$(RUN_TARGET)
 
 libICE:
@@ -164,7 +173,11 @@ libXmu: libXt
 mtdev:
 	@$(RUN_TARGET)
 
-xorg-server: 
+libdrm:
+	@$(RUN_TARGET)
+
+xorg-server: libxshmfence libdrm mesa libXfont2 libxcvt
+#libepoxy(gui)
 	@$(RUN_TARGET)
 
 xf86-input-keyboard:
@@ -306,7 +319,8 @@ xcb-util-xrm:
 libxkbcommon:
 	@$(RUN_TARGET)
 
-i3: startup-notification xcb-util xcb-util-cursor xcb-util-wm xcb-util-xrm libxkbcommon pango
+i3: startup-notification  xcb-util-cursor xcb-util-wm xcb-util-xrm libxkbcommon
+#yajl(cli), libev(cli)
 	@$(RUN_TARGET)
 
 #i3status: i3
@@ -412,7 +426,8 @@ xman:
 xmodmap:
 	@$(RUN_TARGET)
 
-xrandr:
+xrandr: libXrandr
+#nickle
 	@$(RUN_TARGET)
 
 xset:
@@ -590,4 +605,18 @@ font-sun-misc:
 font-xfree86-type1:
 	@$(RUN_TARGET)
 
+libdisplay-info: hwdata
+	@$(RUN_TARGET)
 
+hwdata:
+	@$(RUN_TARGET)
+
+libxcvt:
+	@$(RUN_TARGET)
+
+xf86-input-libinput: libinput libXi
+	@$(RUN_TARGET)
+
+libinput: mtdev 
+#libevdev(cli)
+	@$(RUN_TARGET)

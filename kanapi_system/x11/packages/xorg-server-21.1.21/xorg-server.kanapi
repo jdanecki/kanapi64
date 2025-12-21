@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=xorg-server
+VER=21.1.21
+URL="https://xorg.freedesktop.org/releases/individual/xserver"
+EXT=tar.xz
+
+#LIB_DEPENDS="dri3proto dri2proto xf86driproto xcb xau xcb-keysyms openssl libcrypto libunwind liblzma gl \
+#	expat xext xdamage xfixes x11-xcb x11 xcb-glx xcb-dri2 xcb-dri3 xcb-present xcb-randr xcb-xfixes \
+#	xcb-render xcb-shape xcb-sync xshmfence libdrm pixman-1 fontutil openssl"
+
+. ../settings
+
+#if [ -n "${PKG_CONFIG}" ]
+#then
+#	export CFLAGS="-g -Og ${CFLAGS} -I`${PKG_CONFIG} --variable=includedir xf86driproto`"
+#fi
+
+#export LDFLAGS="${LDFLAGS} -lpthread -lm -lglapi"
+export LDFLAGS="-Wl,-rpath-link,${KANAPI_BASE}/gcc-${gcc_ver}/lib64"
+
+pkg_configure() {
+#	export LIBUNWIND_CFLAGS="-I`${PKG_CONFIG} --variable=includedir libunwind`"
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX 
+	
+#	--disable-secure-rpc --disable-screensaver \
+#	--with-xkb-bin-directory="`${PKG_CONFIG} --variable=prefix xkbcomp`/bin" \
+#	--with-xkb-path=`${PKG_CONFIG} --variable=xkbconfigdir xkbcomp` \
+#	--with-fontmiscdir=`${PKG_CONFIG} --variable=fontrootdir fontutil`/misc \
+#	 ac_cv_lib_c_backtrace=no ac_cv_func_backtrace=no \
+#	--with-sha1=libcrypto --enable-glamor
+}
+
+pkg_install() {
+	pkg_install_pc && pkg_install_bin_all
+#	if [ ! -d ${PREFIX}/lib/xorg/modules/input ]
+#	then
+#		mkdir ${PREFIX}/lib/xorg/modules/input
+#	fi
+}
+
+pkg_check() {
+	echo "LDFLAGS=${LDFLAGS}"
+	echo "PATH=${PATH}"
+	echo "CC=${CC}"
+	${CC} --version
+	${PKG_CONFIG} --cflags ${LIB_DEPENDS}
+}
+
+

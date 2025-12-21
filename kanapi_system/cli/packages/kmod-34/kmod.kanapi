@@ -30,7 +30,7 @@ DONT_TAIL=1
 export LDFLAGS="${LDFLAGS} -lpthread"
 
 pkg_configure() {
-    mkdir build
+    mkdir -p build
     meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} -Dmanpages=false
 }
 
