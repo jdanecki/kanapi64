@@ -31,6 +31,6 @@ docker create -i -t --name kanapi-${NAME}-${VER} \
    -v ${DIR}/kanapi:/kanapi_build/kanapi \
    -v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src \
    -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
-   -v ${HOME}/.Xauthority:${HOME}/.Xauthority \
+   -v ${HOME}/.Xauthority:/kanapi_${KANAPI_VER}/home/.Xauthority \
    -e HOME=/kanapi_${KANAPI_VER}/home kanapi/kanapi-${BASE_IMAGE} /bin/bash
 
