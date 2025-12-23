@@ -120,3 +120,9 @@ fftw:
 
 opus:
 	@$(RUN_TARGET)
+
+libmpeg2:
+	@$(RUN_TARGET)
+
+mpg123:
+	@$(RUN_TARGET)

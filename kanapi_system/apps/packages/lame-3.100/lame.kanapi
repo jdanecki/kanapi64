@@ -22,7 +22,7 @@ VER=3.100
 URL="http://downloads.sourceforge.net/${PACKAGE_NAME}"
 EXT=tar.gz
 #build depends on
-LIB_DEPENDS="ncurses"
+LIB_DEPENDS="ncursesw"
 
 . ../settings
 
