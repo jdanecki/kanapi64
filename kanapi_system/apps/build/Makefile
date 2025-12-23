@@ -339,14 +339,4 @@ fuse:
 libcap:
 	@$(RUN_TARGET)
 
-SDL2:
-	@$(RUN_TARGET)
 
-SDL2_image:
-	@$(RUN_TARGET)
-
-SDL2_ttf:
-	@$(RUN_TARGET)
-
-SDL2_mixer:
-	@$(RUN_TARGET)

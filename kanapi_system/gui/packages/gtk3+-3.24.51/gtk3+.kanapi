@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gtk3+
+VER=3.24.51
+URL="https://gitlab.gnome.org/GNOME/gtk/-/archive/3.24.51/gtk-3.24.51.tar.bz2"
+EXT=tar.bz2
+#build depends on
+
+#LIB_DEPENDS="glib-2.0 xi pango cairo-xlib xcb xau gthread-2.0 libffi ice expat pixman-1 fontconfig freetype2 libpng xcb-shm xcb-render xrender zlib pangoft2 harfbuzz"
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} -lpthread -lm -lrt"
+#if [ -n "${PKG_CONFIG}" ]
+#then
+#	export CFLAGS="${CFLAGS} -I`${PKG_CONFIG} --variable=includedir  cairo-xlib`"
+#fi
+
+pkg_download() {
+	PACKAGE_PATH=gtk+-${VER}.${EXT}
+	pkg_curl
+}
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
+	then 
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		pkg_tar_bz2
+		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+	fi
+	${LN_SNF} gtk-${VER}-0d3e55cf22abc81b532a3011462b3195f1480974 ${PACKAGE_SRCDIR}
+}
+
+pkg_configure() {
+    if [ -d build ] ; then rm -r build; fi
+    mkdir -p build
+    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} -Dwayland_backend=false -Dbroadway_backend=false \
+	-Dtracker3=false -Dprofiler=false -Dcloudproviders=false -Ddemos=false -Dexamples=false -Dtests=false \
+	-Dintrospection=false \
+	-Datk:introspection=false
+}
+
+pkg_build() {
+    meson compile -C build
+}
+
+pkg_install() {
+    meson install -C build && pkg_install_pc_all_only && pkg_install_bin_all && pkg_install_libs 
+#    && pkg_install_schemas
+}
+
+pkg_check() {
+    meson configure build
+}
+
