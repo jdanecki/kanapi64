@@ -36,7 +36,8 @@ libepoxy:
 gsettings-desktop-schemas:
 	@$(RUN_TARGET)
 
-gtk3+: libepoxy gsettings-desktop-schemas
+gtk3+: 
+#libepoxy gsettings-desktop-schemas
 	@$(RUN_TARGET)
 
 dbus:
@@ -51,3 +52,9 @@ dbus-glib: dbus
 wxWidgets:
 	@$(RUN_TARGET)
 
+# requires rustc
+glycin:
+	@$(RUN_TARGET)
+
+at-spi2-core:
+	@$(RUN_TARGET)
