@@ -6,7 +6,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-sound: alsa-utils  pulseaudio
+sound: alsa  pulseaudio
 #	jack2 pulseaudio alsa-plugins alsa-oss
 
 rplay:
@@ -20,6 +20,8 @@ alsa-lib: alsa-ucm-conf
 
 alsa-utils: alsa-lib
 	@$(RUN_TARGET)
+
+alsa: alsa-utils
 
 audiofile:
 	@$(RUN_TARGET)
@@ -46,6 +48,7 @@ intltool: xml
 	@$(RUN_TARGET)
 
 pulseaudio: 
+	# libsndfile (cli)
 	@$(RUN_TARGET)
 #speexdsp intltool speex
 
@@ -114,3 +117,6 @@ libsamplerate: fftw
 fftw:
 	@$(RUN_TARGET)
 
+
+opus:
+	@$(RUN_TARGET)
