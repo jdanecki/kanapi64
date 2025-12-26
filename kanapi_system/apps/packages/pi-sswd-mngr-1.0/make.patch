@@ -1,0 +1,29 @@
+diff --git a/Makefile b/Makefile
+index 43ceb1e..888f8e9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,12 +3,12 @@ src_files_cli = src/cli.c src/lib.c
+ 
+ includes = -I./src/include/
+ 
+-CFLAGS = $(includes) -Wall -Werror -g -O2
++CFLAGS = $(includes) -g -O2
+ CFLAGS_CLI = $(CFLAGS)
+-CFLAGS_GTK = $(CFLAGS_CLI) `pkg-config --cflags gtk+-3.0`
++CFLAGS_GTK = $(CFLAGS_CLI) `pkg-config --cflags gtk+-3.0` -I/packages/include -I/kanapi_0.12/packages/glibc-2.42/include
+ LDFLAGS = -lssl -lcrypto
+ LDFLAGS_CLI = $(LDFLAGS)
+-LDFLAGS_GTK = $(LDFLAGS_CLI) `pkg-config --libs gtk+-3.0`
++LDFLAGS_GTK = $(LDFLAGS_CLI) `pkg-config --libs gtk+-3.0` -I/packages/libs
+ 
+ PREFIX ?= /usr/local
+ BINDIR = $(PREFIX)/bin
+@@ -18,7 +18,7 @@ APPLICATIONSDIR = $(PREFIX)/share/applications
+ obj_files_gtk = $(src_files_gtk:.c=.o)
+ obj_files_cli = $(src_files_cli:.c=.o)
+ 
+-CC = clang
++CC = gcc
+ 
+ TARGET_GTK = pi-sswd-mngr-gtk
+ TARGET_CLI = pi-sswd-mngr-cli
