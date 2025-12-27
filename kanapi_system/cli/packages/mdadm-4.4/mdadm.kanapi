@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,36 +17,28 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=shared-mime-info
-VER=2.4
-URL="https://gitlab.freedesktop.org/xdg/${PACKAGE_NAME}/-/archive/${VER}"
-EXT=tar.bz2
+PACKAGE_NAME=mdadm
+VER=4.4
+URL="https://git.kernel.org/pub/scm/utils/mdadm/mdadm.git/snapshot"
+EXT=tar.gz
 #build depends on
-#LIB_DEPENDS="libxml-2.0 glib-2.0 zlib liblzma libffi gmodule-2.0"
+#LIB_DEPENDS=""
 
 . ../settings
 
-#export MAKE_JOBS=1
-#export LDFLAGS="${LDFLAGS} -lpthread -lm -lresolv"
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	local_copy
-#	git clone https://gitlab.freedesktop.org/xdg/xdgmime.git
-    	meson setup --prefix $PREFIX build .
+    local_copy
 }
 
 pkg_build() {
-	cd build
-	meson compile -C build
+    cd build
+    make mdadm
 }
 
 pkg_install() {
-        cd build
-	meson install -C build && pkg_install_pc_all_only && pkg_install_bin_all
-	if [ ! -d ~/.local/mime ]
-	then 
-		${LN_SF} ${PREFIX}/share/mime ~/.local/mime
-	fi
-	update-mime-database ${PREFIX}/share/mime
+	pkg_install_make && pkg_install_bin_all
 }
 

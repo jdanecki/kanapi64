@@ -1,0 +1,26 @@
+commit a83ecaf17c75734aead366c6de71b6dd42a4a63d
+Author: Xiao Ni <xni@redhat.com>
+Date:   Wed May 7 18:34:20 2025 +0800
+
+    mdadm: add attribute nonstring for signature
+    
+    It reports building error in f42:
+    error: initializer-string for array of ‘unsigned char’ truncates NULL
+    terminator but destination lacks ‘nonstring’ attribute (5 chars into 4
+    available) [-Werror=unterminated-string-initialization]
+    
+    Signed-off-by: Xiao Ni <xni@redhat.com>
+
+diff --git a/platform-intel.h b/platform-intel.h
+index 63d41682..f92a9a11 100644
+--- a/platform-intel.h
++++ b/platform-intel.h
+@@ -24,7 +24,7 @@
+ 
+ /* The IMSM Capability (IMSM AHCI and ISCU OROM/EFI variable) Version Table definition */
+ struct imsm_orom {
+-	__u8 signature[4];
++	__u8 signature[4] __attribute__((nonstring));
+ 	#define IMSM_OROM_SIGNATURE "$VER"
+ 	#define IMSM_NVME_OROM_COMPAT_SIGNATURE "$NVM"
+ 	#define IMSM_VMD_OROM_COMPAT_SIGNATURE "$VMD"

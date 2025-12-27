@@ -25,12 +25,11 @@ EXT=tar.xz
 . ../settings
 
 pkg_configure() {
-    mkdir -p build
-    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR}
+    pkg_configure_meson
 }
 
 pkg_build() {   
-    meson compile -C build
+    pkg_build_meson
 }
 
 pkg_install() {

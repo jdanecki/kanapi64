@@ -17,36 +17,39 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=shared-mime-info
-VER=2.4
-URL="https://gitlab.freedesktop.org/xdg/${PACKAGE_NAME}/-/archive/${VER}"
-EXT=tar.bz2
+PACKAGE_NAME=gsettings-desktop-schemas
+VER=49.1
+URL="https://download.gnome.org/sources/${PACKAGE_NAME}/49/"
+EXT=tar.xz
 #build depends on
-#LIB_DEPENDS="libxml-2.0 glib-2.0 zlib liblzma libffi gmodule-2.0"
+#LIB_DEPENDS=""
 
 . ../settings
 
-#export MAKE_JOBS=1
-#export LDFLAGS="${LDFLAGS} -lpthread -lm -lresolv"
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	local_copy
-#	git clone https://gitlab.freedesktop.org/xdg/xdgmime.git
-    	meson setup --prefix $PREFIX build .
+    if [ -d build ]; then rm -r build; fi
+    mkdir -p build
+    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} -Dintrospection=false
 }
 
 pkg_build() {
-	cd build
-	meson compile -C build
+    pkg_build_meson
+}
+
+update_bashrc() {
+	grep GSETTINGS_SCHEMA_DIR ${HOME}/.bashrc
+	if [ "$?" = "0" ]
+	then
+		 sed -i "s@gsettings-desktop-schemas-.*/share/@gsettings-desktop-schemas-${VER}/share/@" ${HOME}/.bashrc
+	else
+		echo "export GSETTINGS_SCHEMA_DIR=${PREFIX}/share/glib-2.0/schemas" >> ${HOME}/.bashrc
+	fi
 }
 
 pkg_install() {
-        cd build
-	meson install -C build && pkg_install_pc_all_only && pkg_install_bin_all
-	if [ ! -d ~/.local/mime ]
-	then 
-		${LN_SF} ${PREFIX}/share/mime ~/.local/mime
-	fi
-	update-mime-database ${PREFIX}/share/mime
+    meson install -C build && pkg_install_pc_share_all_only && update_bashrc
 }
 

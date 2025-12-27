@@ -35,7 +35,7 @@ pkg_configure() {
     if [ -d build ] ; then rm -r build; fi
     mkdir -p build
     meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} -Dandroid=disabled -Dglycin=disabled \
-	-Dinstalled_tests=false -Dman=false -Dtests=false 
+	-Dinstalled_tests=false -Dman=false -Dtests=false -Dbuiltin_loaders=none -Djpeg=enabled -Dgif=enabled -Dpng=enabled -Dtiff=enabled
 }
 
 pkg_build() {

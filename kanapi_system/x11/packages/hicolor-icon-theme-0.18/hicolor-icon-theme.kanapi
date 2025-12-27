@@ -17,36 +17,24 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=shared-mime-info
-VER=2.4
-URL="https://gitlab.freedesktop.org/xdg/${PACKAGE_NAME}/-/archive/${VER}"
-EXT=tar.bz2
+PACKAGE_NAME=hicolor-icon-theme
+VER=0.18
+URL="https://icon-theme.freedesktop.org/releases"
+EXT=tar.xz
 #build depends on
-#LIB_DEPENDS="libxml-2.0 glib-2.0 zlib liblzma libffi gmodule-2.0"
-
 . ../settings
 
-#export MAKE_JOBS=1
-#export LDFLAGS="${LDFLAGS} -lpthread -lm -lresolv"
-
 pkg_configure() {
-	local_copy
-#	git clone https://gitlab.freedesktop.org/xdg/xdgmime.git
-    	meson setup --prefix $PREFIX build .
+    pkg_configure_meson
 }
 
 pkg_build() {
-	cd build
-	meson compile -C build
+    pkg_build_meson
 }
 
 pkg_install() {
-        cd build
-	meson install -C build && pkg_install_pc_all_only && pkg_install_bin_all
-	if [ ! -d ~/.local/mime ]
-	then 
-		${LN_SF} ${PREFIX}/share/mime ~/.local/mime
-	fi
-	update-mime-database ${PREFIX}/share/mime
+	meson install -C build  && \
+	if [ ! -d ${KANAPI_HOME}/.icons ]; then mkdir ${KANAPI_HOME}/.icons; fi && \
+	${LN_SF} ${PREFIX}/share/icons/hicolor ${KANAPI_HOME}/.icons/hicolor
 }
 

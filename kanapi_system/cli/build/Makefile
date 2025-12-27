@@ -543,3 +543,6 @@ libpipeline:
 
 SPIRV-Tools:
 	@$(RUN_TARGET)
+
+mdadm:
+	@$(RUN_TARGET)

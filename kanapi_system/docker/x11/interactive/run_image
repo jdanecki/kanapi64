@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. version
+
+DIR=`pwd`
+REPO_BASE=`git rev-parse --show-toplevel`
+KANAPI_VER=`cat ${REPO_BASE}/kanapi_system/scripts/KANAPI_VER`
+
+docker run -it \
+   -e DISPLAY=$DISPLAY \
+   --privileged \
+   --cap-add=ALL \
+   --device /dev:/dev \
+   -v /tmp/.X11-unix:/tmp/.X11-unix \
+   --ipc host \
+   -v ${DIR}/kanapi:/kanapi_build/kanapi \
+   -v ${HOME}/src:/kanapi_${KANAPI_VER}/home/src \
+   -v ${HOME}/.ccache:/kanapi_${KANAPI_VER}/home/.ccache \
+   -v ${HOME}/.Xauthority:${HOME}/.Xauthority \
+   --name kanapi-${NAME}-test-${VER} kanapi/kanapi-${NAME}:${VER}
+

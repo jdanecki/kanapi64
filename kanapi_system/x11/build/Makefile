@@ -6,7 +6,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-x11: x11-client x11-server git ImageMagick groff
+x11: x11-client x11-server git ImageMagick groff hicolor-icon-theme
 
 x11-client: libXext libXdamage libxkbfile xterm xfd
 
@@ -31,7 +31,7 @@ x-support:  \
 	mkfontscale mkfontdir bdftopcf font-cursor-misc \
        	xf86-input-keyboard xf86-input-mouse xf86-input-evdev \
 	xf86-video-intel xf86-video-vesa xf86-video-fbdev xf86-video-modesetting fonts \
-	xinput libXft icons libXxf86vm libXScrnSaver ois  libXcomposite 
+	xinput libXft libXxf86vm libXScrnSaver ois  libXcomposite icons
 
 graphics: jpegsrc tiff  pango
 
@@ -228,7 +228,8 @@ xinput: libXi libXrandr libXinerama
 libXft:  libXrender fontconfig
 	@$(RUN_TARGET)
 
-icons:  xcursor-themes default-icon-theme hicolor-icon-theme tango-icon-theme 
+icons:  default-icon-theme hicolor-icon-theme tango-icon-theme 
+	#xcursor-themes 
 
 libXcursor:
 	@$(RUN_TARGET)

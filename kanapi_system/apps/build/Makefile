@@ -3,7 +3,8 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-apps: apps-gtk apps-qt apps-x11 apps-gui
+apps: shared-mime-info
+#	apps-gtk apps-qt apps-x11 apps-gui
 
 apps-libs: libmikmod libmad libva-intel-driver ffmpeg ogl sdl openal-soft fltk glew
 

@@ -3,7 +3,8 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-gui:  gtk qt wxWidgets
+gui: gtk3+ 
+	#gtk qt wxWidgets
 
 gtk: gtk+ dconf gtk3+ dbus-glib
 
@@ -15,13 +16,15 @@ atk:
 gdk-pixbuf: 
 	@$(RUN_TARGET)
 
-librsvg: libcroco
+librsvg: 
+#	libcroco
 	@$(RUN_TARGET)
 
 libcroco:
 	@$(RUN_TARGET)
 
-adwaita-icon-theme: librsvg
+adwaita-icon-theme: 
+#	librsvg
 	@$(RUN_TARGET)
 
 gtk+: atk gdk-pixbuf adwaita-icon-theme
@@ -36,8 +39,8 @@ libepoxy:
 gsettings-desktop-schemas:
 	@$(RUN_TARGET)
 
-gtk3+: 
-#libepoxy gsettings-desktop-schemas
+gtk3+: gdk-pixbuf at-spi2-core adwaita-icon-theme gsettings-desktop-schemas
+# shared-mime-info (apps)
 	@$(RUN_TARGET)
 
 dbus:
@@ -56,5 +59,5 @@ wxWidgets:
 glycin:
 	@$(RUN_TARGET)
 
-at-spi2-core:
+at-spi2-core: dbus
 	@$(RUN_TARGET)
