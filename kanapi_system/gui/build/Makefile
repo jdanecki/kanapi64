@@ -3,7 +3,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-gui: gtk3+ 
+gui: gtk3+ gtk3-libs
 	#gtk qt wxWidgets
 
 gtk: gtk+ dconf gtk3+ dbus-glib
@@ -61,3 +61,10 @@ glycin:
 
 at-spi2-core: dbus
 	@$(RUN_TARGET)
+
+gtkmm:
+#XML-Parser(cli)	
+	@$(RUN_TARGET)
+
+gtk3-libs: gtkmm
+

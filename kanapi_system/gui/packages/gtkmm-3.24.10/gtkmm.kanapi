@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gtkmm
+VER=3.24.10
+URL="http://ftp.gnome.org/pub/GNOME/sources/gtkmm/3.24"
+EXT=tar.xz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+
+pkg_configure() {
+    if [ -d build ]; then rm -r build; fi
+    mkdir -p build
+    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} -Dbuild-documentation=false \
+        -Dbuild-demos=false -Dbuild-tests=false \
+        -Dsigc++-2.0:build-documentation=false \
+        -Dsigc++-2.0:build-manual=false \
+        -Dsigc++-2.0:build-examples=false \
+        -Dsigc++-2.0:build-tests=false \
+        -Dcairomm-1.0:build-documentation=false \
+        -Dcairomm-1.0:build-examples=false \
+        -Dcairomm-1.0:build-tests=false \
+        -Dglibmm-2.4:build-documentation=false \
+        -Dglibmm-2.4:build-examples=false \
+        -Dpangomm-1.4:build-documentation=false \
+        -Datkmm-1.6:build-documentation=false 
+
+}
+
+pkg_build() {
+    pkg_build_meson
+}
+
+pkg_install() {
+    meson install -C build && pkg_install_pc_all_only && pkg_install_libs
+}
+

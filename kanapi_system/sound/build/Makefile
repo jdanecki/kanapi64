@@ -7,7 +7,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 include $(SCRIPTS_DIR)/Makefile.common
 
 sound: alsa  pulseaudio
-#	jack2 pulseaudio alsa-plugins alsa-oss
+#	jack2 alsa-plugins alsa-oss
 
 rplay:
 	@$(RUN_TARGET)
@@ -47,8 +47,7 @@ expat:
 intltool: xml
 	@$(RUN_TARGET)
 
-pulseaudio: 
-	# libsndfile (cli)
+pulseaudio: libsndfile pavucontrol
 	@$(RUN_TARGET)
 #speexdsp intltool speex
 
@@ -58,10 +57,13 @@ libvorbis: libogg
 libogg:
 	@$(RUN_TARGET)
 
-libsndfile: libvorbis flac
+lame:
 	@$(RUN_TARGET)
 
-speex:
+libsndfile: libvorbis flac opus libmpeg2 lame mpg123
+	@$(RUN_TARGET)
+
+speex: speexdsp
 	@$(RUN_TARGET)
 
 speexdsp:
@@ -117,7 +119,6 @@ libsamplerate: fftw
 fftw:
 	@$(RUN_TARGET)
 
-
 opus:
 	@$(RUN_TARGET)
 
@@ -125,4 +126,7 @@ libmpeg2:
 	@$(RUN_TARGET)
 
 mpg123:
+	@$(RUN_TARGET)
+
+pavucontrol:
 	@$(RUN_TARGET)

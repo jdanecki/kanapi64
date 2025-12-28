@@ -52,3 +52,11 @@ pkg_repo() {
     pkg_repo_url ${URL}
 }
 
+pkg_verify() {
+    if [ -f /packages/alsa-lib-${alsa_lib_ver}/share/alsa/ucm2/ucm.conf ]
+    then
+        /bin/date > kanapi_install
+        /bin/date > kanapi_verify
+    fi
+}
+

@@ -6,7 +6,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-cli: cli-base cli-devel 
+cli: cli-base cli-devel XML-Parser
 	
 cli-base: t_compression t_system vim bc neovim
 
@@ -227,7 +227,8 @@ XML-Parser:
 expat:
 	@$(RUN_TARGET)
 
-intltool: xml
+intltool: 
+#	xml
 	@$(RUN_TARGET)
 
 pulseaudio: speexdsp intltool speex

@@ -17,23 +17,23 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=libcanberra
-VER=0.30
-URL="http://0pointer.de/lennart/projects/libcanberra"
-EXT=tar.xz
+PACKAGE_NAME=lame
+VER=3.100
+URL="http://downloads.sourceforge.net/${PACKAGE_NAME}"
+EXT=tar.gz
 #build depends on
-#LIB_DEPENDS=""
+LIB_DEPENDS="ncursesw"
 
 . ../settings
 
-#export LDFLAGS="-L${KANAPI_BASE}/libtool-${libtool_ver}/lib"
-#export CFLAGS="-I${KANAPI_BASE}/libtool-${libtool_ver}/include"
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --disable-oss
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  --enable-nasm --enable-shared
 }
 
 pkg_install() {
-	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+	pkg_install_make && pkg_install_bin_all && pkg_install_libs && pkg_update_include
 }
 
