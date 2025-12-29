@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=supertux2
+VER=0.7.0-beta.1
+URL="https://github.com/SuperTux/supertux/releases/download/v${VER}"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+pkg_download() {
+	PACKAGE_PATH=SuperTux-0.7.0-beta1-Source.tar.gz
+	pkg_curl
+}
+
+pkg_prepare() {
+	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ]
+	then
+		echo "$PACKAGE_NAME: already prepared"
+	else
+		pkg_tar_gz
+		if [ "$?" = "0" ]
+		then
+			echo " ok"
+			/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+			true
+		else
+			echo " Error: $?"
+			rm -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
+			false
+		fi
+	fi
+	mv ${KANAPI_BUILD_SRC}/SuperTux-v0-7-0-beta-1-2aa5245-Source ${PACKAGE_SRCDIR}
+}
+
+pkg_configure() {
+	# GL=$(${PKG_CONFIG} --variable=prefix gl)
+	sed -i '57d' ${PACKAGE_SRCDIR}/mk/cmake/GetGitRevisionDescription.cmake # Get rid of bug
+	cmake ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_PREFIX_PATH=${KANAPI_BASE}/glm-${glm_ver}/share/glm \
+		-DENABLE_OPENGL=OFF # glew is broken
+		# -DOPENGL_gl_LIBRARY="${GL}/lib/libGL.so" \
+		# -DOPENGL_INCLUDE_DIR="${GL}/include"
+}
+
+pkg_install() {
+	pkg_install_make && pkg_install_bin_all && pkg_install_libs &&
+	${LN_SF} ${PREFIX}/games/supertux2 ${KANAPI_BIN}/supertux2
+}
+
+pkg_check() {
+	cmake ${PACKAGE_SRCDIR} -LAH
+}
