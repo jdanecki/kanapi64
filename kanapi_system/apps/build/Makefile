@@ -351,3 +351,12 @@ luanti: openal-soft
 # pango (x11)
 	@$(RUN_TARGET)
 
+
+supertux2: physfs fmt glm SDL2_image # glew is broken
+	@$(RUN_TARGET)
+
+fmt:
+	@$(RUN_TARGET)
+
+glm:
+	@$(RUN_TARGET)
