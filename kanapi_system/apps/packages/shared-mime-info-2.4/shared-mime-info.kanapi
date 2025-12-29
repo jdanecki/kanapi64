@@ -45,7 +45,7 @@ pkg_install() {
 	meson install -C build && pkg_install_pc_all_only && pkg_install_bin_all
 	if [ ! -d ~/.local/mime ]
 	then 
-		${LN_SF} ${PREFIX}/share/mime ~/.local/mime
+		${LN_SF} ${PREFIX}/share/mime ~/.local/share/mime
 	fi
 	update-mime-database ${PREFIX}/share/mime
 }
