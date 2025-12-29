@@ -345,3 +345,8 @@ libcap:
 
 pi-sswd-mngr:
 	@$(RUN_TARGET)
+
+luanti: openal-soft
+# pango (x11)
+	@$(RUN_TARGET)
+
