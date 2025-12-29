@@ -342,3 +342,6 @@ libcap:
 	@$(RUN_TARGET)
 
 
+
+pi-sswd-mngr:
+	@$(RUN_TARGET)
