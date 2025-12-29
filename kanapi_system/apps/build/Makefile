@@ -3,7 +3,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-apps: shared-mime-info
+apps: shared-mime-info gvim
 #	apps-gtk apps-qt apps-x11 apps-gui
 
 apps-libs: libmikmod libmad libva-intel-driver ffmpeg ogl sdl openal-soft fltk glew
@@ -138,7 +138,8 @@ sdl2-support: SDL2_image SDL2_gfx SDL2_ttf SDL2_net SDL2_mixer
 SDL2:
 	@$(RUN_TARGET)
 
-SDL2_image: libwebp SDL2
+SDL2_image: 
+#	libwebp SDL2
 	@$(RUN_TARGET)
 
 SDL2_ttf:

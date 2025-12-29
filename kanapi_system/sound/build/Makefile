@@ -6,7 +6,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-sound: alsa  pulseaudio
+sound: alsa  pulseaudio opusfile
 #	jack2 alsa-plugins alsa-oss
 
 rplay:
@@ -129,4 +129,8 @@ mpg123:
 	@$(RUN_TARGET)
 
 pavucontrol:
+#gtkmm(gui) libcanberra-gtk2(apps) json-glib(apps)
+	@$(RUN_TARGET)
+
+opusfile:
 	@$(RUN_TARGET)
