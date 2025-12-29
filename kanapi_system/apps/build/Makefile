@@ -360,3 +360,6 @@ fmt:
 
 glm:
 	@$(RUN_TARGET)
+
+SuperTuxKart: 
+	@$(RUN_TARGET)
