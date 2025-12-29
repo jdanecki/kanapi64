@@ -285,6 +285,7 @@ vlc: opencv
 	@$(RUN_TARGET)
 
 feh:
+# imlib2 (x11)
 	@$(RUN_TARGET)
 
 openal-soft:
