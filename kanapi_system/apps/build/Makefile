@@ -95,9 +95,10 @@ json-glib:
 	@$(RUN_TARGET)
 
 gegl: json-glib 
+# babl (cli)
 	@$(RUN_TARGET)
 
-gimp: gegl
+gimp: gegl exiv2 gexiv2
 	@$(RUN_TARGET)
 
 gvim:
@@ -362,4 +363,10 @@ glm:
 	@$(RUN_TARGET)
 
 SuperTuxKart: 
+	@$(RUN_TARGET)
+
+exiv2:
+	@$(RUN_TARGET)
+
+gexiv2:
 	@$(RUN_TARGET)
