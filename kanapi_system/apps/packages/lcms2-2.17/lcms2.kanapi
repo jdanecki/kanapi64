@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+# Copyright (c) 2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,31 +17,19 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=exiv2
-VER=0.28.7
-URL="https://github.com/Exiv2/exiv2/archive/refs/tags"
+PACKAGE_NAME=lcms2
+VER=2.17
+URL="https://github.com/mm2/Little-CMS/releases/download/lcms${VER}"
 EXT=tar.gz
 #build depends on
 #LIB_DEPENDS=""
 
 . ../settings
 
-#export LDFLAGS="${LDFLAGS} "
-#export CFLAGS="${CFLAGS} "
-
-pkg_download() {
-	PACKAGE_PATH=v${VER}.${EXT}
-	pkg_curl
-}
-
-pkg_configure() {
-	cmake ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_BUILD_TYPE=Release \
-	-DEXIV2_ENABLE_BROTLI=OFF -DEXIV2_ENABLE_INIH=OFF
-
-}
-
 
 pkg_install() {
-	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+    pkg_install_pc_all && pkg_install_libs && pkg_install_bin_all
 }
+
+
 

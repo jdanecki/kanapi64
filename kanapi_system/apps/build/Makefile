@@ -98,7 +98,8 @@ gegl: json-glib
 # babl (cli)
 	@$(RUN_TARGET)
 
-gimp: gegl exiv2 gexiv2
+#doesn't compile
+gimp: gegl exiv2 gexiv2 lcms2 libmypaint mypaint-brushes
 	@$(RUN_TARGET)
 
 gvim:
@@ -369,4 +370,16 @@ exiv2:
 	@$(RUN_TARGET)
 
 gexiv2:
+	@$(RUN_TARGET)
+
+lcms2:
+	@$(RUN_TARGET)
+
+libmypaint: json-c
+	@$(RUN_TARGET)
+
+json-c:
+	@$(RUN_TARGET)
+
+mypaint-brushes:
 	@$(RUN_TARGET)

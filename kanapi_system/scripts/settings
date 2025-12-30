@@ -454,6 +454,10 @@ pkg_bz2() {
 	bzip2 -d ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -c > ${KANAPI_BUILD_SRC}/${PACKAGE_VER}/${PACKAGE_NAME}
 }
 
+pkg_postprepare() {
+	echo ""
+}
+
 pkg_prepare() {
 	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
 	then 
@@ -486,6 +490,7 @@ pkg_prepare() {
 			false
 		fi
 	fi
+	pkg_postprepare
 }
 
 pkg_reprepare() {
@@ -505,12 +510,12 @@ pkg_url() {
 }
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX ${CONFIGURE_FLAGS}
 }
 
 pkg_configure_local() {
 	local_copy
-	./configure --prefix=$PREFIX
+	./configure --prefix=$PREFIX ${CONFIGURE_FLAGS}
 }
 
 pkg_configure_meson() {

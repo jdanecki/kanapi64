@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=exiv2
-VER=0.28.7
-URL="https://github.com/Exiv2/exiv2/archive/refs/tags"
-EXT=tar.gz
+PACKAGE_NAME=libmypaint
+VER=1.6.1
+URL="https://github.com/mypaint/libmypaint/releases/download/v1.6.1"
+EXT=tar.xz
 #build depends on
 #LIB_DEPENDS=""
 
@@ -30,18 +30,9 @@ EXT=tar.gz
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
-pkg_download() {
-	PACKAGE_PATH=v${VER}.${EXT}
-	pkg_curl
-}
+export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
 
-pkg_configure() {
-	cmake ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_BUILD_TYPE=Release \
-	-DEXIV2_ENABLE_BROTLI=OFF -DEXIV2_ENABLE_INIH=OFF
-
-}
-
-
+CONFIGURE_FLAGS="--with-glib"
 pkg_install() {
 	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 }
