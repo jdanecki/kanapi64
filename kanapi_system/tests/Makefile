@@ -44,4 +44,7 @@ test_gl: test_gl.c
 	@echo "CFLAGS=$(CFLAGS)"
 	@echo "LDFLAGS=$(LDFLAGS)"
 	gcc test_gl.c -Wall -o $(RESULTS)/test_gl $(CFLAGS) $(LDFLAGS) ; $(RESULTS)/test_gl
+
+test_flags:	
+	gcc test_gcc0.c -Wall -Wno-error-implicit-function-declaration -o $(RESULTS)/test_flags ; $(RESULTS)/test_flags
 	
