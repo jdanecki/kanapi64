@@ -3,12 +3,12 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-gui: gtk3+ gtk3-libs
+gui: gtk3+ gtk3-libs qt
 	#gtk qt wxWidgets
 
 gtk: gtk+ dconf gtk3+ dbus-glib
 
-qt: qt-everywhere-opensource-src
+qt: qt-everywhere-src
 
 atk:
 	@$(RUN_TARGET)
@@ -47,6 +47,9 @@ dbus:
 	@$(RUN_TARGET)
 
 qt-everywhere-opensource-src: dbus
+	@$(RUN_TARGET)
+
+qt-everywhere-src:
 	@$(RUN_TARGET)
 
 dbus-glib: dbus
