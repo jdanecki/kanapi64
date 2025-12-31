@@ -35,5 +35,15 @@ pkg_build() {
 
 pkg_install() {
     cmake --install .  && pkg_install_pc_all_only && pkg_install_bin_all && pkg_install_libs
+    grep QT_QPA_PLATFORM_PLUGIN_PATH ${HOME}/.bashrc
+    if [ "$?" = "0" ]
+    then
+        echo "QT_QPA_PLATFORM_PLUGIN_PATH already set"
+    else    
+        echo "export QT_QPA_PLATFORM_PLUGIN_PATH=${KANAPI_BASE}/${PACKAGE_NAME}-${VER}/plugins/platforms/" >> ${HOME}/.bashrc
+    fi
 }
 
+pkg_check() {
+    echo "$KANAPI_BASE"
+}

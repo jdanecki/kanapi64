@@ -31,6 +31,7 @@ EXT=tar.gz
 
 pkg_configure() {
     local_copy
+    patch -p1 < ../../../packages/mdadm-4.4/patch1.patch
 }
 
 pkg_build() {
@@ -39,6 +40,8 @@ pkg_build() {
 }
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all
+	mkdir -p ${PREFIX}/bin
+	cp -av build/mdadm ${PREFIX}/bin
+	pkg_install_bin_all
 }
 
