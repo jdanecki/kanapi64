@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=x265
+VER=4.1
+URL="https://download.videolan.org/pub/videolan/x265"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+	PACKAGE_PATH=${PACKAGE_NAME}_${VER}.${EXT}
+	pkg_curl
+}
+
+pkg_postprepare() {
+	${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}_${VER} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}
+}
+
+pkg_configure() {
+	local_copy
+	sed -i 's/CMP0054 OLD/CMP0054 NEW/' source/CMakeLists.txt
+	sed -i 's/CMP0025 OLD/CMP0025 NEW/' source/CMakeLists.txt
+	cmake -G Ninja source -DCMAKE_INSTALL_PREFIX=${PREFIX} -Wno-dev -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+}
+
+pkg_build() {
+	cd build
+	ninja
+}
+
+pkg_install() {
+	cd build	
+	ninja install && pkg_install_pc_all_only && pkg_install_bin_all &&  pkg_install_libs
+}

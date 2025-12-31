@@ -161,9 +161,10 @@ Blue: MPlayer
 	@$(RUN_TARGET)
 
 x264: 
+# nasm (cli)
 	@$(RUN_TARGET)
 
-ffmpeg: x264 
+ffmpeg: x264 x265
 	@$(RUN_TARGET)
 
 libva-intel-driver: libva
@@ -282,6 +283,9 @@ libmikmod:
 	@$(RUN_TARGET)
 
 vlc: opencv
+# qt-everywhere-src (gui)
+# ffmpeg? (apps)
+# libva-intel-driver? (apps)
 	@$(RUN_TARGET)
 
 feh:
@@ -362,4 +366,11 @@ glm:
 	@$(RUN_TARGET)
 
 SuperTuxKart: 
+	@$(RUN_TARGET)
+
+qt6ct:
+	@$(RUN_TARGET)
+
+x265:
+# nasm (cli)
 	@$(RUN_TARGET)

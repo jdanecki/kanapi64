@@ -1,11 +1,14 @@
 #set -x
 
-export LANGUAGE="C"
-export LC_ALL="C"
-export LC_MESSAGES="C"
-export LC_COLLATE="C"
-export LC_CTYPE="C"
-export LANG="C"
+if [ -z "${NO_SET_LOCALE}" ]
+then
+	export LANGUAGE="C"
+	export LC_ALL="C"
+	export LC_MESSAGES="C"
+	export LC_COLLATE="C"
+	export LC_CTYPE="C"
+	export LANG="C"
+fi
 
 #REPO_BASE=`git rev-parse --show-toplevel`
 REPO_BASE=/kanapi_build/kanapi
@@ -454,6 +457,10 @@ pkg_bz2() {
 	bzip2 -d ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} -c > ${KANAPI_BUILD_SRC}/${PACKAGE_VER}/${PACKAGE_NAME}
 }
 
+pkg_postprepare() {
+	echo ""
+}
+
 pkg_prepare() {
 	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
 	then 
@@ -486,6 +493,7 @@ pkg_prepare() {
 			false
 		fi
 	fi
+	pkg_postprepare
 }
 
 pkg_reprepare() {

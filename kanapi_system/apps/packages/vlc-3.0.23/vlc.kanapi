@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=vlc
+VER=3.0.23
+URL="https://code.videolan.org/videolan/${PACKAGE_NAME}/-/archive/${VER}"
+EXT=tar.bz2
+#build depends on
+#LIB_DEPENDS="ncurses libpng"
+
+export NO_SET_LOCALE=1
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} -lm -lrt -lpthread -lresolv"
+#export CFLAGS="${CFLAGS} "
+
+pkg_configure() {
+	local_copy
+	export BUILDCC="${KANAPI_C_COMPILER} -std=c99"
+#	sed -e 's|-Werror-implicit-function-declaration|-Wno-error-implicit-function-declaration|g' -i configure
+#	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/lua53_compat.patch
+#	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/vlc_fixups.patch
+	
+	KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
+	-I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
+	-I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
+	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
+	export QMAKE_SPEC=linux-g++-64
+	export QMAKE_MKSPECS=/packages/qt-everywhere-src-6.10.1/mkspecs
+	export QT_QPA_PLATFORM_PLUGIN_PATH=/packages/qt-everywhere-src-6.10.1/plugins/platforms/
+	export QMAKE=qmake6
+	./configure --prefix=$PREFIX --disable-swscale --enable-run-as-root --with-qtconf=`pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
+
+
+	#--with-x  \
+	#	--disable-rpath --disable-nls --disable-a52 
+}
+
+pkg_build() {
+	pkg_build_local
+}
+
+pkg_install() {
+	cd build
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+}
+
+pkg_check() {
+	locale
+	cd build
+	echo `pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
+	ls -l `pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
+}
+
