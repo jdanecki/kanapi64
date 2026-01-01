@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -25,9 +25,6 @@ EXT=tar.bz2
 LIB_DEPENDS="libdrm"
 
 . ../settings
-
-#export LDFLAGS="-lm -ldl"
-#export CFLAGS="${CFLAGS} "
 
 pkg_install() {
 	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs

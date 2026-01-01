@@ -3,7 +3,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-apps: shared-mime-info gvim
+apps: shared-mime-info gvim vlc libva-utils feh
 #	apps-gtk apps-qt apps-x11 apps-gui
 
 apps-libs: libmikmod libmad libva-intel-driver ffmpeg ogl sdl openal-soft fltk glew
@@ -182,7 +182,7 @@ libmad:
 qiv:
 	@$(RUN_TARGET)
 
-opencv:
+opencv: ffmpeg libva
 	@$(RUN_TARGET)
 
 glu:
@@ -282,9 +282,9 @@ autoconf213:
 libmikmod:
 	@$(RUN_TARGET)
 
-vlc: opencv
+vlc: ffmpeg libva
+#	opencv - old version
 # qt-everywhere-src (gui)
-# ffmpeg? (apps)
 # libva-intel-driver? (apps)
 	@$(RUN_TARGET)
 
@@ -373,4 +373,12 @@ qt6ct:
 
 x265:
 # nasm (cli)
+	@$(RUN_TARGET)
+
+libva-utils: libva 
+#	intel-media-driver	
+	@$(RUN_TARGET)
+
+media-driver:
+#gmmlib (cli)	
 	@$(RUN_TARGET)

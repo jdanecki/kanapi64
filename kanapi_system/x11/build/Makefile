@@ -8,7 +8,7 @@ include $(SCRIPTS_DIR)/Makefile.common
 
 x11: x11-client x11-server git ImageMagick groff hicolor-icon-theme
 
-x11-client: libXext libXdamage libxkbfile xterm xfd
+x11-client: libXext libXdamage libxkbfile xterm xfd imlib2
 
 x11-server:  xinit xev xhost xmodmap xfontsel xset xauth xkeyboard-config xkbcomp xf86-input-libinput setxkbmap xdpyinfo xdriinfo xinput
 
@@ -467,7 +467,7 @@ xwd:
 xwininfo:
 	@$(RUN_TARGET)
 
-imlib2:
+imlib2: giflib
 	@$(RUN_TARGET)
 
 xlunch:
@@ -620,4 +620,7 @@ xf86-input-libinput: libinput libXi
 
 libinput: mtdev 
 #libevdev(cli)
+	@$(RUN_TARGET)
+
+giflib:
 	@$(RUN_TARGET)

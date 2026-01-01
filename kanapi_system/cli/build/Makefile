@@ -6,7 +6,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
-cli: cli-base cli-devel XML-Parser
+cli: cli-base cli-devel XML-Parser nasm
 	
 cli-base: t_compression t_system vim bc neovim
 

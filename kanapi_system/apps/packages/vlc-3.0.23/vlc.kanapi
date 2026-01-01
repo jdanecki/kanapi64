@@ -34,23 +34,13 @@ export NO_SET_LOCALE=1
 pkg_configure() {
 	local_copy
 	export BUILDCC="${KANAPI_C_COMPILER} -std=c99"
-#	sed -e 's|-Werror-implicit-function-declaration|-Wno-error-implicit-function-declaration|g' -i configure
-#	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/lua53_compat.patch
-#	patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/vlc_fixups.patch
 	
 	KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
 	-I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
 	-I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
 	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
-	export QMAKE_SPEC=linux-g++-64
-	export QMAKE_MKSPECS=/packages/qt-everywhere-src-6.10.1/mkspecs
-	export QT_QPA_PLATFORM_PLUGIN_PATH=/packages/qt-everywhere-src-6.10.1/plugins/platforms/
-	export QMAKE=qmake6
-	./configure --prefix=$PREFIX --disable-swscale --enable-run-as-root --with-qtconf=`pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
-
-
-	#--with-x  \
-	#	--disable-rpath --disable-nls --disable-a52 
+	./configure --prefix=$PREFIX --enable-run-as-root --with-qtconf=`pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf \
+      --without-opencv
 }
 
 pkg_build() {

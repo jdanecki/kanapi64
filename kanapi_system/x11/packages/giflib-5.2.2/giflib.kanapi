@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2025 Piotr Danecki <i3riced@mailfence.com>
+# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,31 +18,28 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=feh
-VER=2.18
-URL="https://feh.finalrewind.org"
-EXT=tar.bz2
+PACKAGE_NAME=giflib
+VER=5.2.2
+URL=" https://downloads.sourceforge.net/project/${PACKAGE_NAME}"
+EXT=tar.gz
 #build depends on
-LIB_DEPENDS="libpng"
+#LIB_DEPENDS=""
 
 . ../settings
 
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
 pkg_configure() {
-	local_copy
-	sed -i "s/-lpng/-lpng16/" config.mk
+    local_copy
 }
 
 pkg_build() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} CC="${KANAPI_C_COMPILER}"
+    make -C build PREFIX=${PREFIX} all
 }
 
 pkg_install() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} install CC="${KANAPI_C_COMPILER}" &&  pkg_install_bin_all
-
+    make -C build PREFIX=${PREFIX} install
+	pkg_install_bin_all && pkg_install_libs
 }
 
-pkg_check() {
-	${PKG_CONFIG} --libs ${LIB_DEPENDS}
-}

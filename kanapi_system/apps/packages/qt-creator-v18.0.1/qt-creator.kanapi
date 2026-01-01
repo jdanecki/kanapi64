@@ -1,7 +1,6 @@
 #!/bin/bash
 #
 # Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2025 Piotr Danecki <i3riced@mailfence.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,31 +17,37 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=feh
-VER=2.18
-URL="https://feh.finalrewind.org"
-EXT=tar.bz2
+PACKAGE_NAME=qt-creator
+VER=v18.0.1
+URL="https://code.qt.io/qt-creator"
+EXT=git
 #build depends on
-LIB_DEPENDS="libpng"
-
 . ../settings
 
-pkg_configure() {
-	local_copy
-	sed -i "s/-lpng/-lpng16/" config.mk
+pkg_download() {
+	pkg_git_clone
+}
+
+pkg_prepare() {
+	echo "nothing to do"
+}
+
+pkg_configure() {	
+	local_clone
+    mkdir build
+    cd build 
+    export CMAKE_PREFIX_PATH=${KANAPI_BASE}/qt-everywhere-src-${qt_everywhere_src_ver}/lib/cmake
+    cmake ..  -DCMAKE_INSTALL_PREFIX=${PREFIX} -DQT_NO_PRIVATE_MODULE_WARNING=ON \
+        -DBUILD_EXECUTABLE_CMDBRIDGE=OFF
 }
 
 pkg_build() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} CC="${KANAPI_C_COMPILER}"
+	${MAKE} -C build/build -j ${MAKE_JOBS} MAKEINFO=true
 }
 
 pkg_install() {
-	cd build
-	${MAKE} -j ${MAKE_JOBS} PREFIX=${PREFIX} install CC="${KANAPI_C_COMPILER}" &&  pkg_install_bin_all
-
+	${MAKE} -C build/build -j ${MAKE_JOBS} install
+	pkg_install_bin_all
 }
 
-pkg_check() {
-	${PKG_CONFIG} --libs ${LIB_DEPENDS}
-}
+

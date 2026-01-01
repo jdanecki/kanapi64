@@ -1,7 +1,6 @@
 #!/bin/bash
 #
 # Copyright (c) 2025 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2025 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,37 +17,37 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=x265
-VER=4.1
-URL="https://download.videolan.org/pub/videolan/x265"
+PACKAGE_NAME=media-driver
+VER=intel-media-25.3.4
+URL="https://github.com/intel/media-driver/archive/refs/tags"
 EXT=tar.gz
 #build depends on
 #LIB_DEPENDS=""
 
 . ../settings
+#MAKE_JOBS=1
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
 pkg_download() {
-	PACKAGE_PATH=${PACKAGE_NAME}_${VER}.${EXT}
+	PACKAGE_PATH=${VER}.${EXT}
 	pkg_curl
-}
-
-pkg_postprepare() {
-	${LN_SF} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}_${VER} ${KANAPI_BUILD_SRC}/${PACKAGE_NAME}-${VER}
+    ${LN_SF} ${KANAPI_BUILD_SRC}/${VER}.${EXT} ${KANAPI_BUILD_SRC}/${PACKAGE_VER}
 }
 
 pkg_configure() {
-	local_copy
-	sed -i 's/CMP0054 OLD/CMP0054 NEW/' source/CMakeLists.txt
-	sed -i 's/CMP0025 OLD/CMP0025 NEW/' source/CMakeLists.txt
-	cmake -G Ninja source -DCMAKE_INSTALL_PREFIX=${PREFIX} -Wno-dev -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-}
-
-pkg_build() {
-	cd build
-	ninja
+	cmake ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_BUILD_TYPE=Release \
+        -Wno-dev -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+        -DGEN8=OFF -DGEN9=ON -DGEN11=OFF \
+        -DGEN9_CMPV=ON -DGEN12=OFF -DXe_M=OFF -DXe2_M_plus=OFF \
+        -DDG2=OFF -DXE_HPG=OFF -DXEHP_SDV=OFF -DPVC=OFF -DMTL=OFF -DARL=OFF -DBMG=OFF \
+        -DLNL=OFF -DPTL=OFF -DMEDIA_BUILD_FATAL_WARNINGS=OFF
 }
 
 pkg_install() {
-	cd build	
-	ninja install && pkg_install_pc_all_only && pkg_install_bin_all &&  pkg_install_libs
+	pkg_install_make && pkg_install_pc_all_only && pkg_install_libs
+}
+
+pkg_check() {
+    echo "CXXFLAGS=${CXXFLAGS}"
 }
