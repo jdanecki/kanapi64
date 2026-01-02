@@ -16,8 +16,7 @@ atk:
 gdk-pixbuf: 
 	@$(RUN_TARGET)
 
-librsvg: 
-#	libcroco
+librsvg: libcroco
 	@$(RUN_TARGET)
 
 libcroco:

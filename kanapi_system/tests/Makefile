@@ -41,10 +41,17 @@ CFLAGS:=$(shell pkg-config --cflags gl x11)
 LDFLAGS:=$(shell pkg-config --libs gl x11) -lstdc++
 
 test_gl: test_gl.c
+	 @if [ ! -d $(RESULTS) ] ; then mkdir $(RESULTS) ; fi
 	@echo "CFLAGS=$(CFLAGS)"
 	@echo "LDFLAGS=$(LDFLAGS)"
 	gcc test_gl.c -Wall -o $(RESULTS)/test_gl $(CFLAGS) $(LDFLAGS) ; $(RESULTS)/test_gl
 
 test_flags:	
 	gcc test_gcc0.c -Wall -Wno-error-implicit-function-declaration -o $(RESULTS)/test_flags ; $(RESULTS)/test_flags
-	
+
+FLAGS:=$(shell pkg-config --cflags --libs gtk+-3.0)
+
+test_gtk: test_gtk.c
+	 gcc -g test_gtk.c $(FLAGS) -o test_gtk
+
+

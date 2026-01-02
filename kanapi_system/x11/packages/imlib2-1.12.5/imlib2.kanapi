@@ -31,12 +31,11 @@ export LDFLAGS="${LDFLAGS} -lm -L${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/lib -L${K
 export CFLAGS="${CFLAGS} -I${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}/include -I${KANAPI_BASE}/bzip2-${bzip2_ver}/include"
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  
-#    --without-gif --without-id3 --with-x  --with-tiff
+    ${PACKAGE_SRCDIR}/configure --prefix=$PREFIX  
 }
 
 pkg_install() {
-	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+    pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 }
 
 pkg_check() {

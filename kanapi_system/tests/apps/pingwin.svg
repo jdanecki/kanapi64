@@ -1,0 +1,116 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: fig2dev Version 3.2 Patchlevel 5d -->
+<!-- CreationDate: Mon Jul 29 00:29:54 2013 -->
+<!-- Magnification: 1.050 -->
+<svg	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="4.4in" height="6.7in"
+	viewBox="6601 10617 5222 8056">
+<g style="stroke-width:.025in; fill:none">
+<!-- Line -->
+<polyline points="7559,10629
+10866,10629
+11811,12283
+11811,18661
+7322,18661
+6614,18661
+6614,12283
+7559,10629
+" style="stroke:#000000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#000000;
+"/>
+<!-- Line -->
+<polygon points="11338,18661
+10629,12992
+7795,12992
+7086,18661
+7559,18661
+11338,18661
+" style="stroke:#000000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#ffffff;
+"/>
+<!-- Line -->
+<polyline points="8740,12992
+8409,12047
+8173,12047
+7795,12992
+8031,12992
+" style="stroke:#000000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#ffffff;
+"/>
+<!-- Line -->
+<polyline points="10629,12992
+10299,12047
+10062,12047
+9685,12992
+9921,12992
+" style="stroke:#000000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#ffffff;
+"/>
+<!-- Line -->
+<polyline points="7795,12992
+9212,13700
+10629,12992
+7795,12992
+" style="stroke:#000000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#ffff00;
+"/>
+<!-- Line -->
+<polyline points="8267,12283
+8031,12992
+8503,12992
+8267,12283
+" style="stroke:#000000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#000000;
+"/>
+<!-- Line -->
+<polyline points="10157,12283
+9921,12992
+10393,12992
+10157,12283
+" style="stroke:#000000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#000000;
+"/>
+<!-- Line -->
+<polyline points="9212,14173
+8740,13937
+8740,14881
+9212,14645
+9685,14881
+9685,13937
+9212,14173
+" style="stroke:#ff0000;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#ff0000;
+"/>
+<!-- Line -->
+<polyline points="7559,18661
+8031,18188
+8267,18188
+8740,18661
+7559,18661
+" style="stroke:#ffff00;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#ffff00;
+"/>
+<!-- Line -->
+<polyline points="9921,18661
+10393,18188
+10629,18188
+11102,18661
+9921,18661
+" style="stroke:#ffff00;stroke-width:8;
+stroke-linejoin:miter; stroke-linecap:butt;
+fill:#ffff00;
+"/>
+</g>
+</svg>

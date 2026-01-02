@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=librsvg
+VER=2.40.23
+URL="https://gitlab.gnome.org/GNOME/librsvg/-/archive/${PACKAGE_NAME}-gtk-${VER}/librsvg-librsvg-gtk-2.40.23.tar.bz2"
+EXT=tar.bz2
+#build depends on
+. ../settings
+
+pkg_download() {
+        if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME} ]
+        then
+                echo "$PACKAGE_NAME: already downloaded"
+        else
+                echo "downloading ${PACKAGE_NAME}"
+                wget ${URL} -O ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}
+        fi
+}
+
+pkg_postprepare() {
+    ${LN_SF} ${KANAPI_BUILD_SRC}/librsvg-${PACKAGE_NAME}-gtk-${VER} ${KANAPI_BUILD_SRC}/${PACKAGE_VER}
+}
+
+pkg_configure() {
+    local_copy
+    cp -v ../../../packages/${PACKAGE_VER}/Makefile.am Makefile.am
+    cp -v ../../../packages/${PACKAGE_VER}/configure.ac configure.ac
+
+    KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
+        -I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
+        -I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
+
+    autoreconf --verbose --force --install ${KANAPI_AC_SCRIPTS}
+	./configure --prefix=$PREFIX
+}
+
+pkg_build() {
+    pkg_build_local
+}
+
+pkg_install() {
+    cd build
+	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+}
+

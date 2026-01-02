@@ -1,0 +1,5 @@
+QT_DEBUG_PLUGINS=1 vlc
+qtpaths6 --qt-query
+qtpaths6 --plugin-dir
+QT_PLUGIN_PATH
+
