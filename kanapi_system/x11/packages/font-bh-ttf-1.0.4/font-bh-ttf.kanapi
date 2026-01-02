@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,28 +17,16 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=freefont-ttf
-VER=20120503
-URL="https://ftp.gnu.org/gnu/freefont"
-EXT=zip
+PACKAGE_NAME=font-bh-ttf
+VER=1.0.4
+URL="https://www.x.org/releases/individual/font"
+EXT=tar.xz
 #build depends on
+export DONT_INSTALL_INCLUDE=1
 . ../settings
 
-pkg_prepare() {
-	if [ -f ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared ] 
-	then 
-		echo "$PACKAGE_NAME: already prepared"
-	else
-		pkg_zip
-		/bin/date > ${KANAPI_BUILD_SRC}/${PACKAGE_FILENAME}.prepared
-	fi
-	${LN_SNF} freefont-${VER} ${PACKAGE_SRCDIR} 
-}
-
 pkg_configure() {
-	rm -rf build
-	mkdir build
-	cp -ar ${PACKAGE_SRCDIR}/*.ttf build
+    echo "nothing to do"
 }
 
 pkg_build() {
@@ -46,19 +34,12 @@ pkg_build() {
 }
 
 pkg_install() {
-	mkdir -p ${PREFIX}
-	cp -v build/* ${PREFIX}
-	cd ${PREFIX}
-#	mkfontscale
-#	mkfontdir
-	ln -svf ${PREFIX} ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/share/fonts
-#	export XDG_DATA_HOME=${KANAPI_HOME}/.local
+	mkdir -p ${PREFIX}/ttf
+	mkdir -p ${PREFIX}/fontconfig
+	cp -arv ${PACKAGE_SRCDIR}/*.ttf ${PREFIX}/ttf
+	cp -arv ${PACKAGE_SRCDIR}/*.conf ${PREFIX}/fontconfig
+	ln -svf ${PREFIX}/ttf/*.ttf ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/share/fonts
+	ln -svf ${PREFIX}/fontconfig/*.conf ${KANAPI_BASE}/fontconfig-${fontconfig_ver}/etc/fonts/conf.d
 	fc-cache -v
-}
-
-pkg_check() {
-	export XDG_DATA_HOME=${KANAPI_HOME}/.local
-	fc-cache -v ${PREFIX}
-	fc-list
 }
 

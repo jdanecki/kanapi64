@@ -6,6 +6,7 @@ export GSETTINGS_SCHEMA_DIR=/kanapi_0.12/packages/gsettings-desktop-schemas-49.1
 #export QT_QPA_PLATFORMTHEME=qt6ct
 export QT_PLUGIN_PATH=/kanapi_0.12/packages/qt-everywhere-src-6.10.1/plugins
 export QT_QPA_PLATFORM=xcb
+export FONTCONFIG_PATH=/kanapi_0.12/packages/fontconfig-2.17.1/etc/fonts
 
 tv
 xset -b

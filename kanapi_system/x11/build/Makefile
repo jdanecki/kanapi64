@@ -346,7 +346,7 @@ freefont-otf:
 dejavu-fonts-ttf:
 	@$(RUN_TARGET)
 
-xterm: libXaw libXft freefont-otf dejavu-fonts-ttf
+xterm: libXaw libXft freefont-otf dejavu-fonts-ttf freefont-ttf font-bh-ttf
 	@$(RUN_TARGET)
 
 xbitmaps:
