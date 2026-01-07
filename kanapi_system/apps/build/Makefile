@@ -380,3 +380,6 @@ libva-utils: libva
 media-driver:
 #gmmlib (cli)	
 	@$(RUN_TARGET)
+
+xsel:
+	@$(RUN_TARGET)
