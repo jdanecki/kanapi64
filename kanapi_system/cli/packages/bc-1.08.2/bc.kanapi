@@ -22,7 +22,14 @@ VER=1.08.2
 URL="GNU"
 EXT=tar.lz
 #build depends on
+LIB_DEPENDS="readline ncurses"
+
 . ../settings
+
+pkg_configure()
+{
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX --with-readline
+}
 
 pkg_install() {
 	pkg_install_make_bin_all
