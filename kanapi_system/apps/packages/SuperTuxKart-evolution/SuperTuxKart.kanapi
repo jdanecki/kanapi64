@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2025 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=SuperTuxKart
+VER=evolution
+URL="https://github.com/supertuxkart/stk-code"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+  mkdir ${KANAPI_BUILD_SRC}/SuperTuxKart-evolution
+  cd ${KANAPI_BUILD_SRC}/SuperTuxKart-evolution
+  git clone https://github.com/supertuxkart/stk-code.git --branch BalanceSTK2
+  git clone https://github.com/Pttn/stk-assets.git
+}
+
+pkg_prepare() {
+  echo "nothing to do!"
+}
+
+pkg_configure() {
+  JPEG=$(${PKG_CONFIG} --variable=prefix libjpeg)
+  ZLIB=$(${PKG_CONFIG} --variable=prefix zlib)
+  PNG_INCLUDE=$(${PKG_CONFIG} --variable=includedir libpng)
+  PNG_LIBDIR=$(${PKG_CONFIG} --variable=libdir libpng)
+  OPENAL=$(${PKG_CONFIG} --variable=prefix openal)
+  HARFBUZZ=$(${PKG_CONFIG} --variable=prefix harfbuzz)
+
+  cmake ${PACKAGE_SRCDIR}/stk-code -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_BUILD_TYPE=Release \
+    -DJPEG_LIBRARY=${JPEG}/lib/libjpeg.so -DJPEG_INCLUDE_DIR=${JPEG}/include \
+    -DPNG_LIBRARY=${PNG_LIBDIR}/libpng16.so -DPNG_PNG_INCLUDE_DIR=${PNG_INCLUDE} \
+    -DZLIB_LIBRARY=${ZLIB}/lib/libz.so -DZLIB_INCLUDE_DIR=${ZLIB}/include \
+    -DOPENAL_LIBRARY=${OPENAL}/lib64/libopenal.so -DOPENAL_INCLUDE_DIR=${OPENAL}/include \
+    -DHARFBUZZ_LIBRARY=${HARFBUZZ}/lib/libharfbuzz.so -DHARFBUZZ_INCLUDEDIR=${HARFBUZZ}/include \
+    -DNO_SHADERC=on \
+    -DBUILD_RECORDER=0 \
+    -DUSE_WIIUSE=off
+}
+
+pkg_install() {
+  pkg_install_make && pkg_install_bin_all
+}
