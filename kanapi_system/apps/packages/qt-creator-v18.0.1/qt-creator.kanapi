@@ -32,13 +32,13 @@ pkg_prepare() {
 	echo "nothing to do"
 }
 
-pkg_configure() {	
+KANAPI_CMAKE_OPTIONS="-DCMAKE_INSTALL_PREFIX=${PREFIX} -DQT_NO_PRIVATE_MODULE_WARNING=ON -DBUILD_EXECUTABLE_CMDBRIDGE=OFF -Wno-dev"
+pkg_configure() {
 	local_clone
     mkdir build
     cd build 
     export CMAKE_PREFIX_PATH=${KANAPI_BASE}/qt-everywhere-src-${qt_everywhere_src_ver}/lib/cmake
-    cmake ..  -DCMAKE_INSTALL_PREFIX=${PREFIX} -DQT_NO_PRIVATE_MODULE_WARNING=ON \
-        -DBUILD_EXECUTABLE_CMDBRIDGE=OFF
+    cmake .. ${KANAPI_CMAKE_OPTIONS}
 }
 
 pkg_build() {
@@ -50,4 +50,8 @@ pkg_install() {
 	pkg_install_bin_all
 }
 
-
+pkg_check() {
+    cd build/build
+    export CMAKE_PREFIX_PATH=${KANAPI_BASE}/qt-everywhere-src-${qt_everywhere_src_ver}/lib/cmake
+    cmake -LA .. ${KANAPI_CMAKE_OPTIONS}
+}
