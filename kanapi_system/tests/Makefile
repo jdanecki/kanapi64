@@ -37,6 +37,12 @@ headers:
 #	. ./set_variables; gcc -E test_headers.c -Wall -o $(RESULTS)/test_headers.i ; cat $(RESULTS)/test_headers.i
 	. ./set_variables; gcc test_headers.c -Wall -o $(RESULTS)/test_headers ; $(RESULTS)/test_headers
 
+test_clang:
+	@if [ ! -d $(RESULTS) ] ; then mkdir $(RESULTS) ; fi
+	clang test_gcc0.c -o $(RESULTS)/test_clang0; $(RESULTS)/test_clang0
+	clang++ test_libstdcpp.cpp -Wall -lstdc++ -std=c++11 -o $(RESULTS)/test_libstdcpp_clang ; $(RESULTS)/test_libstdcpp_clang
+
+
 CFLAGS:=$(shell pkg-config --cflags gl x11)
 LDFLAGS:=$(shell pkg-config --libs gl x11) -lstdc++
 
