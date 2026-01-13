@@ -571,3 +571,5 @@ libva_utils_ver=2.23.0
 media_driver_ver=intel-media-25.3.4
 giflib_ver=5.2.2
 xsel_ver=1.2.1
+SDL3_ver=3.4.0
+SDL3_ttf_ver=3.2.2

@@ -383,3 +383,9 @@ media-driver:
 
 xsel:
 	@$(RUN_TARGET)
+
+SDL3:
+	@$(RUN_TARGET)
+
+SDL3_ttf:
+	@$(RUN_TARGET)
