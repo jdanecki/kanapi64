@@ -1,0 +1,52 @@
+# APPS image is required to compile these packages
+
+REPO_BASE=$(shell git rev-parse --show-toplevel)
+SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
+
+include $(SCRIPTS_DIR)/Makefile.common
+
+xfce: xfwm4 xfce4-panel xfdesktop
+# Building and using xfce4-session is not recommended
+# It likes to break
+
+xfwm4: libxfce4util libxfce4ui libwnck
+	@$(RUN_TARGET)
+
+libxfce4util:
+	@$(RUN_TARGET)
+
+libxfce4ui: xfconf
+	@$(RUN_TARGET)
+
+xfconf:
+	@$(RUN_TARGET)
+
+libwnck:
+# Isn't a xfce4 project, it is a requirement.
+# May be moved to apps in the future.
+	@$(RUN_TARGET)
+
+xfce4-panel: xfce4-dev-tools garcon exo libxfce4windowing
+# May require xfce4/libs?
+	@$(RUN_TARGET)
+
+xfce4-dev-tools:
+	@$(RUN_TARGET)
+
+garcon:
+	@$(RUN_TARGET)
+
+exo:
+	@$(RUN_TARGET)
+
+libxfce4windowing:
+	@$(RUN_TARGET)
+
+xfdesktop:
+	@$(RUN_TARGET)
+
+xfce4-session: iceauth
+	@$(RUN_TARGET)
+
+iceauth:
+	@$(RUN_TARGET)

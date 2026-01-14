@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=@NAME@
-VER=@VER@
-URL=""
-EXT=tar.bz2
+PACKAGE_NAME=libwnck
+VER=43.3
+URL="https://gitlab.gnome.org/GNOME/libwnck/-/archive/43.3"
+EXT=tar.gz
 #build depends on
 #LIB_DEPENDS=""
 
@@ -30,7 +30,15 @@ EXT=tar.bz2
 #export LDFLAGS="${LDFLAGS} "
 #export CFLAGS="${CFLAGS} "
 
-pkg_install() {
-	pkg_install_make && pkg_install_bin_all
+pkg_configure() {
+  MESON_FLAGS="-Dintrospection=disabled"
+  pkg_configure_meson
 }
 
+pkg_build() {
+  pkg_build_meson
+}
+
+pkg_install() {
+  meson install -C build && pkg_install_pc_lib_all_only && pkg_install_libs && pkg_install_bin_all
+}

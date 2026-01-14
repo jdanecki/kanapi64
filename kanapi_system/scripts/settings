@@ -524,7 +524,7 @@ pkg_configure_local() {
 pkg_configure_meson() {
     if [ -d build ]; then rm -r build; fi
     mkdir -p build
-    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR}
+    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} ${MESON_FLAGS}
 }
 
 pkg_build() {
