@@ -5,9 +5,11 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 
 include $(SCRIPTS_DIR)/Makefile.common
 
+xfce-full: xfce xfce-apps
 xfce: xfwm4 xfce4-panel xfdesktop
 # Building and using xfce4-session is not recommended
 # It likes to break
+xfce-apps: xfce4-settings thunar
 
 xfwm4: libxfce4util libxfce4ui libwnck
 	@$(RUN_TARGET)
@@ -49,4 +51,10 @@ xfce4-session: iceauth
 	@$(RUN_TARGET)
 
 iceauth:
+	@$(RUN_TARGET)
+
+xfce4-settings:
+	@$(RUN_TARGET)
+
+thunar:
 	@$(RUN_TARGET)
