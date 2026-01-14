@@ -389,3 +389,6 @@ SDL3:
 
 SDL3_ttf:
 	@$(RUN_TARGET)
+
+xcalc:
+	@$(RUN_TARGET)
