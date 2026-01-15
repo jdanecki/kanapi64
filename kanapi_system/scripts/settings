@@ -527,6 +527,10 @@ pkg_configure_meson() {
     meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} ${MESON_FLAGS}
 }
 
+pkg_configure_cmake() {
+  cmake -G Ninja ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} ${CMAKE_FLAGS}
+}
+
 pkg_build() {
 	${MAKE} -j ${MAKE_JOBS} MAKEINFO=true
 }
@@ -538,6 +542,10 @@ pkg_build_local() {
 
 pkg_build_meson() {   
     meson compile -C build
+}
+
+pkg_build_cmake() {
+  ninja -j ${MAKE_JOBS}
 }
 
 pkg_update_include() {

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+KANAPI_VER=0.12
+
+if [ "$(id -u)" != "0" ]; then
+  KANAPI_ROOT="${HOME}/kanapi_${KANAPI_VER}"
+else
+  KANAPI_ROOT="/kanapi_${KANAPI_VER}"
+fi
+KANAPI_BASE=${KANAPI_ROOT}/packages
+
+rm -r ${KANAPI_ROOT}/desktop
+mkdir -p ${KANAPI_ROOT}/desktop
+for f in $(find -L ${KANAPI_BASE} -name "*.desktop"); do
+  ln -s $f ${KANAPI_ROOT}/desktop/$(basename $f)
+done
