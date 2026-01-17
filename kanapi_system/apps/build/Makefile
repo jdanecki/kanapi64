@@ -392,3 +392,6 @@ SDL3_ttf:
 
 xcalc:
 	@$(RUN_TARGET)
+
+raylib:
+	@$(RUN_TARGET)

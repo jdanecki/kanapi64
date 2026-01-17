@@ -782,6 +782,10 @@ pkg_install_all() {
 	pkg_install_pc_all && pkg_install_libs && pkg_install_bin_all
 }
 
+pkg_install_all_cmake() {
+  ninja install && pkg_install_pc_all_only && pkg_install_libs && pkg_install_bin_all
+}
+
 pkg_test() {
 	echo "tests for ${PACKAGE_NAME}"
 	${MAKE} -C ../../tests test_${PACKAGE_NAME} KANAPI_BASE=${KANAPI_BASE}
