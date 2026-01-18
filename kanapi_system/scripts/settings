@@ -513,12 +513,21 @@ pkg_url() {
 }
 
 pkg_configure() {
-	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX
+	${PACKAGE_SRCDIR}/configure --prefix=$PREFIX ${CONFIG_FLAGS}
+}
+
+pkg_configure_autoconf() {
+	local_copy
+	KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
+	-I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
+	-I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
+	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS} ${AUTOCONF_FLAGS}
+	./configure --prefix=$PREFIX ${CONFIG_FLAGS}
 }
 
 pkg_configure_local() {
 	local_copy
-	./configure --prefix=$PREFIX
+	./configure --prefix=$PREFIX ${CONFIG_FLAGS}
 }
 
 pkg_configure_meson() {

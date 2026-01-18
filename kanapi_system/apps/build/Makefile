@@ -395,3 +395,6 @@ xcalc:
 
 raylib:
 	@$(RUN_TARGET)
+
+icewm:
+	@$(RUN_TARGET)
