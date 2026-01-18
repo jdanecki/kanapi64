@@ -398,3 +398,6 @@ raylib:
 
 icewm:
 	@$(RUN_TARGET)
+
+fvwm3:
+	@$(RUN_TARGET)
