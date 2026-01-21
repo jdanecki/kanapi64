@@ -11,3 +11,4 @@ kanapi_system/sbs/sbs-docker
 kanapi_system/cbs/build
 kanapi_system/sound/build
 kanapi_system/xfce/build
+kanapi_system/wayland/build
