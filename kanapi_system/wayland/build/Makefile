@@ -35,3 +35,6 @@ foot:
 
 swaybg:
 	@$(RUN_TARGET)
+
+mangowc: wlroots scenefx
+	@$(RUN_TARGET)
