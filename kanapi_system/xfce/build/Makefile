@@ -6,9 +6,7 @@ SCRIPTS_DIR:=$(REPO_BASE)/kanapi_system/scripts
 include $(SCRIPTS_DIR)/Makefile.common
 
 xfce-full: xfce xfce-apps xfce-addons
-xfce: xfwm4 xfce4-panel xfdesktop
-# Building and using xfce4-session is not recommended
-# It likes to break
+xfce: xfwm4 xfce4-panel xfdesktop xfce4-session
 xfce-apps: xfce4-settings thunar
 xfce-addons: xfce4-whiskermenu-plugin
 
