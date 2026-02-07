@@ -85,7 +85,7 @@ demo: cairo-demos mesa-demos
 cairo-demos: 
 	@$(RUN_TARGET)
 
-glew:
+glew: glu
 	@$(RUN_TARGET)
 
 mesa-demos: glew

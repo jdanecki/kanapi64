@@ -60,4 +60,7 @@ FLAGS:=$(shell pkg-config --cflags --libs gtk+-3.0)
 test_gtk: test_gtk.c
 	 gcc -g test_gtk.c $(FLAGS) -o test_gtk
 
+check_compiler:
+	clang++ -dM -E -x c++ /dev/null | grep __cplusplus
+	g++ -dM -E -x c++ /dev/null | grep __cplusplus
 
