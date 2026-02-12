@@ -1,0 +1,18 @@
+Add directory for .cmake files (the same that is already done for .pc files)
+Add directory for application icons (.png, .svg, .desktop already is partly supported)
+Cross-directory dependencies (package from app will require another package from cli)
+Release KaNaPi 13 AND KaNaPi 12 as chroot (instead of docker)
+Fully switch from dockers to chroots.
+Pull some apps out of cli. Create a cli-base and cli-apps. cli-base (with sbs and bbs) will be distributed as a minimal chroot (and release).
+Perhaps distribute gui chroot/image.
+Consider rolling-release model for apps.
+Move xapps from x11 to apps (or create a new directory with xapps).
+Fully migrate all packages related to sound to the sound directory.
+Consider wayland.
+Build gtk+3 with gobject and introspection support.
+Perhaps split apps to apps and libs.
+Consider firefox.
+Consider rust (using rustup ecosystem).
+Documentation
+Obsolete `pkg` or host new binary packages.
+Consider testsystem with chroots (pulls cli-base, tries to install package, display failures)
