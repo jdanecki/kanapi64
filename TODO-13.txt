@@ -16,3 +16,4 @@ Consider rust (using rustup ecosystem).
 Documentation
 Obsolete `pkg` or host new binary packages.
 Consider testsystem with chroots (pulls cli-base, tries to install package, display failures)
+fix mesa issues (change buildtype to release, to avoid asserts)

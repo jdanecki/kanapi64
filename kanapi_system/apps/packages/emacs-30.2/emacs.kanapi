@@ -18,10 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=@NAME@
-VER=@VER@
-URL=""
-EXT=tar.gz
+PACKAGE_NAME=emacs
+VER=30.2
+URL="GNU"
+EXT=tar.xz
 #build depends on
 #LIB_DEPENDS=""
 
@@ -33,4 +33,3 @@ EXT=tar.gz
 pkg_install() {
   pkg_install_all
 }
-

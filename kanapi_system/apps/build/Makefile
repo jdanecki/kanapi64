@@ -401,3 +401,9 @@ icewm:
 
 fvwm3:
 	@$(RUN_TARGET)
+
+emacs: giflib
+	@$(RUN_TARGET)
+
+giflib:
+	@$(RUN_TARGET)
