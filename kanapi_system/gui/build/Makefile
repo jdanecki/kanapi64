@@ -70,3 +70,6 @@ gtkmm:
 
 gtk3-libs: gtkmm
 
+
+gtk4:
+	@$(RUN_TARGET)
