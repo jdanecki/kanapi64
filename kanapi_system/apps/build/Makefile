@@ -407,3 +407,6 @@ emacs: giflib
 
 giflib:
 	@$(RUN_TARGET)
+
+irssi:
+	@$(RUN_TARGET)
