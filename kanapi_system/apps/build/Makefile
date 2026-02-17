@@ -109,7 +109,7 @@ poppler:
 shared-mime-info:
 	@$(RUN_TARGET)
 
-evince: poppler shared-mime-info
+evince: libhandy poppler desktop-file-utils
 	@$(RUN_TARGET)
 
 cairomm:
@@ -409,4 +409,10 @@ giflib:
 	@$(RUN_TARGET)
 
 irssi:
+	@$(RUN_TARGET)
+
+libhandy:
+	@$(RUN_TARGET)
+
+desktop-file-utils:
 	@$(RUN_TARGET)

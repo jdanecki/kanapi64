@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2018 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=evince
+VER=48.1
+URL="https://gitlab.gnome.org/GNOME/evince/-/archive/${VER}"
+EXT=tar.gz
+#build depends on
+# LIB_DEPENDS="zlib gtk+-3.0 xinerama xrandr xcursor xi xdamage xfixes epoxy pangoft2 harfbuzz pixman-1 xcb-shm xcb-render xrender xext gthread-2.0 x11 xcb xau ice fontconfig expat freetype2 libpng16 gmodule-2.0 libffi liblzma"
+
+. ../settings
+
+pkg_configure() {
+  python3 -m pip install jinja2 pygments typogrify
+  MESON_FLAGS="-Dintrospection=false -Dgtk_doc=false -Duser_doc=false"
+  echo ${MESON_FLAGS}
+  pkg_configure_meson
+}
+
+pkg_build() {
+  pkg_build_meson
+}
+
+pkg_install() {
+  pkg_install_all_meson && pkg_install_schemas
+}
+
+pkg_check() {
+  ${PKG_CONFIG} --libs ${LIB_DEPENDS}
+}
