@@ -18,3 +18,4 @@ Obsolete `pkg` or host new binary packages.
 Consider testsystem with chroots (pulls cli-base, tries to install package, display failures)
 fix mesa issues (change buildtype to release, to avoid asserts)
 Add python packages directory with pip packages
+Fix ./configure running ./configure on deps instead of ./install

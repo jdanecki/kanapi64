@@ -42,6 +42,12 @@ pkg_build() {
 }
 
 pkg_install() {
+  mkdir -p $PREFIX/include/poppler
+  cp ${PACKAGE_SRCDIR}/poppler/*.h $PREFIX/include/poppler
+  cp poppler/poppler-config.h $PREFIX/include
+  cp poppler_private_export.h $PREFIX/include
+  mkdir -p $PREFIX/include/goo
+  cp ${PACKAGE_SRCDIR}/goo/*.h $PREFIX/include/goo
   pkg_install_all_cmake
 }
 
