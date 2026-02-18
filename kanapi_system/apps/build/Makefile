@@ -422,3 +422,6 @@ vte:
 
 fastfetch:
 	@$(RUN_TARGET)
+
+tzdb:
+	@$(RUN_TARGET)
