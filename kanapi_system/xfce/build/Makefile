@@ -70,3 +70,6 @@ xfce4-screenshooter:
 
 xfce4-taskmanager:
 	@$(RUN_TARGET)
+
+xfce4-terminal: # Requires vte from apps
+	@$(RUN_TARGET)

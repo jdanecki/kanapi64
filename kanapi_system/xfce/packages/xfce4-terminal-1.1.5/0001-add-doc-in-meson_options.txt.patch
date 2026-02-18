@@ -1,0 +1,44 @@
+From a6a0806320b7d941ea18776cd1b9b77f14fd663f Mon Sep 17 00:00:00 2001
+From: Piotr Danecki <i3riced@mailfence.com>
+Date: Wed, 18 Feb 2026 18:53:16 +0100
+Subject: [PATCH] add 'doc' in meson_options.txt
+
+---
+ meson.build       | 5 ++++-
+ meson_options.txt | 7 +++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 536e663e..a57c5e2a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -219,7 +219,10 @@ foreach file : desktop_files
+ endforeach
+ 
+ subdir('colorschemes')
+-subdir('doc')
++
++if get_option('doc')
++  subdir('doc')
++endif
+ subdir('icons')
+ subdir('po')
+ subdir('terminal')
+diff --git a/meson_options.txt b/meson_options.txt
+index 0b2a859f..350564eb 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -25,3 +25,10 @@ option(
+   value: 'auto',
+   description: 'Support for utmp/wtmp files',
+ )
++
++option(
++  'doc',
++  type: 'boolean',
++  value: true,
++  description: 'Build documentation',
++)
+-- 
+2.52.0
+

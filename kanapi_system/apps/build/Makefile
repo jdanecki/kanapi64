@@ -416,3 +416,6 @@ libhandy:
 
 desktop-file-utils:
 	@$(RUN_TARGET)
+
+vte:
+	@$(RUN_TARGET)
