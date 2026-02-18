@@ -1,0 +1,37 @@
+{
+  "Meson": {
+    "prefix": "pkg_meson",
+    "description": "meson package",
+    "body": [
+      "pkg_configure() {",
+      "  pkg_configure_meson",
+      "}",
+      "",
+      "pkg_build() {",
+      "  pkg_build_meson",
+      "}",
+      "",
+      "pkg_install() {",
+      "  pkg_install_all_meson",
+      "}"
+    ]
+  },
+  "CMake": {
+    "prefix": "pkg_cmake",
+    "description": "cmake package",
+    "body": [
+
+      "pkg_configure() {",
+      "  pkg_configure_cmake",
+      "}",
+      "",
+      "pkg_build() {",
+      "  pkg_build_cmake",
+      "}",
+      "",
+      "pkg_install() {",
+      "  pkg_install_all_cmake",
+      "}"
+    ]
+  }
+}
