@@ -64,3 +64,6 @@ xfce4-whiskermenu-plugin:
 yaml:
 # May be moved to libs/apps in the future.
 	@$(RUN_TARGET)
+
+xfce4-screenshooter:
+	@$(RUN_TARGET)
