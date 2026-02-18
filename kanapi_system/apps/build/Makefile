@@ -419,3 +419,6 @@ desktop-file-utils:
 
 vte:
 	@$(RUN_TARGET)
+
+fastfetch:
+	@$(RUN_TARGET)
