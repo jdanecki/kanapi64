@@ -67,3 +67,6 @@ yaml:
 
 xfce4-screenshooter:
 	@$(RUN_TARGET)
+
+xfce4-taskmanager:
+	@$(RUN_TARGET)
