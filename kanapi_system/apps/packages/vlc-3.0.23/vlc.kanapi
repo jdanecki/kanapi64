@@ -32,30 +32,30 @@ export NO_SET_LOCALE=1
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-	local_copy
-	export BUILDCC="${KANAPI_C_COMPILER} -std=c99"
-	
-	KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
+  local_copy
+  export BUILDCC="${KANAPI_C_COMPILER} -std=c99"
+
+  KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
 	-I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
 	-I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
-	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
-	./configure --prefix=$PREFIX --enable-run-as-root --with-qtconf=`pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf \
-      --without-opencv
+  autoreconf -v --install --force ${KANAPI_AC_SCRIPTS}
+  ./configure --prefix=$PREFIX --enable-run-as-root --without-opencv
+  # --with-qtconf=$(pwd)/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf \
+
 }
 
 pkg_build() {
-	pkg_build_local
+  pkg_build_local
 }
 
 pkg_install() {
-	cd build
-	pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
+  cd build
+  pkg_install_pc_all && pkg_install_bin_all && pkg_install_libs
 }
 
 pkg_check() {
-	locale
-	cd build
-	echo `pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
-	ls -l `pwd`/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
+  locale
+  cd build
+  echo $(pwd)/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
+  ls -l $(pwd)/../../../packages/${PACKAGE_NAME}-${VER}/qt.conf
 }
-
