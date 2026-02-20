@@ -425,3 +425,9 @@ fastfetch:
 
 tzdb:
 	@$(RUN_TARGET)
+
+DDNet: libnotify
+	@$(RUN_TARGET)
+
+libnotify:
+	@$(RUN_TARGET)

@@ -620,3 +620,5 @@ xfce4_appfinder_ver=4.20.0
 tzdb_ver=2025c
 xfce4_pulseaudio_plugin_ver=0.5.1
 xfce4_battery_plugin_ver=1.2.0
+DDNet_ver=19.7
+libnotify_ver=0.8.8
