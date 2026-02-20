@@ -8,7 +8,7 @@ include $(SCRIPTS_DIR)/Makefile.common
 xfce-full: xfce xfce-apps xfce-addons
 xfce: xfwm4 xfce4-panel xfdesktop xfce4-session
 xfce-apps: xfce4-settings thunar xfce4-screenshooter xfce4-taskmanager xfce4-terminal xfce4-appfinder
-xfce-addons: xfce4-whiskermenu-plugin xfce4-pulseaudio-plugin
+xfce-addons: xfce4-whiskermenu-plugin xfce4-pulseaudio-plugin xfce4-battery-plugin
 
 xfwm4: libxfce4util libxfce4ui libwnck
 	@$(RUN_TARGET)
@@ -78,4 +78,7 @@ xfce4-appfinder:
 	@$(RUN_TARGET)
 
 xfce4-pulseaudio-plugin:
+	@$(RUN_TARGET)
+
+xfce4-battery-plugin:
 	@$(RUN_TARGET)
