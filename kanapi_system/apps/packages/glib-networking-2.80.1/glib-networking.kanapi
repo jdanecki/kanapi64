@@ -1,7 +1,6 @@
 #!/bin/bash
 #
 # Copyright (c) 2012-2026 Jacek Danecki <jacek.m.danecki@gmail.com>
-# Copyright (c) 2026 Piotr Danecki <i3riced@mailfence.com>
 #
 # This file is part of KaNaPi project
 #
@@ -18,30 +17,32 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=evince
-VER=48.1
-URL="https://gitlab.gnome.org/GNOME/evince/-/archive/${VER}"
-EXT=tar.gz
+PACKAGE_NAME=glib-networking
+VER=2.80.1
+URL="https://gitlab.gnome.org/GNOME/glib-networking/-/archive/${VER}"
+EXT=tar.bz2
 #build depends on
-# LIB_DEPENDS="zlib gtk+-3.0 xinerama xrandr xcursor xi xdamage xfixes epoxy pangoft2 harfbuzz pixman-1 xcb-shm xcb-render xrender xext gthread-2.0 x11 xcb xau ice fontconfig expat freetype2 libpng16 gmodule-2.0 libffi liblzma"
+#LIB_DEPENDS="gio-2.0 gmodule-2.0 zlib libffi"
 
 . ../settings
 
+#export PERL5LIB="${KANAPI_BASE}/XML-Parser-${XML_Parser_ver}/lib/site_perl/${perl_ver}"
+#export LDFLAGS="${LDFLAGS} -lresolv"
+
 pkg_configure() {
-  python3 -m pip install jinja2 pygments typogrify
-  MESON_FLAGS="-Dintrospection=false -Dgtk_doc=false -Duser_doc=false"
-  echo ${MESON_FLAGS}
-  pkg_configure_meson
+    MESON_FLAGS="-Dlibproxy=disabled"
+    pkg_configure_meson
 }
 
 pkg_build() {
-  pkg_build_meson
+    pkg_build_meson
 }
 
 pkg_install() {
-  pkg_install_all_meson && pkg_install_schemas
+	pkg_install_all_meson
+   ${LN_SF} ${PREFIX}/lib/gio/modules/*.so ${KANAPI_BASE}/glib-${glib_ver}/lib/gio/modules
+   cp -av ${PREFIX}/lib/gio/modules/giomodule.cache ${KANAPI_BASE}/glib-${glib_ver}/lib/gio/modules
+
 }
 
-pkg_check() {
-  ${PKG_CONFIG} --libs ${LIB_DEPENDS}
-}
+

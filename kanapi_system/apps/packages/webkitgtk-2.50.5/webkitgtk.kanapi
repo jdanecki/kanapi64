@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2026 Jacek Danecki <jacek.m.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=webkitgtk
+VER=2.50.5
+URL="https://webkitgtk.org/releases"
+EXT=tar.xz
+#build depends on
+
+LIB_DEPENDS="x11 libpng zlib xcomposite xdamage xrender xt \
+	fontconfig sqlite3 gl cairo-xlib xcomposite xdamage xrender \
+	xt gtk+-3.0 gdk-3.0 pangocairo atk gdk-pixbuf-2.0 gio-2.0 \
+	epoxy xcb-render xau libdrm xcursor pango xcb-glx libffi \
+	pixman-1 xcb-dri2 xcb-dri3 gmodule-2.0 libxml-2.0 xi xcb-present \
+    ice expat pangoft2 sm liblzma xcb-shm harfbuzz uuid \
+    xshmfence xcb xinerama x11-xcb xrandr gstreamer-1.0"
+
+. ../settings
+
+pkg_configure() {
+	cmake -G Ninja ${PACKAGE_SRCDIR} -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+    -DCMAKE_C_COMPILER="${KANAPI_C_COMPILER}" -DCMAKE_CXX_COMPILER="${KANAPI_CXX_COMPILER}" \
+    -DPORT=GTK -DENABLE_MINIBROWSER=OFF -DENABLE_PDFJS=OFF \
+	-DCMAKE_CXX_FLAGS="${CFLAGS} ${LDFLAGS}" -DENABLE_ASSERTS=OFF \
+    -DENABLE_GEOLOCATION=OFF -DENABLE_INTROSPECTION=OFF \
+	-DENABLE_SPELLCHECK=OFF -DENABLE_VIDEO=OFF -DENABLE_WEB_AUDIO=OFF \
+    -DENABLE_WEB_CODECS=OFF -DENABLE_MEDIA_STREAM=OFF -DENABLE_GPU_PROCESS=OFF \
+	-DUSE_LIBHYPHEN=OFF \
+    -DUSE_SOUP2=ON -DUSE_GTK4=OFF \
+    -DENABLE_GAMEPAD=OFF -DUSE_LIBSECRET=OFF -DENABLE_SPEECH_SYNTHESIS=OFF -DUSE_JPEGXL=OFF \
+    -DUSE_WOFF2=OFF -DUSE_AVIF=OFF -DENABLE_JOURNALD_LOG=OFF -DUSE_LCMS=OFF -DUSE_LIBBACKTRACE=OFF \
+    -DENABLE_BUBBLEWRAP_SANDBOX=OFF -DUSE_SYSTEM_UNIFDEF=OFF -DUSE_SYSTEM_SYSPROF_CAPTURE=NO \
+    -DUSE_SKIA=OFF -DUSE_SKIA_OPENTYPE_SVG=OFF -DENABLE_JIT=OFF -DENABLE_TOUCH_EVENTS=OFF \
+    -DENABLE_DRAG_SUPPORT=OFF -DENABLE_WAYLAND_TARGET=OFF -DENABLE_WEBDRIVER=OFF \
+    -DCMAKE_BUILD_TYPE=Release
+}
+
+pkg_build() {
+	        ninja -j 8
+}
+
+pkg_install() {
+	ninja install && pkg_install_bin_all && pkg_install_libs && pkg_install_pc_all_only
+}
+
+pkg_check() {
+	JPEG=${KANAPI_BASE}/jpegsrc-${jpegsrc_ver}
+	echo "jpeg=${JPEG}"
+	${PKG_CONFIG} --variable=prefix zlib libpng x11 xcomposite xdamage xrender xt
+	X11=`${PKG_CONFIG} --variable=prefix x11`
+	ls -l ${X11}/include/X11
+	${PKG_CONFIG} --cflags ${LIB_DEPENDS}
+	echo "CFLAGS=${CFLAGS}"
+	ccache --version
+	${PKG_CONFIG} --libs ${LIB_DEPENDS}
+    echo CMAKE_C_COMPILER="${KANAPI_C_COMPILER}" CMAKE_CXX_COMPILER="${KANAPI_CXX_COMPILER}"
+}
+

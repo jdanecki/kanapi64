@@ -92,7 +92,12 @@ else
 		PACKAGE_LINK_BACKUP=${GNU_SUNSITE}
 	else
 		MIRROR_URL=${URL}
-		PACKAGE_PATH=${PACKAGE_FILENAME}
+        if [ "${URL_FORMAT}" = "full_path" ]
+        then
+    		PACKAGE_PATH=${URL_PATH}
+        else
+    		PACKAGE_PATH=${PACKAGE_FILENAME}
+        fi
 	fi
 fi
 

@@ -208,7 +208,9 @@ bullet3:
 ogre: sdl
 	@$(RUN_TARGET)
 
-webkitgtk: libwebp libsoup glib-networking
+webkitgtk: libwebp  glib-networking libsoup
+	#cli: ruby, libtasn1
+	#x11: icu4c, harfbuzz
 	@$(RUN_TARGET)
 
 apps_qt: qt-creator vym qjackctl csoundqt musescore qsynth vmpk hydrogen

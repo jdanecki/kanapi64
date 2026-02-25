@@ -362,6 +362,7 @@ popt:
 	@$(RUN_TARGET)
 
 ruby:
+	#yaml
 	@$(RUN_TARGET)
 
 ocl-icd:

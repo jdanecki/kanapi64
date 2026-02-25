@@ -1,0 +1,3 @@
+in  scripts/setting
+pkg_install_schemas
+    glib-compile-schemas .

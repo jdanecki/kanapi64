@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2026 Jacek Danecki <jacek.m.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -52,7 +52,7 @@ pkg_prepare() {
 pkg_configure() {
     if [ -d build ] ; then rm -r build; fi
     mkdir -p build
-    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} -Dwayland_backend=false -Dbroadway_backend=false \
+    meson setup --prefix $PREFIX build ${PACKAGE_SRCDIR} -Dwayland_backend=true -Dbroadway_backend=false \
 	-Dtracker3=false -Dprofiler=false -Dcloudproviders=false -Ddemos=false -Dexamples=false -Dtests=false \
 	-Dintrospection=false \
 	-Datk:introspection=false
