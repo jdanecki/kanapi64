@@ -433,3 +433,15 @@ DDNet: libnotify
 
 libnotify:
 	@$(RUN_TARGET)
+
+libreoffice: krb5 nss # TODO: java, right now using kanapi_external
+	@$(RUN_TARGET)
+
+krb5:
+	@$(RUN_TARGET)
+
+nss: nspr
+	@$(RUN_TARGET)
+
+nspr:
+	@$(RUN_TARGET)

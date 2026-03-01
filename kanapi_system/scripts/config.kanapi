@@ -622,3 +622,7 @@ xfce4_pulseaudio_plugin_ver=0.5.1
 xfce4_battery_plugin_ver=1.2.0
 DDNet_ver=19.7
 libnotify_ver=0.8.8
+libreoffice_ver=26.2.1.1
+krb5_ver=1.22.2
+nss_ver=3_119_1
+nspr_ver=4.38
