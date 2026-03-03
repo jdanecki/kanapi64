@@ -433,3 +433,6 @@ DDNet: libnotify
 
 libnotify:
 	@$(RUN_TARGET)
+
+cmatrix:
+	@$(RUN_TARGET)
