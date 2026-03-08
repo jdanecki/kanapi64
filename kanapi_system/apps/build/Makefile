@@ -436,3 +436,6 @@ libnotify:
 
 cmatrix:
 	@$(RUN_TARGET)
+
+valgrind:
+	@$(RUN_TARGET)
