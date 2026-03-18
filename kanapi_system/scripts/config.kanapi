@@ -624,3 +624,4 @@ DDNet_ver=19.7
 libnotify_ver=0.8.8
 cmatrix_ver=2.0
 valgrind_ver=3.26.0
+acpi_ver=1.8

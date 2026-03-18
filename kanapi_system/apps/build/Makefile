@@ -439,3 +439,6 @@ cmatrix:
 
 valgrind:
 	@$(RUN_TARGET)
+
+acpi:
+	@$(RUN_TARGET)
