@@ -78,7 +78,7 @@ pkg_install() {
   install -Dt "${PREFIX}/bin" \
     dist/Debug/bin/{*util,shlibsign,signtool,signver,ssltap}
 
-  install -Dt "${PREFIX}/include" -m644 dist/public/nss/*.h
+  install -Dt "${PREFIX}/include/nss" -m644 dist/public/nss/*.h
 
   install -Dt "${PREFIX}/usr/share/man/man1" -m644 \
     nss/doc/nroff/{*util,signtool,signver,ssltap}.1
