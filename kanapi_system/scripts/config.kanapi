@@ -626,3 +626,4 @@ libreoffice_ver=26.2.1.1
 krb5_ver=1.22.2
 nss_ver=3_119_1
 nspr_ver=4.38
+gyp_ver=git

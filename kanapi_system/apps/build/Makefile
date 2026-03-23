@@ -440,8 +440,11 @@ libreoffice: krb5 nss # TODO: java, right now using kanapi_external
 krb5:
 	@$(RUN_TARGET)
 
-nss: nspr
+nss: nspr gyp
 	@$(RUN_TARGET)
 
 nspr:
+	@$(RUN_TARGET)
+
+gyp:
 	@$(RUN_TARGET)

@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2026 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2026 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=gyp
+VER=git
+URL="https://chromium.googlesource.com/external/gyp"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_download() {
+  echo git clone ${URL} ${KANAPI_BUILD_SRC}/gyp-git
+  git clone ${URL} ${KANAPI_BUILD_SRC}/gyp-git
+}
+
+pkg_prepare() {
+  # FIXME: use python wrapper packages
+  pip3 install build
+  pip3 install installer
+}
+
+pkg_configure() {
+  echo Nothing to do!
+}
+
+pkg_build() {
+  local_copy
+  python -m build --wheel --no-isolation
+}
+
+pkg_install() {
+  # FIXME: do not install inside python directory
+  cd build
+  python3 -m installer dist/*.whl
+  mkdir ${PREFIX}
+}
