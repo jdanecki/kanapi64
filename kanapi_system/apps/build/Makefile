@@ -434,7 +434,8 @@ DDNet: libnotify
 libnotify:
 	@$(RUN_TARGET)
 
-libreoffice: krb5 nss # TODO: java, right now using kanapi_external
+libreoffice: krb5 nss xmlsec1 # TODO: java, right now using kanapi_external
+											# TODO: ant, requires java
 	@$(RUN_TARGET)
 
 krb5:
@@ -447,4 +448,7 @@ nspr:
 	@$(RUN_TARGET)
 
 gyp:
+	@$(RUN_TARGET)
+
+xmlsec1:
 	@$(RUN_TARGET)
