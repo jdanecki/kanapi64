@@ -442,3 +442,22 @@ valgrind:
 
 acpi:
 	@$(RUN_TARGET)
+
+libreoffice: krb5 nss xmlsec1 # TODO: java, right now using kanapi_external
+											# TODO: ant, requires java
+	@$(RUN_TARGET)
+
+krb5:
+	@$(RUN_TARGET)
+
+nss: nspr gyp
+	@$(RUN_TARGET)
+
+nspr:
+	@$(RUN_TARGET)
+
+gyp:
+	@$(RUN_TARGET)
+
+xmlsec1:
+	@$(RUN_TARGET)

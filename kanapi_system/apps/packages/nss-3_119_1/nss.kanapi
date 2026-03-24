@@ -1,0 +1,95 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2026 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2026 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=nss
+VER=3_119_1
+VER_DOT=3.119.1
+VER_MAJOR=3
+VER_MINOR=119
+VER_PATCH=1
+URL="https://ftp.mozilla.org/pub/security/nss/releases/NSS_${VER}_RTM/src"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+pkg_configure() {
+  local_copy
+}
+
+pkg_build() {
+  # cd build/nss
+  # FLAGS="-I${KANAPI_BASE}/include/nspr -I$(pwd)/lib/pk11wrap -I$(pwd)/lib/certdb -I$(pwd)/lib/cryptohi -I$(pwd)/lib/util -D_GNU_SOURCE -I$(pwd)/lib/freebl -I$(pwd)/lib/freebl/ecl -I$(pwd)/lib/pkcs7 -I$(pwd)/lib/smime -I$(pwd)/lib/base -I$(pwd)/lib/ssl -I$(pwd)/lib/pki -I$(pwd)/lib/libpkix/include -I$(pwd)/lib/dev -I$(pwd)/lib/libpkix/pkix_pl_nss/pki -I$(pwd)/lib/libpkix/pkix_pl_nss/system -I$(pwd)/lib/libpkix/pkix/util -I$(pwd)/lib/libpkix/pkix/checker -I$(pwd)/lib/libpkix/pkix/results -I$(pwd)/lib/libpkix/pkix/certsel -I$(pwd)/lib/libpkix/pkix/crlsel -I$(pwd)/lib/libpkix/pkix/params -I$(pwd)/lib/libpkix/pkix/store -I$(pwd)/lib/libpkix/pkix/top -I$(pwd)/lib/certhigh -I$(pwd)/lib/libpkix/pkix_pl_nss/module -I$(pwd)/cmd/lib -I$(pwd)../dist/public/nss -I$(pwd)../dist/private/nss"
+  # USE_64=1 make -j "${MAKE_JOBS}" CFLAGS="$FLAGS" CPPFLAGS="$FLAGS"
+  # cd build/nss
+  # ./mach build
+  # FIXME: do not install from pip3
+  pip3 install six
+  cd ./build/nss
+  NSPR=$(${PKG_CONFIG} --variable=includedir nspr)
+  ./build.sh -v --with-nspr=${NSPR}
+}
+
+pkg_install() {
+  cd build
+
+  NSPR_VER=$(${PKG_CONFIG} --modversion nspr)
+
+  sed nss/pkg/pkg-config/nss.pc.in \
+    -e "s,%prefix%,/usr,g" \
+    -e "s,%exec_prefix%,\${prefix},g" \
+    -e "s,%libdir%,${PREFIX}/lib,g" \
+    -e "s,%includedir%,${PREFIX}/include/nss,g" \
+    -e "s,%NSPR_VERSION%,${NSPR_VER},g" \
+    -e "s,%NSS_VERSION%,${VER_DOT},g" |
+    install -Dm644 /dev/stdin "${PREFIX}/lib/pkgconfig/nss.pc"
+
+  sed nss/pkg/pkg-config/nss-config.in \
+    -e "s,@prefix@,/usr,g" \
+    -e "s,@exec_prefix@,/usr,g" \
+    -e "s,@libdir@,${PREFIX}/lib,g" \
+    -e "s,@includedir@,${PREFIX}/include,g" \
+    -e "s,@MOD_MAJOR_VERSION@,${VER_PATCH},g" \
+    -e "s,@MOD_MINOR_VERSION@,${VER_MINOR},g" \
+    -e "s,@MOD_PATCH_VERSION@,${VER_PATCH},g" |
+    install -D /dev/stdin "${PREFIX}/bin/nss-config"
+
+  install -Dt "${PREFIX}/bin" \
+    dist/Debug/bin/{*util,shlibsign,signtool,signver,ssltap}
+
+  install -Dt "${PREFIX}/include/nss" -m644 dist/public/nss/*.h
+
+  install -Dt "${PREFIX}/usr/share/man/man1" -m644 \
+    nss/doc/nroff/{*util,signtool,signver,ssltap}.1
+
+  install -Dt "${PREFIX}/lib" dist/Debug/lib/*.so
+
+  pkg_install_bin_all &&
+    pkg_install_pc_all_only &&
+    pkg_install_libs
+}
+
+pkg_check() {
+  ls -l ${KANAPI_BASE}/include/nspr
+}
