@@ -24,7 +24,7 @@ apps-x11: apps-libs mpv ClanLib bullet3 feh ogre rakarrack xfig
 
 apps-gui: apps-libs vlc Audacity
 
-apps-manual: tests webkitgtk demo midori firefox
+apps-manual: tests webkitgtk demo midori
 
 sdl: sdl-support sdl2-support
 
@@ -274,9 +274,6 @@ midori: gcr
 #lxml:
 #	@$(RUN_TARGET)
 
-firefox: autoconf213
-	@$(RUN_TARGET)
-
 autoconf213:
 	DIR_NAME=autoconf-2.13; if [ ! -d  $${DIR_NAME} ]; then mkdir -p $${DIR_NAME} ; ln -svf ../../packages/$${DIR_NAME}/autoconf.kanapi $${DIR_NAME}; fi
 	make -f ../Makefile -C autoconf-2.13 kanapi_$(ACTION) PKG=autoconf KANAPI_TOP=$(PWD) V=$(V)
@@ -460,4 +457,7 @@ gyp:
 	@$(RUN_TARGET)
 
 xmlsec1:
+	@$(RUN_TARGET)
+
+firefox: # requires nodejs and rust
 	@$(RUN_TARGET)

@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# Copyright (c) 2012-2026 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2026 Piotr Danecki <piotr.a.danecki@gmail.com>
+#
+# This file is part of KaNaPi project
+#
+# KaNaPi is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# KaNaPi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
+
+PACKAGE_NAME=firefox
+VER=149.0
+URL="https://ftp.mozilla.org/pub/firefox/releases/${VER}/source"
+EXT=tar.xz
+#build depends on
+#LIB_DEPENDS=""
+
+. ../settings
+
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
+
+export MOZBUILD_STATE_PATH=.mozbuild
+#export MOZ_TELEMETRY_REPORTING_ENABLED=0
+#export MOZ_GLEAN_DISABLE=1
+MAKE_JOBS=1
+
+CONFIG_FLAGS='--without-wasm-sandboxed-libraries'
+
+pkg_download() {
+  PACKAGE_PATH=firefox-${VER}.source.${EXT}
+  pkg_curl
+}
+
+# pkg_configure() {
+# MOZ_TELEMETRY_REPORTING_ENABLED=0 MOZ_GLEAN_DISABLE=1 ${PACKAGE_SRCDIR}/mach bootstrap
+# }
+
+pkg_install() {
+  pkg_install_all
+}
+
+pkg_check() {
+  CONFIG_FLAGS="--help"
+  pkg_configure | less
+}

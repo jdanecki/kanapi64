@@ -19,4 +19,6 @@ Consider testsystem with chroots (pulls cli-base, tries to install package, disp
 fix mesa issues (change buildtype to release, to avoid asserts)
 Add python packages directory with pip packages
 Fix ./configure running ./configure on deps instead of ./install
-Add java
+Add java/figure out how to deal with other languages than C. (binary download scripts? compilation? ignorance?)
+Add cups
+Build wasi support in clang for firefox
