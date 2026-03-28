@@ -340,7 +340,7 @@ llvm: SPIRV-Tools SPIRV-LLVM-Translator
 cacert:
 	@$(RUN_TARGET)
 
-libxml2:
+libxml2: doxygen
 	@$(RUN_TARGET)
 
 expect:
@@ -547,4 +547,7 @@ SPIRV-Tools:
 	@$(RUN_TARGET)
 
 mdadm:
+	@$(RUN_TARGET)
+
+doxygen:
 	@$(RUN_TARGET)

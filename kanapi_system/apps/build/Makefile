@@ -461,3 +461,36 @@ xmlsec1:
 
 firefox: # requires nodejs and rust
 	@$(RUN_TARGET)
+
+flatpak: libcap fuse3 libostree gpgme
+	@$(RUN_TARGET)
+
+fuse3:
+	@$(RUN_TARGET)
+
+libostree:
+	@$(RUN_TARGET)
+
+AppStream: itstool
+	@$(RUN_TARGET)
+
+itstool:
+	@$(RUN_TARGET)
+
+gpgme: libgpg-error gnupg
+	@$(RUN_TARGET)
+
+libgpg-error: libassuan
+	@$(RUN_TARGET)
+
+libassuan:
+	@$(RUN_TARGET)
+
+gnupg: libksba npth
+	@$(RUN_TARGET)
+
+libksba:
+	@$(RUN_TARGET)
+
+npth:
+	@$(RUN_TARGET)
