@@ -45,8 +45,8 @@ pkg_configure() {
     -Dplatforms=x11 -Dgallium-drivers=crocus,i915,iris -Dvulkan-drivers=intel \
     -Dgallium-rusticl=false -Dcpp_rtti=false -Damd-use-llvm=false \
     -Dandroid-libbacktrace=disabled -Dandroid-libperfetto=disabled -Dandroid-strict=false \
-    -Dgallium-d3d12-graphics=disabled -Dgallium-d3d12-video=disabled -Dglvnd=disabled \
-    -Dmicrosoft-clc=disabled 
+    -Dgallium-d3d12-graphics=disabled -Dgallium-d3d12-video=disabled \
+    -Dmicrosoft-clc=disabled -Db_ndebug=true -Ddebug=false -Dbuildtype=release
 
 #needs libepoxy
 #    -Dtools=intel,intel-ui 
