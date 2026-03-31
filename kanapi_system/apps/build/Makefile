@@ -494,3 +494,9 @@ libksba:
 
 npth:
 	@$(RUN_TARGET)
+
+dosbox-staging: SDL2_net libmt32emu # needs `fluidsynth` from cli
+	@$(RUN_TARGET)
+
+libmt32emu:
+	@$(RUN_TARGET)

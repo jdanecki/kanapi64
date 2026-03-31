@@ -551,3 +551,6 @@ mdadm:
 
 doxygen:
 	@$(RUN_TARGET)
+
+htop:
+	@$(RUN_TARGET)
