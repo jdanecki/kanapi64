@@ -500,3 +500,6 @@ dosbox-staging: SDL2_net libmt32emu # needs `fluidsynth` from cli
 
 libmt32emu:
 	@$(RUN_TARGET)
+
+wine:
+	@$(RUN_TARGET)
