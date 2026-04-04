@@ -22,3 +22,4 @@ Fix ./configure running ./configure on deps instead of ./install
 Add java/figure out how to deal with other languages than C. (binary download scripts? compilation? ignorance?)
 Add cups
 Build wasi support in clang for firefox
+Add compatibility directory for aclocal/pkgconfig/.m4 scripts

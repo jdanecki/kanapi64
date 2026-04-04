@@ -503,3 +503,6 @@ libmt32emu:
 
 wine:
 	@$(RUN_TARGET)
+
+atari800:
+	@$(RUN_TARGET)
