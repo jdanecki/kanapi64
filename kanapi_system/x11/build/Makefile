@@ -624,3 +624,9 @@ libinput: mtdev
 
 giflib:
 	@$(RUN_TARGET)
+
+xlibre-xserver:
+	@$(RUN_TARGET)
+
+xlibre-xf86-input-libinput:
+	@$(RUN_TARGET)
