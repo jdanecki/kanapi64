@@ -506,3 +506,6 @@ wine:
 
 atari800:
 	@$(RUN_TARGET)
+
+sox_ng:
+	@$(RUN_TARGET)
