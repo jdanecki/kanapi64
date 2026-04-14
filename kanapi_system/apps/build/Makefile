@@ -518,3 +518,6 @@ libconfig:
 
 uthash:
 	@$(RUN_TARGET)
+
+cups:
+	@$(RUN_TARGET)
