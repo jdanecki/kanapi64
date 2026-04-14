@@ -652,3 +652,6 @@ atari800_ver=git
 xlibre_xserver_ver=25.1.2
 xlibre_xf86_input_libinput_ver=25.0.1
 sox_ng_ver=14.7.1.2
+picom_ver=git
+libconfig_ver=1.8.2
+uthash_ver=2.3.0

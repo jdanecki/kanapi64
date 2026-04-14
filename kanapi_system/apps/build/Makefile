@@ -509,3 +509,12 @@ atari800:
 
 sox_ng:
 	@$(RUN_TARGET)
+
+picom: libconfig uthash
+	@$(RUN_TARGET)
+
+libconfig:
+	@$(RUN_TARGET)
+
+uthash:
+	@$(RUN_TARGET)
