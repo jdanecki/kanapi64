@@ -521,3 +521,6 @@ uthash:
 
 cups:
 	@$(RUN_TARGET)
+
+grub:
+	@$(RUN_TARGET)
