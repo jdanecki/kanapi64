@@ -31,9 +31,13 @@ EXT=tar.xz
 #export CFLAGS="${CFLAGS} "
 
 pkg_configure() {
-        local_copy
-        patch -p1 < ../../../packages/${PACKAGE_NAME}-${VER}/0005-52383-avoid-incompatible-pointer-types.patch
-	./configure --prefix=$PREFIX
+	CONFIGURE_FLAGS="--enable-maildir-support --enable-function-subdirs --enable-fndir=/usr/share/zsh/functions --with-term-lib=ncursesw --enable-scriptdir=/usr/share/zsh/scripts --enable-pcre --enable-multibyte --enable-cap --with-tcsetpgrp zsh_cv_shared_environ=yes zsh_cv_func_dlsym_needs_underscore=no zsh_cv_sys_dynamic_execsyms=yes"
+	local_copy
+	for f in ../../../packages/${PACKAGE_NAME}-${VER}/patches/*
+	do
+        patch -p1 < $f
+	done
+	./configure --prefix=$PREFIX ${CONFIGURE_FLAGS}
 
 }
 
