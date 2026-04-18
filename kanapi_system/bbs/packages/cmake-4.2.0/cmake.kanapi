@@ -50,8 +50,8 @@ pkg_build() {
 }
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all && \
-	rm -rf ${PREFIX}/doc
+	pkg_install_make && pkg_install_bin_all &&
+	mkdir -p ${PREFIX}/share/cmake
 }
 
 pkg_check() {

@@ -28,7 +28,5 @@ EXT=tar.xz
 . ../settings
 
 pkg_install() {
-	pkg_install_make && pkg_install_bin_all && pkg_install_libs && \
-	rm -rf ${PREFIX}/share/{man,info}
+	pkg_install_all
 }
-

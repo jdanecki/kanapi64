@@ -40,7 +40,6 @@ pkg_configure() {
   PNG_INCLUDE=$(${PKG_CONFIG} --variable=includedir libpng)
   PNG_LIBDIR=$(${PKG_CONFIG} --variable=libdir libpng)
   GL=$(${PKG_CONFIG} --variable=prefix gl)
-  SDL2=$(${PKG_CONFIG} --variable=prefix sdl2)
   CMAKE_FLAGS=$(
     cat <<-EOF
 -DCMAKE_BUILD_TYPE=Release
@@ -54,7 +53,6 @@ pkg_configure() {
 -DPNG_PNG_INCLUDE_DIR=${PNG_INCLUDE}
 -DZLIB_LIBRARY=${ZLIB}/lib/libz.so
 -DZLIB_INCLUDE_DIR=${ZLIB}/include
--DSDL2_DIR=${SDL2}/lib/cmake/SDL2
 EOF
   )
   echo $CMAKE_FLAGS
