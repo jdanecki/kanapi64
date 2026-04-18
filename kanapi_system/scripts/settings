@@ -40,6 +40,16 @@ then
 	export KANAPI_PKGCONFIG=${KANAPI_BIN}/pkg-config
 fi
 
+if [ -f ${KANAPI_BIN}/cmake ]
+then
+	export KANAPI_CMAKE=${KANAPI_BIN}/cmake
+fi
+
+if [ -f ${KANAPI_BIN}/aclocal ]
+then
+	export KANAPI_ACLOCAL=${KANAPI_BIN}/aclocal
+fi
+
 #echo "settings: KANAPI_PKGCONFIG=${KANAPI_PKGCONFIG}"
 
 if [ -x ${KANAPI_BIN}/ccache -a -z "${CI}" ]
@@ -129,6 +139,22 @@ else
 		export GLIB_CFLAGS="-I${KANAPI_BASE}/glib-${glib_ver}/include -I${KANAPI_BASE}/glib-${glib_ver}/include/glib-2.0 -I${KANAPI_BASE}/glib-${glib_ver}/lib/glib-2.0/include"
 		export GLIB_LIBS="-L${KANAPI_BASE}/glib-${glib_ver}/lib -lglib-2.0 -lgmodule-2.0"
 	fi
+fi
+
+export CMAKE=${KANAPI_CMAKE}
+if [ -n "${CMAKE}" ]
+then
+	echo "CMAKE=$CMAKE"
+	export CMAKE_DIR=${KANAPI_BASE}/cmake-${cmake_ver}/share/cmake
+	echo "CMAKE_DIR=$CMAKE_DIR"
+fi
+
+export ACLOCAL=${KANAPI_ACLOCAL}
+if [ -n "${ACLOCAL}" ]
+then
+	echo "ACLOCAL=$ACLOCAL"
+	export ACLOCAL_DIR=`${KANAPI_ACLOCAL} --print-ac-dir`
+	echo "ACLOCAL_DIR=$ACLOCAL_DIR"
 fi
 
 if [ -d ${KANAPI_BASE}/libs ]
@@ -523,10 +549,7 @@ pkg_configure() {
 
 pkg_configure_autoconf() {
 	local_copy
-	KANAPI_AC_SCRIPTS="-I ${KANAPI_BASE}/libtool-${libtool_ver}/share/aclocal \
-	-I ${KANAPI_BASE}/autoconf-${autoconf_ver}/share/autoconf \
-	-I ${KANAPI_BASE}/pkg-config-${pkg_config_ver}/share/aclocal"
-	autoreconf -v --install --force ${KANAPI_AC_SCRIPTS} ${AUTOCONF_FLAGS}
+	autoreconf -v --install --force ${AUTOCONF_FLAGS}
 	./configure --prefix=$PREFIX ${CONFIG_FLAGS}
 }
 
@@ -792,16 +815,42 @@ pkg_install_libs() {
 	pkg_strip_libraries
 }
 
+pkg_install_cmake_scripts()
+{
+	for i in ${PREFIX}/lib/cmake/* ${PREFIX}/lib64/cmake/*
+	do
+		if [ -f $i ] || [ -d $i ]
+		then
+			${LN_SF} $i ${CMAKE_DIR}
+		fi
+	done
+}
+
+pkg_install_aclocal()
+{
+	for i in ${PREFIX}/share/autoconf/* ${PREFIX}/share/aclocal/*
+	do
+		if [ -f $i ] || [ -d $i ]
+		then
+			${LN_SF} $i ${ACLOCAL_DIR}
+		fi
+	done
+}
+
+pkg_install_all_common() {
+	pkg_install_pc_all_only && pkg_install_libs && pkg_install_bin_all && pkg_install_cmake_scripts && pkg_install_aclocal
+}
+
 pkg_install_all() {
-	pkg_install_pc_all && pkg_install_libs && pkg_install_bin_all
+	pkg_install_make && pkg_install_all_common
 }
 
 pkg_install_all_cmake() {
-  ninja install && pkg_install_pc_all_only && pkg_install_libs && pkg_install_bin_all
+  ninja install && pkg_install_all_common
 }
 
 pkg_install_all_meson() {
-  cd build && ninja install && pkg_install_pc_all_only && pkg_install_libs && pkg_install_bin_all
+  cd build && ninja install && pkg_install_all_common
 }
 
 pkg_test() {
