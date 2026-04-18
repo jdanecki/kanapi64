@@ -1,0 +1,16 @@
+#!/bin/bash
+
+KANAPI_VER=0.12
+
+if [ "$(id -u)" != "0" ]; then
+  KANAPI_ROOT="${HOME}/kanapi_${KANAPI_VER}"
+else
+  KANAPI_ROOT="/kanapi_${KANAPI_VER}"
+fi
+KANAPI_BASE=${KANAPI_ROOT}/packages
+
+rm -r ${KANAPI_ROOT}/hicolor
+mkdir -p ${KANAPI_ROOT}/icons
+for d in $(find -L ${KANAPI_BASE} -name "hicolor"); do
+  cp -r $d ${KANAPI_ROOT}/icons
+done

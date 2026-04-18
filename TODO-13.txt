@@ -1,4 +1,3 @@
-Add directory for application icons (.png, .svg, .desktop already is partly supported)
 Cross-directory dependencies (package from app will require another package from cli)
 Release KaNaPi 13 AND KaNaPi 12 as chroot (instead of docker)
 Fully switch from dockers to chroots.
