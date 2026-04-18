@@ -32,6 +32,8 @@ EXT=tar.xz
 unset CFLAGS
 unset LDFLAGS
 
+export CONFIG_FLAGS='--with-platform=efi --target=x86_64'
+
 pkg_install() {
   pkg_install_all
 }
