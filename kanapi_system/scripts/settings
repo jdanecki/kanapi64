@@ -838,7 +838,7 @@ pkg_install_aclocal()
 }
 
 pkg_install_all_common() {
-	pkg_install_pc_all_only && pkg_install_libs && pkg_install_bin_all && pkg_install_cmake_scripts && pkg_install_aclocal
+	pkg_install_pc_all_only && pkg_install_libs && pkg_install_bin_all && pkg_install_sbin_all && pkg_install_cmake_scripts && pkg_install_aclocal
 }
 
 pkg_install_all() {

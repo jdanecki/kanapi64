@@ -524,3 +524,12 @@ cups:
 
 grub:
 	@$(RUN_TARGET)
+
+efibootmgr: efivar popt
+	@$(RUN_TARGET)
+
+efivar:
+	@$(RUN_TARGET)
+
+popt:
+	@$(RUN_TARGET)
