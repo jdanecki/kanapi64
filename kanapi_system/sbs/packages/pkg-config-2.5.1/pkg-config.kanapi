@@ -59,6 +59,10 @@ pkg_install() {
 	done
 	ln -sf ${PREFIX}/bin/pkgconf ${PREFIX}/bin/pkg-config 
 	pkg_install_bin_all
+	if [[ "$ACLOCAL" != "" ]]
+	then
+		pkg_install_aclocal
+	fi
 }
 
 pkg_configure() {

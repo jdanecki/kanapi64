@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2025 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2012-2026 Jacek Danecki <jacek.m.danecki@gmail.com>
+# Copyright (c) 2022-2026 Piotr Danecki <piotr.a.danecki@gmail.com>
 #
 # This file is part of KaNaPi project
 #
@@ -17,14 +18,36 @@
 # You should have received a copy of the GNU General Public License
 # along with KaNaPi.  If not, see <http://www.gnu.org/licenses/>.
 
-PACKAGE_NAME=util-macros
-VER=1.20.2
-EXT=tar.xz
-URL="http://xorg.freedesktop.org/releases/individual/util"
+PACKAGE_NAME=xmessage
+VER=1.0.7
+URL="https://gitlab.freedesktop.org/xorg/app/xmessage/-/archive/xmessage-${VER}"
+EXT=tar.gz
+#build depends on
+#LIB_DEPENDS=""
 
 . ../settings
 
-pkg_install() {
-	pkg_install_all
-}	
+#export LDFLAGS="${LDFLAGS} "
+#export CFLAGS="${CFLAGS} "
 
+pkg_download() {
+  PACKAGE_PATH=xmessage-xmessage-${VER}.${EXT}
+  pkg_curl
+}
+
+pkg_postprepare() {
+  ${LN_SF} ${KANAPI_BUILD_SRC}/xmessage-xmessage-${VER} ${PACKAGE_SRCDIR}
+}
+
+pkg_configure() {
+  pkg_configure_autoconf
+}
+
+pkg_build() {
+  pkg_build_local
+}
+
+pkg_install() {
+  cd build
+  pkg_install_all
+}

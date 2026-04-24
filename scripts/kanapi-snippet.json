@@ -33,5 +33,22 @@
       "  pkg_install_all_cmake",
       "}"
     ]
+  },
+  "Autoconf": {
+    "prefix": "pkg_autoconf",
+    "description": "autoconf package",
+    "body": [
+      "pkg_configure() {",
+      "  pkg_configure_autoconf",
+      "}",
+      "",
+      "pkg_build() {",
+      "  pkg_build_local",
+      "}",
+      "",
+      "pkg_install() {",
+      "  pkg_install_all",
+      "}"
+    ]
   }
 }

@@ -660,3 +660,4 @@ grub_ver=2.14
 efibootmgr_ver=18
 efivar_ver=39
 popt_ver=1.19
+xmessage_ver=1.0.7

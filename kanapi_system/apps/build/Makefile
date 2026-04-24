@@ -533,3 +533,6 @@ efivar:
 
 popt:
 	@$(RUN_TARGET)
+
+xmessage:
+	@$(RUN_TARGET)
