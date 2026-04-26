@@ -47,6 +47,7 @@
       "}",
       "",
       "pkg_install() {",
+      "  cd build",
       "  pkg_install_all",
       "}"
     ]

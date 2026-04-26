@@ -536,3 +536,6 @@ popt:
 
 xmessage:
 	@$(RUN_TARGET)
+
+xbill:
+	@$(RUN_TARGET)
