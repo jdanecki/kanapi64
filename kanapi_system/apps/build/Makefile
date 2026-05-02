@@ -462,7 +462,7 @@ xmlsec1:
 firefox: # requires nodejs and rust
 	@$(RUN_TARGET)
 
-flatpak: libcap fuse3 libostree gpgme
+flatpak: libcap fuse3 libostree gpgme AppStream
 	@$(RUN_TARGET)
 
 fuse3:
@@ -471,7 +471,7 @@ fuse3:
 libostree:
 	@$(RUN_TARGET)
 
-AppStream: itstool
+AppStream: itstool libfyaml snowball
 	@$(RUN_TARGET)
 
 itstool:
@@ -480,7 +480,7 @@ itstool:
 gpgme: libgpg-error gnupg
 	@$(RUN_TARGET)
 
-libgpg-error: libassuan
+libgpg-error: 
 	@$(RUN_TARGET)
 
 libassuan:
@@ -538,4 +538,10 @@ xmessage:
 	@$(RUN_TARGET)
 
 xbill:
+	@$(RUN_TARGET)
+
+libfyaml:
+	@$(RUN_TARGET)
+
+snowball:
 	@$(RUN_TARGET)
