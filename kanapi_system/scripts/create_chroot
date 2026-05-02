@@ -1,0 +1,118 @@
+#!/bin/bash
+
+# TODO: layers, versions
+
+KANAPI_VER=$(cat KANAPI_VER)
+sdir=$(pwd)
+CHROOT_DIR=${sdir}/chroot
+KANAPI_DIR=${CHROOT_DIR}/kanapi_${KANAPI_VER}
+PACKAGES_DIR=${KANAPI_DIR}/packages
+
+get_version() {
+  pkg_trimmed=$(echo $1 | tr "-" "_")
+  line=$(grep "^${pkg_trimmed}_ver=" config.kanapi)
+  pkg_version=${line#*=}
+  pkg_version=${pkg_version#(}
+  pkg_version=${pkg_version%)}
+  if [[ "$pkg_version" == "" ]]; then
+    echo "Couldn't find version for ${pkg}"
+  fi
+}
+
+# FIXME: do not copy from update_include
+search_in_dir() {
+  if [ -d $2 ]; then
+    name=$(echo $2 | sed "s@$1\/@@")
+    #	echo "dir: $1 --- $2 -> $name"
+    if [ ! -d $name ]; then mkdir -p $name; fi
+    for f in $2/*; do
+      search_in_dir $1 $f
+    done
+  else
+    name=$(echo $2 | sed "s@$1\/@@")
+    #	echo "fil: $1 --- $2 -> $name"
+    pwd
+    ln -svf $2 $name
+  fi
+}
+
+search_include_dir() {
+  for package in $1/*; do
+    echo "looking in $package"
+    if [ -d $package/include ]; then
+      for fd in $package/include/*; do
+        dir=$(basename $package)
+        if [ "${dir:0:3}" = "gcc" -o "${dir:0:5}" = "glibc" ]; then
+          #echo "don't link compiler $dir"
+          continue
+        else
+          #echo "$package ($dir)-> $fd"
+          search_in_dir $package $fd
+        fi
+      done
+    fi
+  done
+}
+
+# TODO: also deal with cmake, pkgconfig, aclocal
+pkg_update_links() {
+  for p in ${PACKAGES_DIR}/*; do
+    echo "updating $p"
+    if [ -d $p/bin ]; then ln -sf $p/bin/* ${KANAPI_DIR}/bin; fi
+    if [ -d $p/sbin ]; then ln -sf $p/sbin/* ${KANAPI_DIR}/bin; fi
+    if [ -d $p/usr/bin ]; then ln -sf $p/usr/bin/* ${KANAPI_DIR}/bin; fi
+    for f in $p/lib/lib*.so* $p/lib/lib*.a $p/lib/lib*.la $p/lib64/lib*.so* $p/lib64/lib*.a $p/lib64/lib*.la; do
+      if [ -f $f ]; then
+        ln -sf $f ${PACKAGES_DIR}/libs/$(basename $f)
+      fi
+    done
+  done
+  cd ${PACKAGES_DIR}
+  search_include_dir ${PACKAGES_DIR}
+  ldconfig
+}
+
+install_package() {
+  get_version $1
+  echo $pkg_version
+  echo $1
+  cd ${sdir}/kanapi-clone/kanapi_system
+  pkg_ver=$1-$pkg_version
+  path=$(find -name "$pkg_ver")
+  cd ${sdir}/..
+  cd $(dirname $path)
+  echo $(pwd)
+  mkdir ../build/$pkg_ver
+  cd ../build/$pkg_ver
+  pkg_kanapi=${pkg}.kanapi
+  ln -sf ../../packages/${pkg_ver}/${pkg_kanapi}
+  pkg_kanapi ${pkg_kanapi} verify
+  if [[ ! -f kanapi_verify ]]; then
+    export DESTDIR=$CHROOT_DIR
+    pkg_kanapi ${pkg_kanapi} download
+    pkg_kanapi ${pkg_kanapi} prepare
+    pkg_kanapi ${pkg_kanapi} configure
+    pkg_kanapi ${pkg_kanapi} build
+    pkg_kanapi ${pkg_kanapi} install
+    rmdir /kanapi_${KANAPI_VER}/packages/${pkg_ver} # get rid of the line with `mkdir ${PREFIX}` that doesn't care about DESTDIR in `settings` script
+  else
+    cp -r /kanapi_${KANAPI_VER}/packages/${pkg_ver} ${PACKAGES_DIR}
+  fi
+}
+
+mkdir -p ${KANAPI_DIR}/packages/libs
+mkdir -p ${KANAPI_DIR}/packages/include
+# TODO: maybe deal with these too?
+# mkdir -p ${KANAPI_DIR}/icons
+# mkdir -p ${KANAPI_DIR}/desktop
+mkdir -p ${KANAPI_DIR}/bin
+
+git clone ../.. kanapi-clone
+
+if [[ $# -gt 0 ]]; then
+  for pkg in $@; do
+    install_package $pkg
+  done
+fi
+
+pkg_update_links

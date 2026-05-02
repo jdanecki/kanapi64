@@ -2,7 +2,7 @@
 
 ## Chroots/images - to test all new changes
 - [ ] Fully switch from dockers to chroots.
-- [ ] Allow creating chroots from host using selected packages
+- [x] Allow creating chroots from host using selected packages
   - [ ] Allow to specify version (or to omit it) ex: `foo bar-5.12 hello cmake cmake-3.smth` would fetch: newest foo, bar-5.12, newest hello, newest cmake and cmake-3.smth (with deps)
   - [ ] Nice if it would be in file, not as arguments
   - [ ] With deps (./create_chroot neovim => creates a chroot using host-built packages (or compiles them), with all deps (like lua for neovim))
@@ -28,6 +28,9 @@
 
 # Actually building of kanapi 0.13, not prepwork
 
+## Remove
+- [ ] busybox
+
 ## Build
 - [ ] Add python packages directory with pip packages
 - [ ] java
@@ -42,6 +45,7 @@
   - [ ] + .iso image
 - [ ] ***Perhaps*** distribute gui chroot/image.
 - [ ] ~Obsolete `pkg` or~ host new binary packages.
+- [ ] Switch to codeberg (github is getting worse and worse)
 
 ## Documentation - in case I get dementia
 
