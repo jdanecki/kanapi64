@@ -64,7 +64,10 @@ make:
 openssl: 
 	@$(RUN_TARGET)
 
-libgpg-error:
+libassuan:
+	@$(RUN_TARGET)
+
+libgpg-error: libassuan
 	@$(RUN_TARGET)
 
 libgcrypt: libgpg-error

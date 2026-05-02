@@ -477,13 +477,7 @@ AppStream: itstool
 itstool:
 	@$(RUN_TARGET)
 
-gpgme: libgpg-error gnupg
-	@$(RUN_TARGET)
-
-libgpg-error: libassuan
-	@$(RUN_TARGET)
-
-libassuan:
+gpgme: gnupg # needs libgpg-error from sbs
 	@$(RUN_TARGET)
 
 gnupg: libksba npth

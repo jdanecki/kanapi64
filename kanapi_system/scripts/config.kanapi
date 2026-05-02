@@ -272,7 +272,6 @@ libffi_ver=3.3
 libffi_ver=3.5.2
 libfontenc_ver=1.1.8
 libgcrypt_ver=1.11.2
-libgpg_error_ver=1.56
 libical_ver=3.0.3
 libmad_ver=0.15.1b
 libmikmod_ver=3.3.11.1

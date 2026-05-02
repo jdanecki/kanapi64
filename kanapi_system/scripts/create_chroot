@@ -1,9 +1,12 @@
 #!/bin/bash
 
-# TODO: layers, versions
+# TODO: allow to specify version
+# TODO: allow using a file
+# TODO: deps
 
 KANAPI_VER=$(cat KANAPI_VER)
-sdir=$(pwd)
+sdir=$(dirname "$(realpath "$0")")
+cd $sdir
 CHROOT_DIR=${sdir}/chroot
 KANAPI_DIR=${CHROOT_DIR}/kanapi_${KANAPI_VER}
 PACKAGES_DIR=${KANAPI_DIR}/packages
@@ -19,7 +22,7 @@ get_version() {
   fi
 }
 
-# FIXME: do not copy from update_include
+# FIXME: do not copy from update_include (create "library" script)
 search_in_dir() {
   if [ -d $2 ]; then
     name=$(echo $2 | sed "s@$1\/@@")
@@ -54,6 +57,7 @@ search_include_dir() {
   done
 }
 
+# FIXME: move to "library" script to use with `pkg` later on
 # TODO: also deal with cmake, pkgconfig, aclocal
 pkg_update_links() {
   for p in ${PACKAGES_DIR}/*; do
@@ -72,6 +76,7 @@ pkg_update_links() {
   ldconfig
 }
 
+# FIXME: cleanup
 install_package() {
   get_version $1
   echo $pkg_version
@@ -94,10 +99,22 @@ install_package() {
     pkg_kanapi ${pkg_kanapi} configure
     pkg_kanapi ${pkg_kanapi} build
     pkg_kanapi ${pkg_kanapi} install
-    rmdir /kanapi_${KANAPI_VER}/packages/${pkg_ver} # get rid of the line with `mkdir ${PREFIX}` that doesn't care about DESTDIR in `settings` script
+    rmdir /kanapi_${KANAPI_VER}/packages/${pkg_ver} # NOTE: gets rid of the line with `mkdir ${PREFIX}` that doesn't care about DESTDIR in `settings` script
   else
     cp -r /kanapi_${KANAPI_VER}/packages/${pkg_ver} ${PACKAGES_DIR}
   fi
+}
+
+install_layer() {
+  echo "in install layer"
+  git clone ../.. kanapi-clone-for-layer-build
+  cd kanapi-clone-for-layer-build/kanapi_system/$1/build
+  ./verify $1
+  for d in *; do
+    if [ -d $d ]; then
+      echo $d
+    fi
+  done
 }
 
 mkdir -p ${KANAPI_DIR}/packages/libs
@@ -111,7 +128,11 @@ git clone ../.. kanapi-clone
 
 if [[ $# -gt 0 ]]; then
   for pkg in $@; do
-    install_package $pkg
+    if [[ ${pkg:0:1} == "@" ]]; then # detect `@` layer tag
+      install_layer ${pkg:1}
+    else
+      install_package $pkg
+    fi
   done
 fi
 

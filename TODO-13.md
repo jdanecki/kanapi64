@@ -6,7 +6,7 @@
   - [ ] Allow to specify version (or to omit it) ex: `foo bar-5.12 hello cmake cmake-3.smth` would fetch: newest foo, bar-5.12, newest hello, newest cmake and cmake-3.smth (with deps)
   - [ ] Nice if it would be in file, not as arguments
   - [ ] With deps (./create_chroot neovim => creates a chroot using host-built packages (or compiles them), with all deps (like lua for neovim))
-  - [ ] Allow using `#cli` tag (example) to fetch all packages from cli + deps
+  - [ ] Allow using `@cli` tag (example) to fetch all packages from cli + deps
   - [ ] Testsystem with chroots (pulls packages from a pre-defined file, tries to install package, display failures)
 
 ## Cross-directory dependencies (package from app will require another package from cli)
