@@ -19,6 +19,8 @@ get_version() {
   pkg_version=${pkg_version%)}
   if [[ "$pkg_version" == "" ]]; then
     echo "Couldn't find version for ${pkg}"
+    echo "Does the package exist?"
+    exit 1
   fi
 }
 
@@ -38,23 +40,23 @@ search_in_dir() {
   fi
 }
 
-search_include_dir() {
-  for package in $1/*; do
-    echo "looking in $package"
-    if [ -d $package/include ]; then
-      for fd in $package/include/*; do
-        dir=$(basename $package)
-        if [ "${dir:0:3}" = "gcc" -o "${dir:0:5}" = "glibc" ]; then
-          #echo "don't link compiler $dir"
-          continue
-        else
-          #echo "$package ($dir)-> $fd"
-          search_in_dir $package $fd
-        fi
-      done
-    fi
-  done
-}
+# search_include_dir() {
+#   for package in $1/*; do
+#     echo "looking in $package"
+#     if [ -d $package/include ]; then
+#       for fd in $package/include/*; do
+#         dir=$(basename $package)
+#         if [ "${dir:0:3}" = "gcc" -o "${dir:0:5}" = "glibc" ]; then
+#           #echo "don't link compiler $dir"
+#           continue
+#         else
+#           #echo "$package ($dir)-> $fd"
+#           search_in_dir $package $fd
+#         fi
+#       done
+#     fi
+#   done
+# }
 
 # FIXME: move to "library" script to use with `pkg` later on
 # TODO: also deal with cmake, pkgconfig, aclocal
@@ -62,25 +64,41 @@ search_include_dir() {
 pkg_update_links() {
   for p in ${PACKAGES_DIR}/*; do
     echo "updating $p"
-    if [ -d $p/bin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
-    if [ -d $p/sbin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
-    if [ -d $p/usr/bin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
-    for f in $p/lib/lib*.so* $p/lib/lib*.a $p/lib/lib*.la $p/lib64/lib*.so* $p/lib64/lib*.a $p/lib64/lib*.la; do
-      if [ -f $f ]; then
-        ln -sf $(realpath --no-symlinks --relative-to="${PACKAGES_DIR}/libs" "$f") ${PACKAGES_DIR}/libs/$(basename $f)
-      fi
-    done
+    pkg_install_package $p
   done
   cd ${PACKAGES_DIR}
-  search_include_dir ${PACKAGES_DIR}
+  # search_include_dir ${PACKAGES_DIR}
   ldconfig
+}
+
+install_package_links() {
+  cd ${PACKAGES_DIR}
+  p=$1
+  if [ -d $p/bin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
+  if [ -d $p/sbin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
+  if [ -d $p/usr/bin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
+  for f in $p/lib/lib*.so* $p/lib/lib*.a $p/lib/lib*.la $p/lib64/lib*.so* $p/lib64/lib*.a $p/lib64/lib*.la; do
+    if [ -f $f ]; then
+      ln -sf $(realpath --no-symlinks --relative-to="${PACKAGES_DIR}/libs" "$f") ${PACKAGES_DIR}/libs/$(basename $f)
+    fi
+  done
+  if [ -d $p/include ]; then
+    for fd in $p/include/*; do
+      dir=$(basename $p)
+      if [ "${dir:0:3}" = "gcc" -o "${dir:0:5}" = "glibc" ]; then
+        #echo "don't link compiler $dir"
+        continue
+      else
+        #echo "$p ($dir)-> $fd"
+        search_in_dir $p $fd
+      fi
+    done
+  fi
 }
 
 # FIXME: cleanup
 install_package() {
   get_version $1
-  echo $pkg_version
-  echo $1
   cd ${sdir}/kanapi-clone/kanapi_system
   pkg_ver=$1-$pkg_version
   path=$(find -name "$pkg_ver")
@@ -103,18 +121,27 @@ install_package() {
   else
     cp -r /kanapi_${KANAPI_VER}/packages/${pkg_ver} ${PACKAGES_DIR}
   fi
+  install_package_links ${pkg_ver}
 }
 
 install_layer() {
+  cd ${sdir}/..
+  if [ ! -d $1 ]; then
+    echo "layer $1 doesn't exist"
+    exit 1
+  fi
   echo "in install layer"
+  cd ${sdir}
   git clone ../.. kanapi-clone-for-layer-build
-  cd kanapi-clone-for-layer-build/kanapi_system/$1/build
+  cd ${sdir}/kanapi-clone-for-layer-build/kanapi_system/$1/build
   ./verify $1
   for d in *; do
     if [ -d $d ]; then
       echo installing $d
       rsync -a --info=progress2 /kanapi_${KANAPI_VER}/packages/"$d" "${PACKAGES_DIR}/"
+      install_package_links $d
     fi
+    cd ${sdir}/kanapi-clone-for-layer-build/kanapi_system/$1/build
   done
 }
 
@@ -125,7 +152,13 @@ mkdir -p ${KANAPI_DIR}/packages/include
 # mkdir -p ${KANAPI_DIR}/desktop
 mkdir -p ${KANAPI_DIR}/bin
 
-git clone ../.. kanapi-clone
+if [ -d kanapi-clone ]; then
+  cd kanapi-clone
+  git pull
+  cd ..
+else
+  git clone ../.. kanapi-clone
+fi
 
 if [[ $# -gt 0 ]]; then
   for pkg in $@; do
@@ -134,7 +167,22 @@ if [[ $# -gt 0 ]]; then
     else
       install_package $pkg
     fi
+    cd ${sdir}
   done
 fi
 
-pkg_update_links
+cd ${sdir}/chroot
+mkdir -p kanapi_build
+cd kanapi_build
+if [ -d kanapi64 ]; then
+  cd kanapi64
+  git pull
+  cd ..
+else
+  git clone ../../../.. kanapi64
+fi
+ln -sf kanapi64 kanapi
+ln -sf /kanapi_build/kanapi/kanapi_system/scripts/pkg_kanapi ${sdir}/chroot/bin
+ln -sf /kanapi_build/kanapi/kanapi_system/scripts/pkg ${sdir}/chroot/bin
+ln -sf /kanapi_build/kanapi/kanapi_system/scripts/pkg_dev ${sdir}/chroot/bin
+# pkg_update_links
