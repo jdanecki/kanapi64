@@ -34,8 +34,7 @@ search_in_dir() {
   else
     name=$(echo $2 | sed "s@$1\/@@")
     #	echo "fil: $1 --- $2 -> $name"
-    pwd
-    ln -svf $2 $name
+    ln -sf $(realpath --no-symlinks --relative-to="$(dirname "$name")" "$2") $name
   fi
 }
 
@@ -59,15 +58,16 @@ search_include_dir() {
 
 # FIXME: move to "library" script to use with `pkg` later on
 # TODO: also deal with cmake, pkgconfig, aclocal
+# FIXME: do not update if installed? maybe flag like --force to reinstall?
 pkg_update_links() {
   for p in ${PACKAGES_DIR}/*; do
     echo "updating $p"
-    if [ -d $p/bin ]; then ln -sf $p/bin/* ${KANAPI_DIR}/bin; fi
-    if [ -d $p/sbin ]; then ln -sf $p/sbin/* ${KANAPI_DIR}/bin; fi
-    if [ -d $p/usr/bin ]; then ln -sf $p/usr/bin/* ${KANAPI_DIR}/bin; fi
+    if [ -d $p/bin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
+    if [ -d $p/sbin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
+    if [ -d $p/usr/bin ]; then ln -sf $(realpath --no-symlinks --relative-to="${KANAPI_DIR}/bin" $p/bin/*) ${KANAPI_DIR}/bin; fi
     for f in $p/lib/lib*.so* $p/lib/lib*.a $p/lib/lib*.la $p/lib64/lib*.so* $p/lib64/lib*.a $p/lib64/lib*.la; do
       if [ -f $f ]; then
-        ln -sf $f ${PACKAGES_DIR}/libs/$(basename $f)
+        ln -sf $(realpath --no-symlinks --relative-to="${PACKAGES_DIR}/libs" "$f") ${PACKAGES_DIR}/libs/$(basename $f)
       fi
     done
   done
@@ -86,12 +86,12 @@ install_package() {
   path=$(find -name "$pkg_ver")
   cd ${sdir}/..
   cd $(dirname $path)
-  echo $(pwd)
   mkdir ../build/$pkg_ver
   cd ../build/$pkg_ver
   pkg_kanapi=${pkg}.kanapi
   ln -sf ../../packages/${pkg_ver}/${pkg_kanapi}
   pkg_kanapi ${pkg_kanapi} verify
+  echo installing $pkg_ver
   if [[ ! -f kanapi_verify ]]; then
     export DESTDIR=$CHROOT_DIR
     pkg_kanapi ${pkg_kanapi} download
@@ -112,7 +112,8 @@ install_layer() {
   ./verify $1
   for d in *; do
     if [ -d $d ]; then
-      echo $d
+      echo installing $d
+      rsync -a --info=progress2 /kanapi_${KANAPI_VER}/packages/"$d" "${PACKAGES_DIR}/"
     fi
   done
 }
