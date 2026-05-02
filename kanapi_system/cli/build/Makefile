@@ -234,12 +234,6 @@ intltool:
 pulseaudio: speexdsp intltool speex
 	@$(RUN_TARGET)
 
-libvorbis: libogg
-	@$(RUN_TARGET)
-
-libogg:
-	@$(RUN_TARGET)
-
 libsndfile: libvorbis flac
 	@$(RUN_TARGET)
 
