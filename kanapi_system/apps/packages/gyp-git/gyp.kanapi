@@ -47,7 +47,7 @@ pkg_configure() {
 
 pkg_build() {
   local_copy
-  python -m build --wheel --no-isolation
+  python3 -m build --wheel --no-isolation
 }
 
 pkg_install() {
