@@ -1,3 +1,5 @@
+# Development has been moved to [codeberg](https://codeberg.org/jdanecki/kanapi)!
+
 # KaNaPi project for x86_64 architecture
 
 Main goal of this project is to create educational operating system based on Linux kernel
